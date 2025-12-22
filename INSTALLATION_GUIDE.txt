@@ -1,0 +1,77 @@
+========================================
+ROC CITY PICKLEBALL - INSTALLATION GUIDE
+========================================
+
+QUICK START - FOR CLUB PC
+--------------------------
+
+Step 1: Install Python (one-time setup)
+   - Download Python from: https://www.python.org/downloads/
+   - Choose version 3.10 or newer
+   - IMPORTANT: Check "Add Python to PATH" during installation
+   - Click "Install Now"
+
+Step 2: Install Dependencies
+   - Open Command Prompt (search "cmd" in Windows)
+   - Navigate to this folder:
+     cd "C:\Users\karth\OneDrive\Documents\ROC_city_ladder_league_configurator"
+   - Run: pip install -r requirements.txt
+   - Wait for installation to complete
+
+Step 3: Build the Executable
+   - Double-click "build_exe.bat"
+   - Wait for the build process (may take a few minutes)
+   - When complete, find "ROC_City_Ladder_League.exe" in the "dist" folder
+
+Step 4: Deploy to Club PC
+   - Copy these files to the club PC:
+     * dist\ROC_City_Ladder_League.exe
+     * RocCityPickleball_4k.png
+   - Put them in the same folder
+   - Create a desktop shortcut to the .exe for easy access
+
+RUNNING THE APPLICATION
+------------------------
+   - Double-click ROC_City_Ladder_League.exe
+   - No installation needed on the club PC!
+   - All data saves automatically to ladder_league_data.json
+
+
+TESTING BEFORE DEPLOYMENT
+--------------------------
+
+To test without building:
+   - Open Command Prompt in this folder
+   - Run: python ladder_league.py
+   - This runs the app directly from source
+
+
+TROUBLESHOOTING
+---------------
+
+"Python not found":
+   - Reinstall Python and check "Add to PATH"
+   - Restart Command Prompt
+
+"PyQt6 not found":
+   - Run: pip install PyQt6
+
+"Build failed":
+   - Make sure all files are in the same folder
+   - Check that RocCityPickleball_4k.png exists
+
+"Executable won't run":
+   - Make sure RocCityPickleball_4k.png is next to the .exe
+   - Try running as Administrator
+
+
+BACKUP INSTRUCTIONS
+-------------------
+
+To backup league data:
+   - Copy "ladder_league_data.json" to a safe location
+   - This file contains all players and match history
+
+To restore:
+   - Place the backup .json file next to the .exe
+   - Restart the application

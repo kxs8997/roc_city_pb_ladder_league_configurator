@@ -1,0 +1,151 @@
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║     ROC CITY PICKLEBALL - LADDER LEAGUE CONFIGURATOR       ║
+║                    QUICK START GUIDE                       ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+📋 WHAT YOU HAVE
+─────────────────────────────────────────────────────────────
+✓ ladder_league.py          - Main application (PyQt6)
+✓ requirements.txt          - Python dependencies
+✓ build_exe.bat            - Build Windows executable
+✓ run_app.bat              - Quick test launcher
+✓ test_logic.py            - Algorithm validation tests
+✓ RocCityPickleball_4k.png - Club logo
+✓ README.md                - Full documentation
+✓ INSTALLATION_GUIDE.txt   - Step-by-step setup
+✓ TESTING_CHECKLIST.md     - Complete testing guide
+
+
+🚀 NEXT STEPS (Choose One Path)
+─────────────────────────────────────────────────────────────
+
+PATH A: BUILD EXECUTABLE (Recommended for Club PC)
+───────────────────────────────────────────────────
+1. Install Python 3.10+ from https://www.python.org/downloads/
+   ⚠️  CHECK "Add Python to PATH" during install!
+
+2. Double-click: build_exe.bat
+   (It will auto-install dependencies and build)
+
+3. Find your executable:
+   📁 dist\ROC_City_Ladder_League.exe
+
+4. Deploy to club PC:
+   - Copy ROC_City_Ladder_League.exe
+   - Copy RocCityPickleball_4k.png
+   - Put in same folder
+   - Double-click to run!
+
+
+PATH B: RUN FROM SOURCE (For Testing/Development)
+───────────────────────────────────────────────────
+1. Install Python 3.10+ (same as above)
+
+2. Open Command Prompt in this folder
+
+3. Install dependencies:
+   python -m pip install -r requirements.txt
+
+4. Run the app:
+   python ladder_league.py
+   
+   OR just double-click: run_app.bat
+
+
+🧪 VALIDATE THE ALGORITHM
+─────────────────────────────────────────────────────────────
+Before building, you can test the core logic:
+
+   python test_logic.py
+
+This runs 5 automated tests without needing PyQt6:
+  ✓ Player management
+  ✓ Round generation
+  ✓ Rotation fairness
+  ✓ Edge cases
+  ✓ Matchup tracking
+
+
+📖 HOW IT WORKS
+─────────────────────────────────────────────────────────────
+LADDER LEAGUE CONCEPT:
+• 4 courts available
+• Each round assigns 4 players per court (2v2 doubles)
+• Minimum 8 players needed (fills 2 courts)
+• Optimal: 16+ players (fills all 4 courts)
+
+SMART ROTATION:
+• Tracks which courts each player has used
+• Tracks who has played together/against whom
+• Assigns players to minimize repetition
+• Fair distribution over multiple rounds
+
+TYPICAL SESSION:
+1. Add all players (one-time setup)
+2. Generate round → players assigned to courts
+3. Play matches
+4. Generate next round → new assignments
+5. Repeat!
+
+
+💾 DATA STORAGE
+─────────────────────────────────────────────────────────────
+All data auto-saves to: ladder_league_data.json
+
+Contains:
+• Player roster
+• Match history (who played with whom)
+• Court history (who played on which courts)
+
+⚠️  BACKUP THIS FILE to preserve your league data!
+
+
+🎯 FEATURES AT A GLANCE
+─────────────────────────────────────────────────────────────
+PLAYERS TAB:
+• Add/remove players
+• View current roster
+• Reset match history (new season)
+
+SCHEDULE ROUND TAB:
+• One-click round generation
+• Shows all 4 courts with team assignments
+• Lists players sitting out (if >16 players)
+
+STATISTICS TAB:
+• Court usage per player
+• Matchup frequency
+• Total rounds played
+
+
+⚠️  TROUBLESHOOTING
+─────────────────────────────────────────────────────────────
+"Python not found"
+→ Install Python, check "Add to PATH", restart terminal
+
+"PyQt6 not found"
+→ Run: python -m pip install -r requirements.txt
+
+"Need at least 8 players"
+→ Add more players to your roster
+
+"Logo not showing"
+→ Ensure RocCityPickleball_4k.png is in same folder as .exe
+
+"Data disappeared"
+→ Check for ladder_league_data.json backup
+
+
+📞 SUPPORT
+─────────────────────────────────────────────────────────────
+For issues or questions, contact the developer who created
+this tool for your club.
+
+All source code is included - feel free to customize!
+
+
+═══════════════════════════════════════════════════════════
+              Ready to organize your ladder league!
+═══════════════════════════════════════════════════════════

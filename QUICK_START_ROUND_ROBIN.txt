@@ -1,0 +1,172 @@
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║     ROC CITY PICKLEBALL - ROUND ROBIN LEAGUE MANAGER       ║
+║                    QUICK START GUIDE                       ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+📋 WHAT'S NEW - ROUND ROBIN SYSTEM
+─────────────────────────────────────────────────────────────
+This is a COMPLETE REDESIGN based on your requirements:
+
+✓ Handles 12-28 players (3-4 courts dynamically)
+✓ Smart sit-out rotation (no one sits 2 rounds in a row)
+✓ Ensures minimum 5 games per player in 8-9 rounds
+✓ Point tracking with fair ranking system
+✓ Rankings based on minimum games only
+✓ Point differential tie-breaker
+
+
+🎯 HOW IT WORKS
+─────────────────────────────────────────────────────────────
+
+PLAYER COUNTS & COURTS:
+• 12-15 players → 3 courts (12 play, rest sit)
+• 16-28 players → 4 courts (16 play, rest sit)
+
+SIT-OUT ROTATION:
+• Players who played last round sit first
+• Players with more games sit before those with fewer
+• NO ONE sits 2 rounds consecutively (enforced)
+
+GAME MINIMUMS (8-9 rounds):
+• 16 players: Everyone plays 8-9 games
+• 20 players: Everyone plays 6-7 games  
+• 24 players: Everyone plays 5-6 games
+• 28 players: 24 play 5 games, 4 play 6 games
+
+RANKINGS:
+• Based on points scored in MINIMUM games only
+• Example: If min is 5 games, only first 5 count
+• Tie-breaker: Point differential
+• Fair for everyone regardless of total games played
+
+
+🚀 RUNNING A SESSION
+─────────────────────────────────────────────────────────────
+
+STEP 1: Setup Players (One-Time)
+   • Players tab → Add all league members
+   • Or use "Load Demo Players (24)" for testing
+
+STEP 2: Generate Rounds (Before Session)
+   • Rounds tab → Click "Generate Next Round" 8-9 times
+   • View all court assignments
+   • Print or display for players
+
+STEP 3: Enter Scores (During Session)
+   • Enter Scores tab → Click "Enter Score" for each game
+   • Enter Team 1 and Team 2 scores
+   • System tracks everything automatically
+
+STEP 4: View Rankings (Anytime)
+   • Rankings tab → Click "Refresh Rankings"
+   • See current standings with point differential
+   • Rankings update in real-time as scores entered
+
+STEP 5: New Session (Next Week)
+   • Session tab → Click "Start New Session"
+   • Clears rounds/scores, keeps players
+   • Ready for next week!
+
+
+📊 EXAMPLE: 24 PLAYERS, 9 ROUNDS
+─────────────────────────────────────────────────────────────
+
+Round 1: 16 play, 8 sit (Group A sits)
+Round 2: 16 play, 8 sit (Group B sits - Group A must play)
+Round 3: 16 play, 8 sit (Group A sits again - allowed now)
+... continue for 9 rounds ...
+
+Result: Everyone plays 5-6 games
+Rankings: Based on first 5 games only
+
+
+💾 FILES & DATA
+─────────────────────────────────────────────────────────────
+
+EXECUTABLE:
+   dist\ROC_City_Round_Robin.exe
+
+DATA FILE:
+   round_robin_data.json (auto-saved)
+   
+BACKUP:
+   Copy .json file weekly to preserve history
+
+OLD VERSION:
+   ladder_league_old.py (simple ladder league - backup)
+
+
+🎮 DEMO MODE
+─────────────────────────────────────────────────────────────
+
+Test with realistic scenarios:
+
+1. Load Demo Players (24)
+2. Generate 9 rounds
+3. Enter random scores
+4. Check Rankings tab
+5. Verify sit-out rotation in Rounds tab
+
+
+⚙️ KEY FEATURES
+─────────────────────────────────────────────────────────────
+
+ROUNDS TAB:
+• Generate rounds one at a time
+• See who's playing on which court
+• See who's sitting out each round
+• View all rounds at once
+
+ENTER SCORES TAB:
+• Table of all games
+• "Enter Score" button for incomplete games
+• Shows completed games with scores
+• Easy dialog for score entry
+
+RANKINGS TAB:
+• Real-time standings
+• Games played vs counted games
+• Total points (from counted games)
+• Point differential (green/red)
+
+SESSION TAB:
+• Session statistics
+• Start new session button
+• Preserves player roster
+
+
+🔧 DEPLOYMENT
+─────────────────────────────────────────────────────────────
+
+FOR CLUB PC:
+1. Copy dist\ROC_City_Round_Robin.exe
+2. Copy RocCityPickleball_4k.png (same folder)
+3. Double-click .exe to run
+4. No Python needed!
+
+
+📖 FULL DOCUMENTATION
+─────────────────────────────────────────────────────────────
+
+See README_ROUND_ROBIN.md for:
+• Detailed algorithm explanation
+• Session planning examples
+• Troubleshooting guide
+• Tips for league organizers
+
+
+⚠️ IMPORTANT NOTES
+─────────────────────────────────────────────────────────────
+
+• Generate ALL rounds before session starts
+• Enter scores promptly for accurate rankings
+• Backup .json file before starting new session
+• Minimum 12 players required (3 courts)
+• Maximum tested: 28 players (4 courts)
+
+
+═══════════════════════════════════════════════════════════
+           Ready to run your round-robin league!
+═══════════════════════════════════════════════════════════
