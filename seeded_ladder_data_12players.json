@@ -1,0 +1,69 @@
+{
+  "players": [
+    "Alex Martinez",
+    "Blake Johnson",
+    "Casey Williams",
+    "Drew Anderson",
+    "Emma Thompson",
+    "Frank Garcia",
+    "Grace Miller",
+    "Henry Davis",
+    "Iris Rodriguez",
+    "Jack Wilson",
+    "Kelly Moore",
+    "Logan Taylor"
+  ],
+  "session_rounds": [],
+  "current_session": 1,
+  "player_stats": {
+    "Alex Martinez": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Blake Johnson": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Casey Williams": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Drew Anderson": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Emma Thompson": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Frank Garcia": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Grace Miller": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Henry Davis": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Iris Rodriguez": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Jack Wilson": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Kelly Moore": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []},
+    "Logan Taylor": {"games_played": 0, "total_points": 0, "total_points_against": 0, "rounds_sat_out": 0, "last_sat_out_round": -2, "game_scores": []}
+  },
+  "session_history": [],
+  "player_tiers": {
+    "Alex Martinez": 1,
+    "Blake Johnson": 1,
+    "Casey Williams": 1,
+    "Drew Anderson": 2,
+    "Emma Thompson": 2,
+    "Frank Garcia": 2,
+    "Grace Miller": 3,
+    "Henry Davis": 3,
+    "Iris Rodriguez": 3,
+    "Jack Wilson": 4,
+    "Kelly Moore": 4,
+    "Logan Taylor": 4
+  },
+  "is_seeding_session": false,
+  "player_numbers": {
+    "Alex Martinez": 1,
+    "Blake Johnson": 2,
+    "Casey Williams": 3,
+    "Drew Anderson": 4,
+    "Emma Thompson": 5,
+    "Frank Garcia": 6,
+    "Grace Miller": 7,
+    "Henry Davis": 8,
+    "Iris Rodriguez": 9,
+    "Jack Wilson": 10,
+    "Kelly Moore": 11,
+    "Logan Taylor": 12
+  },
+  "next_player_number": 13,
+  "tier_court_assignments": {
+    "1": [4],
+    "2": [3],
+    "3": [2],
+    "4": [1]
+  }
+}

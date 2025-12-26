@@ -23,146 +23,164 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-class RoundRobinLeague:
+class MixedDoublesLeague:
     def __init__(self):
-        self.players = []
+        self.teams = []  # List of team dicts: {'name': str, 'player1': str, 'player2': str}
         self.session_rounds = []
         self.current_session = 1
-        self.player_stats = {}
+        self.team_stats = {}  # Stats keyed by team name
         self.session_history = []
-        self.player_numbers = {}  # Map player name to assigned number
-        self.next_player_number = 1  # Track next available number
+        self.team_numbers = {}  # Map team name to assigned number
+        self.next_team_number = 1  # Track next available number
         
-    def add_player(self, name):
-        if name and name not in self.players:
-            self.players.append(name)
-            self.player_stats[name] = {
-                'games_played': 0,
-                'total_points': 0,
-                'total_points_against': 0,
-                'rounds_sat_out': 0,
-                'last_sat_out_round': -2,
-                'game_scores': []
-            }
-            # Assign player number
-            self.player_numbers[name] = self.next_player_number
-            self.next_player_number += 1
-            return True
-        return False
+    def add_team(self, player1, player2):
+        """Add a doubles team - team name is auto-generated from players"""
+        if not player1 or not player2:
+            return False
+        
+        # Auto-generate team name from player names
+        team_name = f"{player1} & {player2}"
+        
+        # Check if this exact pairing already exists
+        if team_name in [t['name'] for t in self.teams]:
+            return False
+            
+        team = {
+            'name': team_name,
+            'player1': player1,
+            'player2': player2
+        }
+        self.teams.append(team)
+        self.team_stats[team_name] = {
+            'games_played': 0,
+            'wins': 0,
+            'losses': 0,
+            'total_points': 0,
+            'total_points_against': 0,
+            'rounds_sat_out': 0,
+            'last_sat_out_round': -2,
+            'game_scores': []
+        }
+        # Assign team number
+        self.team_numbers[team_name] = self.next_team_number
+        self.next_team_number += 1
+        return True
     
-    def remove_player(self, name):
-        if name in self.players:
-            self.players.remove(name)
-            if name in self.player_stats:
-                del self.player_stats[name]
-            if name in self.player_numbers:
-                del self.player_numbers[name]
-            return True
+    def remove_team(self, team_name):
+        """Remove a team"""
+        for team in self.teams:
+            if team['name'] == team_name:
+                self.teams.remove(team)
+                if team_name in self.team_stats:
+                    del self.team_stats[team_name]
+                if team_name in self.team_numbers:
+                    del self.team_numbers[team_name]
+                return True
         return False
     
     def get_active_courts(self):
-        """Determine number of courts based on player count"""
-        player_count = len(self.players)
+        """Determine number of courts based on team count"""
+        team_count = len(self.teams)
         
-        if player_count >= 16:
+        if team_count >= 8:
             return 4
-        elif player_count >= 12:
+        elif team_count >= 6:
             return 3
-        elif player_count >= 8:
+        elif team_count >= 4:
             return 2
         else:
             return 1
     
-    def get_players_per_round(self):
-        """Calculate how many players play each round"""
-        return self.get_active_courts() * 4
+    def get_teams_per_round(self):
+        """Calculate how many teams play each round (2 teams per court)"""
+        return self.get_active_courts() * 2
     
-    def can_sit_out(self, player, current_round_num):
-        """Check if player can sit out this round (didn't sit out last round)"""
-        last_sat = self.player_stats[player]['last_sat_out_round']
+    def can_sit_out(self, team_name, current_round_num):
+        """Check if team can sit out this round (didn't sit out last round)"""
+        last_sat = self.team_stats[team_name]['last_sat_out_round']
         return (current_round_num - last_sat) > 1
     
-    def get_games_played(self, player):
-        """Get number of games played by player"""
-        return self.player_stats[player]['games_played']
+    def get_games_played(self, team_name):
+        """Get number of games played by team"""
+        return self.team_stats[team_name]['games_played']
     
-    def select_sitting_players(self, current_round_num):
-        """Select players to sit out, prioritizing those who haven't sat recently and have more games"""
+    def select_sitting_teams(self, current_round_num):
+        """Select teams to sit out, prioritizing those who haven't sat recently and have more games"""
         num_courts = self.get_active_courts()
-        players_per_round = num_courts * 4
-        num_sitting = len(self.players) - players_per_round
+        teams_per_round = num_courts * 2
+        num_sitting = len(self.teams) - teams_per_round
         
         if num_sitting <= 0:
             return []
         
-        # Score each player for sitting priority
+        # Score each team for sitting priority
         sit_scores = []
-        for player in self.players:
-            if not self.can_sit_out(player, current_round_num):
+        for team in self.teams:
+            team_name = team['name']
+            if not self.can_sit_out(team_name, current_round_num):
                 continue
             
-            games_played = self.get_games_played(player)
-            rounds_sat = self.player_stats[player]['rounds_sat_out']
-            last_sat = self.player_stats[player]['last_sat_out_round']
+            games_played = self.get_games_played(team_name)
+            rounds_sat = self.team_stats[team_name]['rounds_sat_out']
+            last_sat = self.team_stats[team_name]['last_sat_out_round']
             
             # Higher score = more likely to sit
             score = games_played * 10 - rounds_sat * 20 + (current_round_num - last_sat)
-            sit_scores.append((player, score))
+            sit_scores.append((team_name, score))
         
         # Sort by score (highest first) and select top num_sitting
         sit_scores.sort(key=lambda x: x[1], reverse=True)
-        sitting_players = [p for p, _ in sit_scores[:num_sitting]]
+        sitting_teams = [t for t, _ in sit_scores[:num_sitting]]
         
-        # If we don't have enough eligible players, force some to sit
-        if len(sitting_players) < num_sitting:
-            remaining = [p for p in self.players if p not in sitting_players]
+        # If we don't have enough eligible teams, force some to sit
+        if len(sitting_teams) < num_sitting:
+            remaining = [t['name'] for t in self.teams if t['name'] not in sitting_teams]
             random.shuffle(remaining)
-            sitting_players.extend(remaining[:num_sitting - len(sitting_players)])
+            sitting_teams.extend(remaining[:num_sitting - len(sitting_teams)])
         
-        return sitting_players
+        return sitting_teams
     
     def generate_round(self):
         """Generate a new round with proper sit-out rotation"""
         num_courts = self.get_active_courts()
         
-        if len(self.players) < num_courts * 4:
-            return None, f"Need at least {num_courts * 4} players for {num_courts} courts"
+        if len(self.teams) < num_courts * 2:
+            return None, f"Need at least {num_courts * 2} teams for {num_courts} courts"
         
         current_round_num = len(self.session_rounds) + 1
         
-        # Select who sits out
-        sitting_players = self.select_sitting_players(current_round_num)
+        # Select which teams sit out
+        sitting_teams = self.select_sitting_teams(current_round_num)
         
-        # Get playing players
-        playing_players = [p for p in self.players if p not in sitting_players]
-        random.shuffle(playing_players)
+        # Get playing teams
+        playing_teams = [t for t in self.teams if t['name'] not in sitting_teams]
+        random.shuffle(playing_teams)
         
-        # Assign to courts
+        # Assign to courts (2 teams per court)
         courts = []
         for court_num in range(1, num_courts + 1):
-            start_idx = (court_num - 1) * 4
-            court_players = playing_players[start_idx:start_idx + 4]
+            start_idx = (court_num - 1) * 2
+            court_teams = playing_teams[start_idx:start_idx + 2]
             
-            if len(court_players) == 4:
+            if len(court_teams) == 2:
                 courts.append({
                     'court': court_num,
-                    'players': court_players,
-                    'team1': court_players[:2],
-                    'team2': court_players[2:],
+                    'team1': court_teams[0],
+                    'team2': court_teams[1],
                     'team1_score': 0,
                     'team2_score': 0,
                     'completed': False
                 })
         
         # Update sit-out tracking
-        for player in sitting_players:
-            self.player_stats[player]['rounds_sat_out'] += 1
-            self.player_stats[player]['last_sat_out_round'] = current_round_num
+        for team_name in sitting_teams:
+            self.team_stats[team_name]['rounds_sat_out'] += 1
+            self.team_stats[team_name]['last_sat_out_round'] = current_round_num
         
         round_data = {
             'round_number': current_round_num,
             'courts': courts,
-            'sitting_players': sitting_players
+            'sitting_teams': sitting_teams
         }
         
         self.session_rounds.append(round_data)
@@ -187,63 +205,68 @@ class RoundRobinLeague:
         court['team2_score'] = team2_score
         court['completed'] = True
         
-        # Update player stats
-        for player in court['team1']:
-            self.player_stats[player]['games_played'] += 1
-            self.player_stats[player]['total_points'] += team1_score
-            self.player_stats[player]['total_points_against'] += team2_score
-            self.player_stats[player]['game_scores'].append({
-                'round': round_num,
-                'points_for': team1_score,
-                'points_against': team2_score
-            })
+        # Update team stats
+        team1_name = court['team1']['name']
+        team2_name = court['team2']['name']
         
-        for player in court['team2']:
-            self.player_stats[player]['games_played'] += 1
-            self.player_stats[player]['total_points'] += team2_score
-            self.player_stats[player]['total_points_against'] += team1_score
-            self.player_stats[player]['game_scores'].append({
-                'round': round_num,
-                'points_for': team2_score,
-                'points_against': team1_score
-            })
+        self.team_stats[team1_name]['games_played'] += 1
+        self.team_stats[team1_name]['total_points'] += team1_score
+        self.team_stats[team1_name]['total_points_against'] += team2_score
+        
+        self.team_stats[team2_name]['games_played'] += 1
+        self.team_stats[team2_name]['total_points'] += team2_score
+        self.team_stats[team2_name]['total_points_against'] += team1_score
+        
+        # Record wins/losses
+        if team1_score > team2_score:
+            self.team_stats[team1_name]['wins'] += 1
+            self.team_stats[team2_name]['losses'] += 1
+        else:
+            self.team_stats[team2_name]['wins'] += 1
+            self.team_stats[team1_name]['losses'] += 1
+        
+        # Store game score
+        self.team_stats[team1_name]['game_scores'].append({
+            'round': round_num,
+            'opponent': team2_name,
+            'score_for': team1_score,
+            'score_against': team2_score
+        })
+        self.team_stats[team2_name]['game_scores'].append({
+            'round': round_num,
+            'opponent': team1_name,
+            'score_for': team2_score,
+            'score_against': team1_score
+        })
         
         return True
     
     def get_rankings(self):
-        """Get player rankings based on points (counting only minimum games)"""
-        if not self.players:
-            return []
-        
-        # Find minimum games played
-        min_games = min(self.player_stats[p]['games_played'] for p in self.players)
-        
+        """Get team rankings based on wins and point differential"""
         rankings = []
-        for player in self.players:
-            stats = self.player_stats[player]
-            games_played = stats['games_played']
+        
+        for team in self.teams:
+            team_name = team['name']
+            stats = self.team_stats[team_name]
             
-            # Count only first min_games
-            points = 0
-            points_against = 0
-            for i, game in enumerate(stats['game_scores']):
-                if i < min_games:
-                    points += game['points_for']
-                    points_against += game['points_against']
-            
-            differential = points - points_against
+            differential = stats['total_points'] - stats['total_points_against']
+            win_percentage = (stats['wins'] / stats['games_played'] * 100) if stats['games_played'] > 0 else 0
             
             rankings.append({
-                'player': player,
-                'games_played': games_played,
-                'counted_games': min_games,
-                'points': points,
-                'points_against': points_against,
-                'differential': differential
+                'team': team_name,
+                'player1': team['player1'],
+                'player2': team['player2'],
+                'wins': stats['wins'],
+                'losses': stats['losses'],
+                'win_pct': win_percentage,
+                'points': stats['total_points'],
+                'points_against': stats['total_points_against'],
+                'differential': differential,
+                'games_played': stats['games_played']
             })
         
-        # Sort by points (desc), then differential (desc)
-        rankings.sort(key=lambda x: (x['points'], x['differential']), reverse=True)
+        # Sort by wins (descending), then differential (descending)
+        rankings.sort(key=lambda x: (x['wins'], x['differential']), reverse=True)
         
         return rankings
     
@@ -256,15 +279,18 @@ class RoundRobinLeague:
                 'date': datetime.now().strftime("%Y-%m-%d %H:%M"),
                 'rounds': self.session_rounds,
                 'rankings': self.get_rankings(),
-                'player_count': len(self.players)
+                'team_count': len(self.teams)
             }
             self.session_history.append(session_data)
         
         # Clear current session
         self.session_rounds = []
-        for player in self.players:
-            self.player_stats[player] = {
+        for team in self.teams:
+            team_name = team['name']
+            self.team_stats[team_name] = {
                 'games_played': 0,
+                'wins': 0,
+                'losses': 0,
                 'total_points': 0,
                 'total_points_against': 0,
                 'rounds_sat_out': 0,
@@ -276,9 +302,12 @@ class RoundRobinLeague:
     def clear_current_session(self):
         """Clear current session rounds and scores without saving to history"""
         self.session_rounds = []
-        for player in self.players:
-            self.player_stats[player] = {
+        for team in self.teams:
+            team_name = team['name']
+            self.team_stats[team_name] = {
                 'games_played': 0,
+                'wins': 0,
+                'losses': 0,
                 'total_points': 0,
                 'total_points_against': 0,
                 'rounds_sat_out': 0,
@@ -291,13 +320,16 @@ class RoundRobinLeague:
         self.session_history = []
     
     def reset_all(self):
-        """Reset everything except players"""
+        """Reset everything except teams"""
         self.session_rounds = []
         self.current_session = 1
         self.session_history = []
-        for player in self.players:
-            self.player_stats[player] = {
+        for team in self.teams:
+            team_name = team['name']
+            self.team_stats[team_name] = {
                 'games_played': 0,
+                'wins': 0,
+                'losses': 0,
                 'total_points': 0,
                 'total_points_against': 0,
                 'rounds_sat_out': 0,
@@ -306,24 +338,24 @@ class RoundRobinLeague:
             }
     
     def clear_all_data(self):
-        """Clear everything including players"""
-        self.players = []
+        """Clear everything including teams"""
+        self.teams = []
         self.session_rounds = []
         self.current_session = 1
-        self.player_stats = {}
+        self.team_stats = {}
         self.session_history = []
-        self.player_numbers = {}
-        self.next_player_number = 1
+        self.team_numbers = {}
+        self.next_team_number = 1
     
     def save_to_file(self, filename):
         data = {
-            'players': self.players,
+            'teams': self.teams,
             'session_rounds': self.session_rounds,
             'current_session': self.current_session,
-            'player_stats': self.player_stats,
+            'team_stats': self.team_stats,
             'session_history': self.session_history,
-            'player_numbers': self.player_numbers,
-            'next_player_number': self.next_player_number
+            'team_numbers': self.team_numbers,
+            'next_team_number': self.next_team_number
         }
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
@@ -332,13 +364,13 @@ class RoundRobinLeague:
         try:
             with open(filename, 'r') as f:
                 data = json.load(f)
-                self.players = data.get('players', [])
+                self.teams = data.get('teams', [])
                 self.session_rounds = data.get('session_rounds', [])
                 self.current_session = data.get('current_session', 1)
-                self.player_stats = data.get('player_stats', {})
+                self.team_stats = data.get('team_stats', {})
                 self.session_history = data.get('session_history', [])
-                self.player_numbers = data.get('player_numbers', {})
-                self.next_player_number = data.get('next_player_number', 1)
+                self.team_numbers = data.get('team_numbers', {})
+                self.next_team_number = data.get('next_team_number', 1)
             return True
         except:
             return False
@@ -384,10 +416,8 @@ class BigScreenDisplay(QWidget):
             logo_label.setPixmap(scaled_pixmap)
             header_layout.addWidget(logo_label)
         
-        # Title container
+        # Title, round number, and date/time
         title_container = QVBoxLayout()
-        
-        # Title
         self.title_label = QLabel('CURRENT ROUND')
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_font = QFont()
@@ -397,7 +427,6 @@ class BigScreenDisplay(QWidget):
         self.title_label.setStyleSheet("color: #00d4ff;")
         title_container.addWidget(self.title_label)
         
-        # Round number
         self.round_label = QLabel()
         self.round_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         round_font = QFont()
@@ -514,7 +543,7 @@ class BigScreenDisplay(QWidget):
         self.courts_layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.courts_widget, 1)
         
-        # Sitting players at bottom
+        # Sitting teams at bottom
         self.sitting_label = QLabel()
         self.sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.sitting_label.setWordWrap(True)
@@ -598,11 +627,11 @@ class BigScreenDisplay(QWidget):
             court_widget = self.create_court_widget(court_data)
             self.courts_layout.addWidget(court_widget)
         
-        # Display sitting players
-        if current_round['sitting_players']:
+        # Display sitting teams
+        if current_round.get('sitting_teams'):
             sitting_text = "SITTING OUT: " + " • ".join([
-                f"#{self.league.player_numbers.get(p, '?')} {p}" 
-                for p in current_round['sitting_players']
+                f"#{self.league.team_numbers.get(team_name, '?')} {team_name}" 
+                for team_name in current_round['sitting_teams']
             ])
             self.sitting_label.setText(sitting_text)
             self.sitting_label.show()
@@ -629,7 +658,7 @@ class BigScreenDisplay(QWidget):
         layout.setSpacing(15)
         layout.setContentsMargins(10, 8, 10, 8)
         
-        # Court number - compact sizing with responsive font
+        # Court number - compact sizing
         court_font_size = int(self.screen_height * 0.022)
         court_label = QLabel(f"COURT\n{court_data['court']}")
         court_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -650,13 +679,9 @@ class BigScreenDisplay(QWidget):
         teams_layout = QHBoxLayout()
         teams_layout.setSpacing(10)
         
-        # Team 1 - horizontal display
-        team1_players = []
-        for player in court_data['team1']:
-            player_num = self.league.player_numbers.get(player, '?')
-            team1_players.append(f"#{player_num} {player}")
-        
-        team1_label = QLabel(" & ".join(team1_players))
+        # Team 1
+        team1_num = self.league.team_numbers.get(court_data['team1']['name'], '?')
+        team1_label = QLabel(f"#{team1_num}  {court_data['team1']['player1']} & {court_data['team1']['player2']}")
         team1_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         name_font = QFont()
         name_font.setPointSize(int(self.screen_height * 0.02))
@@ -675,13 +700,9 @@ class BigScreenDisplay(QWidget):
         vs_label.setStyleSheet("color: #ff6b6b; padding: 5px 15px;")
         teams_layout.addWidget(vs_label, 0)
         
-        # Team 2 - horizontal display
-        team2_players = []
-        for player in court_data['team2']:
-            player_num = self.league.player_numbers.get(player, '?')
-            team2_players.append(f"#{player_num} {player}")
-        
-        team2_label = QLabel(" & ".join(team2_players))
+        # Team 2
+        team2_num = self.league.team_numbers.get(court_data['team2']['name'], '?')
+        team2_label = QLabel(f"#{team2_num}  {court_data['team2']['player1']} & {court_data['team2']['player2']}")
         team2_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         team2_label.setFont(name_font)
         team2_label.setStyleSheet("color: #f39c12; padding: 5px;")
@@ -690,7 +711,7 @@ class BigScreenDisplay(QWidget):
         layout.addLayout(teams_layout, 1)
         
         # Score (if completed)
-        if court_data.get('completed', False):
+        if court_data['completed']:
             score_label = QLabel(f"{court_data['team1_score']}\n-\n{court_data['team2_score']}")
             score_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             score_font = QFont()
@@ -719,9 +740,12 @@ class ScoreDialog(QDialog):
         
         form = QFormLayout()
         
-        team1_label = QLabel(f"Team 1: {team1[0]} & {team1[1]}")
-        team1_label.setStyleSheet("font-weight: bold;")
+        team1_label = QLabel(f"Team 1: {team1['name']}")
+        team1_label.setStyleSheet("font-weight: bold; font-size: 12pt;")
         form.addRow(team1_label)
+        
+        players1_label = QLabel(f"   {team1['player1']} & {team1['player2']}")
+        form.addRow(players1_label)
         
         self.team1_score = QSpinBox()
         self.team1_score.setRange(0, 99)
@@ -730,18 +754,23 @@ class ScoreDialog(QDialog):
         
         form.addRow(QLabel(""))
         
-        team2_label = QLabel(f"Team 2: {team2[0]} & {team2[1]}")
-        team2_label.setStyleSheet("font-weight: bold;")
+        team2_label = QLabel(f"Team 2: {team2['name']}")
+        team2_label.setStyleSheet("font-weight: bold; font-size: 12pt;")
         form.addRow(team2_label)
+        
+        players2_label = QLabel(f"   {team2['player1']} & {team2['player2']}")
+        form.addRow(players2_label)
         
         self.team2_score = QSpinBox()
         self.team2_score.setRange(0, 99)
-        self.team2_score.setValue(0)
+        self.team2_score.setValue(9)
         form.addRow("Team 2 Score:", self.team2_score)
         
         layout.addLayout(form)
         
-        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -753,8 +782,8 @@ class ScoreDialog(QDialog):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.league = RoundRobinLeague()
-        self.data_file = Path('round_robin_data.json')
+        self.league = MixedDoublesLeague()
+        self.data_file = Path('mixed_doubles_data.json')
         
         if self.data_file.exists():
             self.league.load_from_file(self.data_file)
@@ -762,8 +791,8 @@ class MainWindow(QMainWindow):
         self.init_ui()
     
     def init_ui(self):
-        self.setWindowTitle('ROC City Pickleball - Round Robin League Manager')
-        self.setGeometry(100, 100, 1100, 800)
+        self.setWindowTitle('ROC City Pickleball - Doubles League Manager')
+        self.setGeometry(100, 100, 1200, 800)
         
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -778,7 +807,7 @@ class MainWindow(QMainWindow):
             logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             main_layout.addWidget(logo_label)
         
-        title_label = QLabel('Round Robin League Manager')
+        title_label = QLabel('Doubles League Manager')
         title_font = QFont()
         title_font.setPointSize(16)
         title_font.setBold(True)
@@ -786,93 +815,130 @@ class MainWindow(QMainWindow):
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(title_label)
         
+        subtitle_label = QLabel('Teams Stay Together')
+        subtitle_font = QFont()
+        subtitle_font.setPointSize(10)
+        subtitle_font.setItalic(True)
+        subtitle_label.setFont(subtitle_font)
+        subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        main_layout.addWidget(subtitle_label)
+        
         self.status_label = QLabel('Ready')
         main_layout.addWidget(self.status_label)
         
         tabs = QTabWidget()
         main_layout.addWidget(tabs)
         
-        tabs.addTab(self.create_players_tab(), 'Players')
-        tabs.addTab(self.create_player_numbers_tab(), 'Player Numbers')
+        tabs.addTab(self.create_teams_tab(), 'Teams')
+        tabs.addTab(self.create_team_numbers_tab(), 'Team Numbers')
         tabs.addTab(self.create_rounds_tab(), 'Rounds')
         tabs.addTab(self.create_scores_tab(), 'Enter Scores')
         tabs.addTab(self.create_rankings_tab(), 'Rankings')
         tabs.addTab(self.create_history_tab(), 'History')
         tabs.addTab(self.create_session_tab(), 'Session')
     
-    def create_players_tab(self):
+    def create_teams_tab(self):
         widget = QWidget()
         layout = QVBoxLayout(widget)
         
-        add_group = QGroupBox('Add Player')
-        add_layout = QHBoxLayout()
+        add_group = QGroupBox('Add Doubles Team')
+        add_layout = QVBoxLayout()
         
-        self.player_name_input = QLineEdit()
-        self.player_name_input.setPlaceholderText('Enter player name')
-        self.player_name_input.returnPressed.connect(self.add_player)
-        add_layout.addWidget(self.player_name_input)
+        info_label = QLabel('Enter both player names (team name will be auto-generated)')
+        info_label.setStyleSheet('font-style: italic; color: #666;')
+        add_layout.addWidget(info_label)
         
-        add_btn = QPushButton('Add Player')
-        add_btn.clicked.connect(self.add_player)
+        player1_layout = QHBoxLayout()
+        player1_layout.addWidget(QLabel('Player 1:'))
+        self.player1_input = QLineEdit()
+        self.player1_input.setPlaceholderText('First player name')
+        self.player1_input.returnPressed.connect(lambda: self.player2_input.setFocus())
+        player1_layout.addWidget(self.player1_input)
+        add_layout.addLayout(player1_layout)
+        
+        player2_layout = QHBoxLayout()
+        player2_layout.addWidget(QLabel('Player 2:'))
+        self.player2_input = QLineEdit()
+        self.player2_input.setPlaceholderText('Second player name')
+        self.player2_input.returnPressed.connect(self.add_team)
+        player2_layout.addWidget(self.player2_input)
+        add_layout.addLayout(player2_layout)
+        
+        add_btn = QPushButton('Add Team')
+        add_btn.clicked.connect(self.add_team)
+        add_btn.setStyleSheet('QPushButton { background-color: #4CAF50; color: white; padding: 8px; }')
         add_layout.addWidget(add_btn)
         
         add_group.setLayout(add_layout)
         layout.addWidget(add_group)
         
-        players_group = QGroupBox('Current Players')
-        players_layout = QVBoxLayout()
+        teams_group = QGroupBox('Current Teams')
+        teams_layout = QVBoxLayout()
         
-        self.players_list = QListWidget()
-        self.update_players_list()
-        players_layout.addWidget(self.players_list)
+        self.teams_list = QListWidget()
+        self.update_teams_list()
+        teams_layout.addWidget(self.teams_list)
         
-        remove_btn = QPushButton('Remove Selected Player')
-        remove_btn.clicked.connect(self.remove_player)
-        players_layout.addWidget(remove_btn)
+        remove_btn = QPushButton('Remove Selected Team')
+        remove_btn.clicked.connect(self.remove_team)
+        remove_btn.setStyleSheet('QPushButton { background-color: #f44336; color: white; padding: 8px; }')
+        teams_layout.addWidget(remove_btn)
         
-        players_group.setLayout(players_layout)
-        layout.addWidget(players_group)
+        teams_group.setLayout(teams_layout)
+        layout.addWidget(teams_group)
         
-        buttons_layout = QHBoxLayout()
+        demo_group = QGroupBox('Demo Teams')
+        demo_layout = QHBoxLayout()
         
-        demo_btn = QPushButton('Load Demo Players (16)')
-        demo_btn.clicked.connect(self.load_demo_players)
-        demo_btn.setStyleSheet('QPushButton { background-color: #4CAF50; color: white; padding: 8px; }')
-        buttons_layout.addWidget(demo_btn)
+        demo_8_btn = QPushButton('8 Teams\n(4 courts)')
+        demo_8_btn.clicked.connect(lambda: self.load_demo_teams(8))
+        demo_8_btn.setStyleSheet('QPushButton { background-color: #2196F3; color: white; padding: 8px; }')
+        demo_layout.addWidget(demo_8_btn)
         
-        demo_btn_24 = QPushButton('Load Demo Players (24)')
-        demo_btn_24.clicked.connect(lambda: self.load_demo_players(24))
-        demo_btn_24.setStyleSheet('QPushButton { background-color: #4CAF50; color: white; padding: 8px; }')
-        buttons_layout.addWidget(demo_btn_24)
+        demo_6_btn = QPushButton('6 Teams\n(3 courts)')
+        demo_6_btn.clicked.connect(lambda: self.load_demo_teams(6))
+        demo_6_btn.setStyleSheet('QPushButton { background-color: #2196F3; color: white; padding: 8px; }')
+        demo_layout.addWidget(demo_6_btn)
         
-        layout.addLayout(buttons_layout)
+        demo_10_btn = QPushButton('10 Teams\n(4 courts + sitouts)')
+        demo_10_btn.clicked.connect(lambda: self.load_demo_teams(10))
+        demo_10_btn.setStyleSheet('QPushButton { background-color: #2196F3; color: white; padding: 8px; }')
+        demo_layout.addWidget(demo_10_btn)
+        
+        demo_3_btn = QPushButton('3 Teams\n(1-2 courts)')
+        demo_3_btn.clicked.connect(lambda: self.load_demo_teams(3))
+        demo_3_btn.setStyleSheet('QPushButton { background-color: #2196F3; color: white; padding: 8px; }')
+        demo_layout.addWidget(demo_3_btn)
+        
+        demo_group.setLayout(demo_layout)
+        layout.addWidget(demo_group)
         
         return widget
     
-    def create_player_numbers_tab(self):
+    def create_team_numbers_tab(self):
         widget = QWidget()
         layout = QVBoxLayout(widget)
         
-        info_label = QLabel('Player Number Assignments')
+        info_label = QLabel('Team Number Assignments')
         info_font = QFont()
         info_font.setPointSize(12)
         info_font.setBold(True)
         info_label.setFont(info_font)
         layout.addWidget(info_label)
         
-        description = QLabel('Each player is assigned a unique number for easy identification during play.')
+        description = QLabel('Each team is assigned a unique number for easy identification during play.')
         description.setWordWrap(True)
         layout.addWidget(description)
         
-        self.player_numbers_table = QTableWidget()
-        self.player_numbers_table.setColumnCount(2)
-        self.player_numbers_table.setHorizontalHeaderLabels(['Number', 'Player Name'])
-        self.player_numbers_table.horizontalHeader().setStretchLastSection(True)
-        self.player_numbers_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        self.player_numbers_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-        layout.addWidget(self.player_numbers_table)
+        self.team_numbers_table = QTableWidget()
+        self.team_numbers_table.setColumnCount(3)
+        self.team_numbers_table.setHorizontalHeaderLabels(['Number', 'Team Name', 'Players'])
+        self.team_numbers_table.horizontalHeader().setStretchLastSection(True)
+        self.team_numbers_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.team_numbers_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        layout.addWidget(self.team_numbers_table)
         
-        self.update_player_numbers_table()
+        self.update_team_numbers_table()
         
         return widget
     
@@ -880,81 +946,44 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         layout = QVBoxLayout(widget)
         
-        info_label = QLabel('Generate rounds for your session. Players will rotate through courts\n'
-                           'and sit-outs to ensure everyone plays minimum 5 games.')
-        info_label.setWordWrap(True)
-        layout.addWidget(info_label)
+        btn_layout = QHBoxLayout()
         
-        gen_layout = QHBoxLayout()
-        generate_btn = QPushButton('Generate Next Round')
+        generate_btn = QPushButton('Generate New Round')
         generate_btn.clicked.connect(self.generate_round)
-        generate_btn.setStyleSheet('QPushButton { font-size: 14pt; padding: 10px; background-color: #88cc00; }')
-        gen_layout.addWidget(generate_btn)
+        generate_btn.setStyleSheet('QPushButton { background-color: #4CAF50; color: white; padding: 12px; font-size: 14pt; }')
+        btn_layout.addWidget(generate_btn)
         
         big_screen_btn = QPushButton('📺 Big Screen Display')
         big_screen_btn.clicked.connect(self.open_big_screen)
-        big_screen_btn.setStyleSheet('QPushButton { font-size: 14pt; padding: 10px; background-color: #2196F3; color: white; }')
-        gen_layout.addWidget(big_screen_btn)
+        big_screen_btn.setStyleSheet('QPushButton { font-size: 14pt; padding: 12px; background-color: #2196F3; color: white; }')
+        btn_layout.addWidget(big_screen_btn)
         
-        self.round_count_label = QLabel('Rounds: 0')
-        self.round_count_label.setStyleSheet('font-size: 14pt; font-weight: bold;')
-        gen_layout.addWidget(self.round_count_label)
-        
-        layout.addLayout(gen_layout)
+        layout.addLayout(btn_layout)
         
         self.rounds_display = QTextEdit()
         self.rounds_display.setReadOnly(True)
-        self.rounds_display.setStyleSheet('QTextEdit { font-family: Courier; font-size: 10pt; }')
         layout.addWidget(self.rounds_display)
+        
+        self.update_rounds_display()
         
         return widget
     
     def create_scores_tab(self):
         widget = QWidget()
-        layout = QHBoxLayout(widget)
+        layout = QVBoxLayout(widget)
         
-        # Left side: Scores table
-        left_widget = QWidget()
-        left_layout = QVBoxLayout(left_widget)
-        
-        info_label = QLabel('Enter scores for completed games')
-        left_layout.addWidget(info_label)
+        info_label = QLabel('Click on a game to enter scores')
+        info_label.setStyleSheet('font-size: 12pt; font-weight: bold;')
+        layout.addWidget(info_label)
         
         self.scores_table = QTableWidget()
         self.scores_table.setColumnCount(6)
-        self.scores_table.setHorizontalHeaderLabels(['Round', 'Court', 'Team 1', 'Team 2', 'Score', 'Action'])
+        self.scores_table.setHorizontalHeaderLabels(['Round', 'Court', 'Team 1', 'Team 2', 'Score', 'Status'])
         self.scores_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        left_layout.addWidget(self.scores_table)
+        self.scores_table.cellDoubleClicked.connect(self.enter_score)
+        layout.addWidget(self.scores_table)
         
-        refresh_btn = QPushButton('Refresh')
-        refresh_btn.clicked.connect(self.update_scores_table)
-        left_layout.addWidget(refresh_btn)
-        
-        layout.addWidget(left_widget, 3)
-        
-        # Right side: Player numbers reference
-        right_widget = QWidget()
-        right_layout = QVBoxLayout(right_widget)
-        
-        ref_label = QLabel('Player Numbers Reference')
-        ref_font = QFont()
-        ref_font.setPointSize(11)
-        ref_font.setBold(True)
-        ref_label.setFont(ref_font)
-        right_layout.addWidget(ref_label)
-        
-        self.scores_player_numbers_table = QTableWidget()
-        self.scores_player_numbers_table.setColumnCount(2)
-        self.scores_player_numbers_table.setHorizontalHeaderLabels(['#', 'Player'])
-        self.scores_player_numbers_table.horizontalHeader().setStretchLastSection(True)
-        self.scores_player_numbers_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        self.scores_player_numbers_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-        self.scores_player_numbers_table.verticalHeader().setVisible(False)
-        right_layout.addWidget(self.scores_player_numbers_table)
-        
-        self.update_scores_player_numbers()
-        
-        layout.addWidget(right_widget, 1)
+        self.update_scores_table()
         
         return widget
     
@@ -962,17 +991,18 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         layout = QVBoxLayout(widget)
         
-        info_label = QLabel('Player rankings based on points scored (counting minimum games only)')
-        layout.addWidget(info_label)
-        
-        self.rankings_table = QTableWidget()
-        self.rankings_table.setColumnCount(6)
-        self.rankings_table.setHorizontalHeaderLabels(['Rank', 'Player', 'Games', 'Counted', 'Points', 'Diff'])
-        layout.addWidget(self.rankings_table)
-        
         refresh_btn = QPushButton('Refresh Rankings')
         refresh_btn.clicked.connect(self.update_rankings)
+        refresh_btn.setStyleSheet('QPushButton { background-color: #2196F3; color: white; padding: 8px; }')
         layout.addWidget(refresh_btn)
+        
+        self.rankings_table = QTableWidget()
+        self.rankings_table.setColumnCount(8)
+        self.rankings_table.setHorizontalHeaderLabels(['Rank', 'Team', 'Players', 'Wins', 'Losses', 'Win %', 'Points +/-', 'Games'])
+        self.rankings_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        layout.addWidget(self.rankings_table)
+        
+        self.update_rankings()
         
         return widget
     
@@ -980,7 +1010,7 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         layout = QVBoxLayout(widget)
         
-        info_label = QLabel('Session History - View Past Results')
+        info_label = QLabel('Session History')
         info_label.setStyleSheet('font-size: 14pt; font-weight: bold;')
         layout.addWidget(info_label)
         
@@ -993,10 +1023,6 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.history_details)
         
         buttons_layout = QHBoxLayout()
-        
-        refresh_history_btn = QPushButton('Refresh')
-        refresh_history_btn.clicked.connect(self.update_history_list)
-        buttons_layout.addWidget(refresh_history_btn)
         
         export_btn = QPushButton('Export Selected Session')
         export_btn.clicked.connect(self.export_session)
@@ -1070,12 +1096,12 @@ class MainWindow(QMainWindow):
         clear_history_btn.setStyleSheet('QPushButton { background-color: #FF5722; color: white; padding: 6px; }')
         clear_buttons_layout.addWidget(clear_history_btn)
         
-        reset_all_btn = QPushButton('Reset All Data (Keep Players)')
+        reset_all_btn = QPushButton('Reset All Data (Keep Teams)')
         reset_all_btn.clicked.connect(self.reset_all_data)
         reset_all_btn.setStyleSheet('QPushButton { background-color: #E91E63; color: white; padding: 6px; }')
         clear_buttons_layout.addWidget(reset_all_btn)
         
-        clear_all_btn = QPushButton('Clear Everything (Including Players)')
+        clear_all_btn = QPushButton('Clear Everything (Including Teams)')
         clear_all_btn.clicked.connect(self.clear_everything)
         clear_all_btn.setStyleSheet('QPushButton { background-color: #D32F2F; color: white; padding: 6px; font-weight: bold; }')
         clear_buttons_layout.addWidget(clear_all_btn)
@@ -1090,107 +1116,69 @@ class MainWindow(QMainWindow):
         
         return widget
     
-    def add_player(self):
-        name = self.player_name_input.text().strip()
-        if self.league.add_player(name):
-            self.player_name_input.clear()
-            self.update_players_list()
-            self.update_player_numbers_table()
-            self.update_scores_player_numbers()
+    def add_team(self):
+        player1 = self.player1_input.text().strip()
+        player2 = self.player2_input.text().strip()
+        
+        if not player1 or not player2:
+            QMessageBox.warning(self, 'Error', 'Please enter both player names')
+            return
+        
+        if self.league.add_team(player1, player2):
+            self.player1_input.clear()
+            self.player2_input.clear()
+            self.player1_input.setFocus()
+            self.update_teams_list()
+            self.update_team_numbers_table()
             self.save_data()
-            self.status_label.setText(f'Added player: {name}')
+            self.status_label.setText(f'Added team: {player1} & {player2}')
         else:
-            QMessageBox.warning(self, 'Error', 'Player name is empty or already exists')
+            QMessageBox.warning(self, 'Error', 'This team pairing already exists')
     
-    def remove_player(self):
-        current_item = self.players_list.currentItem()
+    def remove_team(self):
+        current_item = self.teams_list.currentItem()
         if current_item:
-            display_text = current_item.text()
-            # Extract player name from "#X - Name" format
-            name = display_text.split(' - ', 1)[1] if ' - ' in display_text else display_text
-            if self.league.remove_player(name):
-                self.update_players_list()
-                self.update_player_numbers_table()
-                self.update_scores_player_numbers()
+            # Extract team name from "#X - Team Name - Players" format
+            parts = current_item.text().split(' - ')
+            team_name = parts[1] if len(parts) > 1 else parts[0]
+            if self.league.remove_team(team_name):
+                self.update_teams_list()
+                self.update_team_numbers_table()
                 self.save_data()
-                self.status_label.setText(f'Removed player: {name}')
+                self.status_label.setText(f'Removed team: {team_name}')
     
-    def update_players_list(self):
-        self.players_list.clear()
-        for player in sorted(self.league.players):
-            player_num = self.league.player_numbers.get(player, '?')
-            self.players_list.addItem(f"#{player_num} - {player}")
+    def update_teams_list(self):
+        self.teams_list.clear()
+        for team in sorted(self.league.teams, key=lambda t: t['name']):
+            team_num = self.league.team_numbers.get(team['name'], '?')
+            item_text = f"#{team_num} - {team['name']} - {team['player1']} & {team['player2']}"
+            self.teams_list.addItem(item_text)
         
         num_courts = self.league.get_active_courts()
-        self.status_label.setText(f'Total players: {len(self.league.players)} | Active courts: {num_courts}')
+        self.status_label.setText(f'Total teams: {len(self.league.teams)} | Active courts: {num_courts}')
     
-    def update_player_numbers_table(self):
-        # Sort players by their assigned number
-        sorted_players = sorted(self.league.players, key=lambda p: self.league.player_numbers.get(p, 999))
+    def update_team_numbers_table(self):
+        # Sort teams by their assigned number
+        sorted_teams = sorted(self.league.teams, key=lambda t: self.league.team_numbers.get(t['name'], 999))
         
-        self.player_numbers_table.setRowCount(len(sorted_players))
+        self.team_numbers_table.setRowCount(len(sorted_teams))
         
-        for i, player in enumerate(sorted_players):
-            player_num = self.league.player_numbers.get(player, '?')
+        for i, team in enumerate(sorted_teams):
+            team_num = self.league.team_numbers.get(team['name'], '?')
             
-            num_item = QTableWidgetItem(f"#{player_num}")
+            num_item = QTableWidgetItem(f"#{team_num}")
             num_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             num_font = QFont()
             num_font.setBold(True)
             num_font.setPointSize(11)
             num_item.setFont(num_font)
-            self.player_numbers_table.setItem(i, 0, num_item)
+            self.team_numbers_table.setItem(i, 0, num_item)
             
-            name_item = QTableWidgetItem(player)
-            self.player_numbers_table.setItem(i, 1, name_item)
-    
-    def update_scores_player_numbers(self):
-        # Sort players by their assigned number
-        sorted_players = sorted(self.league.players, key=lambda p: self.league.player_numbers.get(p, 999))
-        
-        self.scores_player_numbers_table.setRowCount(len(sorted_players))
-        
-        for i, player in enumerate(sorted_players):
-            player_num = self.league.player_numbers.get(player, '?')
+            name_item = QTableWidgetItem(team['name'])
+            self.team_numbers_table.setItem(i, 1, name_item)
             
-            num_item = QTableWidgetItem(f"#{player_num}")
-            num_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-            num_font = QFont()
-            num_font.setBold(True)
-            num_font.setPointSize(10)
-            num_item.setFont(num_font)
-            self.scores_player_numbers_table.setItem(i, 0, num_item)
-            
-            name_item = QTableWidgetItem(player)
-            self.scores_player_numbers_table.setItem(i, 1, name_item)
-    
-    def load_demo_players(self, count=16):
-        all_demo_players = [
-            "Alex Martinez", "Blake Johnson", "Casey Williams", "Drew Anderson",
-            "Emma Thompson", "Frank Garcia", "Grace Miller", "Henry Davis",
-            "Iris Rodriguez", "Jack Wilson", "Kelly Moore", "Logan Taylor",
-            "Maya Jackson", "Noah White", "Olivia Harris", "Parker Martin",
-            "Quinn Roberts", "Riley Cooper", "Sam Peterson", "Taylor Brooks",
-            "Uma Patel", "Victor Chen", "Willow Singh", "Xavier Lee"
-        ]
-        
-        demo_players = all_demo_players[:count]
-        
-        reply = QMessageBox.question(self, 'Load Demo Players', 
-                                     f'This will add {count} sample players for testing.\n'
-                                     'Current players will be kept.\n\nContinue?',
-                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        if reply == QMessageBox.StandardButton.Yes:
-            added_count = 0
-            for player in demo_players:
-                if self.league.add_player(player):
-                    added_count += 1
-            
-            self.update_players_list()
-            self.update_player_numbers_table()
-            self.update_scores_player_numbers()
-            self.save_data()
-            self.status_label.setText(f'Demo mode: Added {added_count} players')
+            players_item = QTableWidgetItem(f"{team['player1']} & {team['player2']}")
+            self.team_numbers_table.setItem(i, 2, players_item)
     
     def open_big_screen(self):
         if not self.league.session_rounds:
@@ -1200,9 +1188,35 @@ class MainWindow(QMainWindow):
         self.big_screen = BigScreenDisplay(self.league, self)
         self.big_screen.show()
     
+    def load_demo_teams(self, count=8):
+        demo_players = [
+            ('Alice', 'Bob'),
+            ('Carol', 'Dave'),
+            ('Eve', 'Frank'),
+            ('Grace', 'Henry'),
+            ('Ivy', 'Jack'),
+            ('Kate', 'Leo'),
+            ('Mia', 'Noah'),
+            ('Olivia', 'Paul'),
+            ('Quinn', 'Ryan'),
+            ('Sam', 'Taylor'),
+            ('Uma', 'Victor'),
+            ('Wendy', 'Xavier')
+        ]
+        
+        teams_to_add = demo_players[:count]
+        added_count = 0
+        for player1, player2 in teams_to_add:
+            if self.league.add_team(player1, player2):
+                added_count += 1
+        
+        self.update_teams_list()
+        self.update_team_numbers_table()
+        self.save_data()
+        self.status_label.setText(f'Demo mode: Added {added_count} teams')
+    
     def generate_round(self):
         round_data, error = self.league.generate_round()
-        
         if error:
             QMessageBox.warning(self, 'Cannot Generate Round', error)
             return
@@ -1213,116 +1227,125 @@ class MainWindow(QMainWindow):
         self.status_label.setText(f'Round {round_data["round_number"]} generated!')
     
     def update_rounds_display(self):
-        output = ''
+        if not self.league.session_rounds:
+            self.rounds_display.setText('No rounds generated yet.\n\nClick "Generate New Round" to start!')
+            return
+        
+        text = f"SESSION #{self.league.current_session}\n"
+        text += "=" * 70 + "\n\n"
         
         for round_data in self.league.session_rounds:
-            round_num = round_data['round_number']
-            output += f'\n{"=" * 60}\n'
-            output += f'ROUND {round_num}\n'
-            output += f'{"=" * 60}\n\n'
+            text += f"ROUND {round_data['round_number']}\n"
+            text += "-" * 40 + "\n"
             
             for court in round_data['courts']:
-                output += f'COURT {court["court"]}:\n'
-                # Add player numbers to team display
-                t1p1_num = self.league.player_numbers.get(court["team1"][0], '?')
-                t1p2_num = self.league.player_numbers.get(court["team1"][1], '?')
-                t2p1_num = self.league.player_numbers.get(court["team2"][0], '?')
-                t2p2_num = self.league.player_numbers.get(court["team2"][1], '?')
-                output += f'  Team 1: #{t1p1_num} {court["team1"][0]} & #{t1p2_num} {court["team1"][1]}\n'
-                output += f'  Team 2: #{t2p1_num} {court["team2"][0]} & #{t2p2_num} {court["team2"][1]}\n'
+                team1 = court['team1']
+                team2 = court['team2']
+                text += f"Court {court['court']}:\n"
+                text += f"  {team1['name']} ({team1['player1']} & {team1['player2']})\n"
+                text += f"    vs\n"
+                text += f"  {team2['name']} ({team2['player1']} & {team2['player2']})\n"
+                
                 if court['completed']:
-                    output += f'  Score: {court["team1_score"]} - {court["team2_score"]}\n'
-                output += '\n'
+                    text += f"  Final Score: {court['team1_score']} - {court['team2_score']}\n"
+                text += "\n"
             
-            if round_data['sitting_players']:
-                sitting_with_nums = [f"#{self.league.player_numbers.get(p, '?')} {p}" for p in round_data["sitting_players"]]
-                output += f'Sitting out: {", ".join(sitting_with_nums)}\n'
+            if round_data['sitting_teams']:
+                text += f"Sitting out: {', '.join(round_data['sitting_teams'])}\n"
+            text += "\n"
         
-        self.rounds_display.setText(output)
-        self.round_count_label.setText(f'Rounds: {len(self.league.session_rounds)}')
+        self.rounds_display.setText(text)
     
     def update_scores_table(self):
         self.scores_table.setRowCount(0)
         
         for round_data in self.league.session_rounds:
-            round_num = round_data['round_number']
             for court in round_data['courts']:
                 row = self.scores_table.rowCount()
                 self.scores_table.insertRow(row)
                 
-                self.scores_table.setItem(row, 0, QTableWidgetItem(str(round_num)))
+                self.scores_table.setItem(row, 0, QTableWidgetItem(str(round_data['round_number'])))
                 self.scores_table.setItem(row, 1, QTableWidgetItem(str(court['court'])))
-                # Add player numbers to scores table
-                t1p1_num = self.league.player_numbers.get(court['team1'][0], '?')
-                t1p2_num = self.league.player_numbers.get(court['team1'][1], '?')
-                t2p1_num = self.league.player_numbers.get(court['team2'][0], '?')
-                t2p2_num = self.league.player_numbers.get(court['team2'][1], '?')
-                self.scores_table.setItem(row, 2, QTableWidgetItem(f"#{t1p1_num} {court['team1'][0]} & #{t1p2_num} {court['team1'][1]}"))
-                self.scores_table.setItem(row, 3, QTableWidgetItem(f"#{t2p1_num} {court['team2'][0]} & #{t2p2_num} {court['team2'][1]}"))
+                
+                team1_text = f"{court['team1']['name']}"
+                team2_text = f"{court['team2']['name']}"
+                self.scores_table.setItem(row, 2, QTableWidgetItem(team1_text))
+                self.scores_table.setItem(row, 3, QTableWidgetItem(team2_text))
                 
                 if court['completed']:
                     score_text = f"{court['team1_score']} - {court['team2_score']}"
-                    self.scores_table.setItem(row, 4, QTableWidgetItem(score_text))
-                    self.scores_table.setItem(row, 5, QTableWidgetItem('Completed'))
+                    status_text = "Complete"
                 else:
-                    self.scores_table.setItem(row, 4, QTableWidgetItem(''))
-                    enter_btn = QPushButton('Enter Score')
-                    enter_btn.clicked.connect(lambda checked, r=round_num, c=court['court'], 
-                                             t1=court['team1'], t2=court['team2']: 
-                                             self.enter_score(r, c, t1, t2))
-                    self.scores_table.setCellWidget(row, 5, enter_btn)
+                    score_text = "-"
+                    status_text = "Pending"
+                
+                self.scores_table.setItem(row, 4, QTableWidgetItem(score_text))
+                self.scores_table.setItem(row, 5, QTableWidgetItem(status_text))
     
-    def enter_score(self, round_num, court_num, team1, team2):
-        dialog = ScoreDialog(round_num, court_num, team1, team2, self)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            team1_score, team2_score = dialog.get_scores()
-            if self.league.record_game_score(round_num, court_num, team1_score, team2_score):
-                self.update_scores_table()
-                self.update_rounds_display()
-                self.update_rankings()
-                self.save_data()
-                self.status_label.setText(f'Score recorded: Round {round_num}, Court {court_num}')
+    def enter_score(self, row, col):
+        round_num = int(self.scores_table.item(row, 0).text())
+        court_num = int(self.scores_table.item(row, 1).text())
+        
+        round_data = self.league.session_rounds[round_num - 1]
+        court = None
+        for c in round_data['courts']:
+            if c['court'] == court_num:
+                court = c
+                break
+        
+        if court and not court['completed']:
+            dialog = ScoreDialog(round_num, court_num, court['team1'], court['team2'], self)
+            if dialog.exec() == QDialog.DialogCode.Accepted:
+                team1_score, team2_score = dialog.get_scores()
+                if self.league.record_game_score(round_num, court_num, team1_score, team2_score):
+                    self.update_scores_table()
+                    self.update_rounds_display()
+                    self.update_rankings()
+                    self.save_data()
+                    self.status_label.setText(f'Score recorded: Round {round_num}, Court {court_num}')
     
     def update_rankings(self):
         rankings = self.league.get_rankings()
         
         self.rankings_table.setRowCount(len(rankings))
         
-        for i, rank_data in enumerate(rankings):
+        for i, rank in enumerate(rankings):
             self.rankings_table.setItem(i, 0, QTableWidgetItem(str(i + 1)))
-            # Add player number to rankings
-            player_num = self.league.player_numbers.get(rank_data['player'], '?')
-            self.rankings_table.setItem(i, 1, QTableWidgetItem(f"#{player_num} {rank_data['player']}"))
-            self.rankings_table.setItem(i, 2, QTableWidgetItem(str(rank_data['games_played'])))
-            self.rankings_table.setItem(i, 3, QTableWidgetItem(str(rank_data['counted_games'])))
-            self.rankings_table.setItem(i, 4, QTableWidgetItem(str(rank_data['points'])))
+            self.rankings_table.setItem(i, 1, QTableWidgetItem(rank['team']))
+            self.rankings_table.setItem(i, 2, QTableWidgetItem(f"{rank['player1']} & {rank['player2']}"))
+            self.rankings_table.setItem(i, 3, QTableWidgetItem(str(rank['wins'])))
+            self.rankings_table.setItem(i, 4, QTableWidgetItem(str(rank['losses'])))
+            self.rankings_table.setItem(i, 5, QTableWidgetItem(f"{rank['win_pct']:.1f}%"))
             
-            diff = rank_data['differential']
-            diff_text = f"+{diff}" if diff > 0 else str(diff)
-            diff_item = QTableWidgetItem(diff_text)
+            diff_item = QTableWidgetItem(f"{rank['differential']:+d}")
+            diff = rank['differential']
             if diff > 0:
                 diff_item.setForeground(QColor('green'))
             elif diff < 0:
                 diff_item.setForeground(QColor('red'))
-            self.rankings_table.setItem(i, 5, diff_item)
+            self.rankings_table.setItem(i, 6, diff_item)
+            
+            self.rankings_table.setItem(i, 7, QTableWidgetItem(str(rank['games_played'])))
     
     def update_session_info(self):
         info = f'Session #{self.league.current_session}\n'
         info += f'Total Rounds: {len(self.league.session_rounds)}\n'
-        info += f'Players: {len(self.league.players)}\n'
+        info += f'Teams: {len(self.league.teams)}\n'
         info += f'Active Courts: {self.league.get_active_courts()}\n\n'
         
-        if self.league.players:
-            min_games = min(self.league.player_stats[p]['games_played'] for p in self.league.players)
-            max_games = max(self.league.player_stats[p]['games_played'] for p in self.league.players)
-            info += f'Games played: {min_games} to {max_games}\n'
+        if self.league.teams:
+            games_counts = [self.league.team_stats[t['name']]['games_played'] for t in self.league.teams]
+            if games_counts:
+                min_games = min(games_counts)
+                max_games = max(games_counts)
+                info += f'Games played: {min_games} to {max_games}\n'
         
         self.session_info.setText(info)
     
     def update_history_list(self):
         self.history_list.clear()
         for session in reversed(self.league.session_history):
-            item_text = f"Session #{session['session_number']} - {session['date']} ({session['player_count']} players)"
+            item_text = f"Session #{session['session_number']} - {session['date']} ({session['team_count']} teams)"
             self.history_list.addItem(item_text)
     
     def show_history_details(self, item):
@@ -1338,17 +1361,18 @@ class MainWindow(QMainWindow):
         
         details = f"SESSION #{session['session_number']}\n"
         details += f"Date: {session['date']}\n"
-        details += f"Players: {session['player_count']}\n"
+        details += f"Teams: {session['team_count']}\n"
         details += f"Rounds: {len(session['rounds'])}\n\n"
         details += "=" * 60 + "\n"
         details += "FINAL RANKINGS\n"
         details += "=" * 60 + "\n\n"
         
         for i, rank in enumerate(session['rankings'], 1):
-            details += f"{i}. {rank['player']}\n"
-            details += f"   Points: {rank['points']} (from {rank['counted_games']} games)\n"
-            details += f"   Differential: {rank['differential']:+d}\n"
-            details += f"   Total Games: {rank['games_played']}\n\n"
+            details += f"{i}. {rank['team']}\n"
+            details += f"   Players: {rank['player1']} & {rank['player2']}\n"
+            details += f"   Record: {rank['wins']}-{rank['losses']} ({rank['win_pct']:.1f}%)\n"
+            details += f"   Point Differential: {rank['differential']:+d}\n"
+            details += f"   Games Played: {rank['games_played']}\n\n"
         
         self.history_details.setText(details)
     
@@ -1368,26 +1392,28 @@ class MainWindow(QMainWindow):
         if not session:
             return
         
-        filename = f"session_{session['session_number']}_{session['date'].replace(':', '-').replace(' ', '_')}.txt"
+        filename = f"mixed_doubles_session_{session['session_number']}_{session['date'].replace(':', '-').replace(' ', '_')}.txt"
         
         try:
             with open(filename, 'w') as f:
                 f.write("=" * 70 + "\n")
-                f.write(f"ROC CITY PICKLEBALL - SESSION #{session['session_number']}\n")
+                f.write(f"ROC CITY PICKLEBALL - MIXED DOUBLES SESSION #{session['session_number']}\n")
                 f.write("=" * 70 + "\n\n")
                 f.write(f"Date: {session['date']}\n")
-                f.write(f"Players: {session['player_count']}\n")
+                f.write(f"Teams: {session['team_count']}\n")
                 f.write(f"Rounds: {len(session['rounds'])}\n\n")
                 
                 f.write("=" * 70 + "\n")
                 f.write("FINAL RANKINGS\n")
                 f.write("=" * 70 + "\n\n")
-                f.write(f"{'Rank':<6} {'Player':<25} {'Points':<8} {'Diff':<8} {'Games':<6}\n")
+                f.write(f"{'Rank':<6} {'Team':<20} {'Players':<30} {'W-L':<8} {'Diff':<8}\n")
                 f.write("-" * 70 + "\n")
                 
                 for i, rank in enumerate(session['rankings'], 1):
+                    players = f"{rank['player1']} & {rank['player2']}"
+                    record = f"{rank['wins']}-{rank['losses']}"
                     diff_str = f"{rank['differential']:+d}"
-                    f.write(f"{i:<6} {rank['player']:<25} {rank['points']:<8} {diff_str:<8} {rank['games_played']:<6}\n")
+                    f.write(f"{i:<6} {rank['team']:<20} {players:<30} {record:<8} {diff_str:<8}\n")
                 
                 f.write("\n\n")
                 f.write("=" * 70 + "\n")
@@ -1398,15 +1424,18 @@ class MainWindow(QMainWindow):
                     f.write(f"\nROUND {round_data['round_number']}\n")
                     f.write("-" * 40 + "\n")
                     for court in round_data['courts']:
+                        team1 = court['team1']
+                        team2 = court['team2']
                         f.write(f"Court {court['court']}:\n")
-                        f.write(f"  Team 1: {court['team1'][0]} & {court['team1'][1]}\n")
-                        f.write(f"  Team 2: {court['team2'][0]} & {court['team2'][1]}\n")
+                        f.write(f"  {team1['name']} ({team1['player1']} & {team1['player2']})\n")
+                        f.write(f"    vs\n")
+                        f.write(f"  {team2['name']} ({team2['player1']} & {team2['player2']})\n")
                         if court['completed']:
                             f.write(f"  Score: {court['team1_score']} - {court['team2_score']}\n")
                         f.write("\n")
                     
-                    if round_data['sitting_players']:
-                        f.write(f"Sitting out: {', '.join(round_data['sitting_players'])}\n")
+                    if round_data['sitting_teams']:
+                        f.write(f"Sitting out: {', '.join(round_data['sitting_teams'])}\n")
                     f.write("\n")
             
             QMessageBox.information(self, 'Export Successful', 
@@ -1435,7 +1464,7 @@ class MainWindow(QMainWindow):
         filename, _ = QFileDialog.getSaveFileName(
             self,
             'Export League Data',
-            f'league_data_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
+            f'mixed_doubles_data_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
             'JSON Files (*.json);;All Files (*)'
         )
         
@@ -1469,7 +1498,7 @@ class MainWindow(QMainWindow):
             if filename:
                 try:
                     if self.league.load_from_file(filename):
-                        self.update_players_list()
+                        self.update_teams_list()
                         self.update_rounds_display()
                         self.update_scores_table()
                         self.update_rankings()
@@ -1530,8 +1559,8 @@ class MainWindow(QMainWindow):
             'This will delete:\n'
             '• All rounds and scores\n'
             '• All session history\n'
-            '• All player statistics\n\n'
-            'Player list will be preserved.\n\n'
+            '• All team statistics\n\n'
+            'Team list will be preserved.\n\n'
             'Are you sure?',
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
         )
@@ -1544,15 +1573,15 @@ class MainWindow(QMainWindow):
             self.update_session_info()
             self.update_history_list()
             self.save_data()
-            QMessageBox.information(self, 'Data Reset', 'All data has been reset. Players preserved.')
-            self.status_label.setText('All data reset - players preserved')
+            QMessageBox.information(self, 'Data Reset', 'All data has been reset. Teams preserved.')
+            self.status_label.setText('All data reset - teams preserved')
     
     def clear_everything(self):
         reply = QMessageBox.warning(
             self,
             'Clear Everything',
             'WARNING: This will delete EVERYTHING:\n'
-            '• All players\n'
+            '• All teams\n'
             '• All rounds and scores\n'
             '• All session history\n'
             '• All statistics\n\n'
@@ -1566,13 +1595,13 @@ class MainWindow(QMainWindow):
                 self,
                 'Final Confirmation',
                 'This is your last chance!\n\n'
-                'Delete ALL data including players?',
+                'Delete ALL data including teams?',
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
             )
             
             if confirm == QMessageBox.StandardButton.Yes:
                 self.league.clear_all_data()
-                self.update_players_list()
+                self.update_teams_list()
                 self.update_rounds_display()
                 self.update_scores_table()
                 self.update_rankings()

@@ -1,0 +1,538 @@
+{
+  "teams": [
+    {
+      "name": "Alice & Bob",
+      "player1": "Alice",
+      "player2": "Bob"
+    },
+    {
+      "name": "Carol & Dave",
+      "player1": "Carol",
+      "player2": "Dave"
+    },
+    {
+      "name": "Eve & Frank",
+      "player1": "Eve",
+      "player2": "Frank"
+    },
+    {
+      "name": "Grace & Henry",
+      "player1": "Grace",
+      "player2": "Henry"
+    },
+    {
+      "name": "Ivy & Jack",
+      "player1": "Ivy",
+      "player2": "Jack"
+    },
+    {
+      "name": "Kate & Leo",
+      "player1": "Kate",
+      "player2": "Leo"
+    },
+    {
+      "name": "Mia & Noah",
+      "player1": "Mia",
+      "player2": "Noah"
+    },
+    {
+      "name": "Olivia & Paul",
+      "player1": "Olivia",
+      "player2": "Paul"
+    },
+    {
+      "name": "Quinn & Ryan",
+      "player1": "Quinn",
+      "player2": "Ryan"
+    },
+    {
+      "name": "Sam & Taylor",
+      "player1": "Sam",
+      "player2": "Taylor"
+    }
+  ],
+  "session_rounds": [
+    {
+      "round_number": 1,
+      "courts": [
+        {
+          "court": 1,
+          "team1": {
+            "name": "Grace & Henry",
+            "player1": "Grace",
+            "player2": "Henry"
+          },
+          "team2": {
+            "name": "Ivy & Jack",
+            "player1": "Ivy",
+            "player2": "Jack"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 2,
+          "team1": {
+            "name": "Kate & Leo",
+            "player1": "Kate",
+            "player2": "Leo"
+          },
+          "team2": {
+            "name": "Quinn & Ryan",
+            "player1": "Quinn",
+            "player2": "Ryan"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "team1": {
+            "name": "Mia & Noah",
+            "player1": "Mia",
+            "player2": "Noah"
+          },
+          "team2": {
+            "name": "Olivia & Paul",
+            "player1": "Olivia",
+            "player2": "Paul"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "team1": {
+            "name": "Eve & Frank",
+            "player1": "Eve",
+            "player2": "Frank"
+          },
+          "team2": {
+            "name": "Sam & Taylor",
+            "player1": "Sam",
+            "player2": "Taylor"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_teams": [
+        "Alice & Bob",
+        "Carol & Dave"
+      ]
+    },
+    {
+      "round_number": 2,
+      "courts": [
+        {
+          "court": 1,
+          "team1": {
+            "name": "Mia & Noah",
+            "player1": "Mia",
+            "player2": "Noah"
+          },
+          "team2": {
+            "name": "Ivy & Jack",
+            "player1": "Ivy",
+            "player2": "Jack"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 2,
+          "team1": {
+            "name": "Quinn & Ryan",
+            "player1": "Quinn",
+            "player2": "Ryan"
+          },
+          "team2": {
+            "name": "Sam & Taylor",
+            "player1": "Sam",
+            "player2": "Taylor"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "team1": {
+            "name": "Olivia & Paul",
+            "player1": "Olivia",
+            "player2": "Paul"
+          },
+          "team2": {
+            "name": "Carol & Dave",
+            "player1": "Carol",
+            "player2": "Dave"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "team1": {
+            "name": "Alice & Bob",
+            "player1": "Alice",
+            "player2": "Bob"
+          },
+          "team2": {
+            "name": "Kate & Leo",
+            "player1": "Kate",
+            "player2": "Leo"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_teams": [
+        "Eve & Frank",
+        "Grace & Henry"
+      ]
+    },
+    {
+      "round_number": 3,
+      "courts": [
+        {
+          "court": 1,
+          "team1": {
+            "name": "Quinn & Ryan",
+            "player1": "Quinn",
+            "player2": "Ryan"
+          },
+          "team2": {
+            "name": "Mia & Noah",
+            "player1": "Mia",
+            "player2": "Noah"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 2,
+          "team1": {
+            "name": "Olivia & Paul",
+            "player1": "Olivia",
+            "player2": "Paul"
+          },
+          "team2": {
+            "name": "Alice & Bob",
+            "player1": "Alice",
+            "player2": "Bob"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "team1": {
+            "name": "Grace & Henry",
+            "player1": "Grace",
+            "player2": "Henry"
+          },
+          "team2": {
+            "name": "Sam & Taylor",
+            "player1": "Sam",
+            "player2": "Taylor"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "team1": {
+            "name": "Carol & Dave",
+            "player1": "Carol",
+            "player2": "Dave"
+          },
+          "team2": {
+            "name": "Eve & Frank",
+            "player1": "Eve",
+            "player2": "Frank"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_teams": [
+        "Ivy & Jack",
+        "Kate & Leo"
+      ]
+    },
+    {
+      "round_number": 4,
+      "courts": [
+        {
+          "court": 1,
+          "team1": {
+            "name": "Alice & Bob",
+            "player1": "Alice",
+            "player2": "Bob"
+          },
+          "team2": {
+            "name": "Carol & Dave",
+            "player1": "Carol",
+            "player2": "Dave"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 2,
+          "team1": {
+            "name": "Kate & Leo",
+            "player1": "Kate",
+            "player2": "Leo"
+          },
+          "team2": {
+            "name": "Quinn & Ryan",
+            "player1": "Quinn",
+            "player2": "Ryan"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "team1": {
+            "name": "Grace & Henry",
+            "player1": "Grace",
+            "player2": "Henry"
+          },
+          "team2": {
+            "name": "Ivy & Jack",
+            "player1": "Ivy",
+            "player2": "Jack"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "team1": {
+            "name": "Eve & Frank",
+            "player1": "Eve",
+            "player2": "Frank"
+          },
+          "team2": {
+            "name": "Sam & Taylor",
+            "player1": "Sam",
+            "player2": "Taylor"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_teams": [
+        "Mia & Noah",
+        "Olivia & Paul"
+      ]
+    },
+    {
+      "round_number": 5,
+      "courts": [
+        {
+          "court": 1,
+          "team1": {
+            "name": "Carol & Dave",
+            "player1": "Carol",
+            "player2": "Dave"
+          },
+          "team2": {
+            "name": "Mia & Noah",
+            "player1": "Mia",
+            "player2": "Noah"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 2,
+          "team1": {
+            "name": "Alice & Bob",
+            "player1": "Alice",
+            "player2": "Bob"
+          },
+          "team2": {
+            "name": "Ivy & Jack",
+            "player1": "Ivy",
+            "player2": "Jack"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "team1": {
+            "name": "Grace & Henry",
+            "player1": "Grace",
+            "player2": "Henry"
+          },
+          "team2": {
+            "name": "Eve & Frank",
+            "player1": "Eve",
+            "player2": "Frank"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "team1": {
+            "name": "Kate & Leo",
+            "player1": "Kate",
+            "player2": "Leo"
+          },
+          "team2": {
+            "name": "Olivia & Paul",
+            "player1": "Olivia",
+            "player2": "Paul"
+          },
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_teams": [
+        "Quinn & Ryan",
+        "Sam & Taylor"
+      ]
+    }
+  ],
+  "current_session": 1,
+  "team_stats": {
+    "Alice & Bob": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 1,
+      "game_scores": []
+    },
+    "Carol & Dave": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 1,
+      "game_scores": []
+    },
+    "Eve & Frank": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 2,
+      "game_scores": []
+    },
+    "Grace & Henry": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 2,
+      "game_scores": []
+    },
+    "Ivy & Jack": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Kate & Leo": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Mia & Noah": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 4,
+      "game_scores": []
+    },
+    "Olivia & Paul": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 4,
+      "game_scores": []
+    },
+    "Quinn & Ryan": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 5,
+      "game_scores": []
+    },
+    "Sam & Taylor": {
+      "games_played": 0,
+      "wins": 0,
+      "losses": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 5,
+      "game_scores": []
+    }
+  },
+  "session_history": [],
+  "team_numbers": {
+    "Alice & Bob": 1,
+    "Carol & Dave": 2,
+    "Eve & Frank": 3,
+    "Grace & Henry": 4,
+    "Ivy & Jack": 5,
+    "Kate & Leo": 6,
+    "Mia & Noah": 7,
+    "Olivia & Paul": 8,
+    "Quinn & Ryan": 9,
+    "Sam & Taylor": 10
+  },
+  "next_team_number": 11
+}

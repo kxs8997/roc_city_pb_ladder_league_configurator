@@ -1,0 +1,102 @@
+SEEDED LADDER LEAGUE - TEST DATA FILES
+======================================
+
+This folder contains test data files for the Seeded Ladder League with different player counts
+to help you test the full functionality of the 4-tier system.
+
+TEST FILES:
+-----------
+
+1. seeded_ladder_data_12players.json
+   - 12 players (3 players per tier)
+   - Tests: Smaller league with 3 courts active
+   - Tier distribution: 3-3-3-3
+   - Court assignments: Tier 1→Court 4, Tier 2→Court 3, Tier 3→Court 2, Tier 4→Court 1
+   - Expected behavior: 3 courts will be used, some players will sit out each round
+
+2. seeded_ladder_data_20players.json
+   - 20 players (5 players per tier)
+   - Tests: Larger league with multiple courts per tier
+   - Tier distribution: 5-5-5-5
+   - Court assignments: Tier 1→Courts 3&4 (8 players), Tier 2→Courts 1&2 (8 players), 
+                        Tier 3→Court 2 (4 players), Tier 4→Court 1 (4 players)
+   - Expected behavior: All 4 courts used, with rotation for Tier 1 and Tier 2
+
+3. seeded_ladder_data.json (your current file)
+   - 16 players (4 players per tier)
+   - Tests: Perfect fit - exactly 4 players per tier
+   - Tier distribution: 4-4-4-4
+   - Court assignments: Tier 1→Court 4, Tier 2→Court 3, Tier 3→Court 2, Tier 4→Court 1
+   - Expected behavior: All 4 courts filled, no one sits out
+
+
+HOW TO USE:
+-----------
+
+To test with different player counts:
+
+1. Close the Seeded Ladder League application if it's running
+
+2. Rename your current data file:
+   - Rename "seeded_ladder_data.json" to "seeded_ladder_data_backup.json"
+
+3. Copy one of the test files:
+   - Copy "seeded_ladder_data_12players.json" to "seeded_ladder_data.json"
+   OR
+   - Copy "seeded_ladder_data_20players.json" to "seeded_ladder_data.json"
+
+4. Start the Seeded Ladder League application
+
+5. The app will load the test data with the specified number of players
+
+6. Test the functionality:
+   - Generate rounds
+   - Check that courts are assigned correctly
+   - Verify sitting players rotate fairly
+   - Enter scores and check rankings
+   - Test promotion/relegation between tiers
+   - Start new sessions
+
+7. To switch to a different test file, repeat steps 1-4
+
+
+WHAT TO TEST:
+-------------
+
+For 12 players (< 16):
+- Verify only 3 courts are used (not all 4)
+- Check that sitting players rotate fairly
+- Confirm tier assignments work with fewer players
+- Test that promotion/relegation still functions
+
+For 20 players (> 16):
+- Verify Tier 1 and Tier 2 use multiple courts
+- Check that players rotate within their tier
+- Confirm sitting players are selected fairly
+- Test that all 4 courts are utilized
+- Verify promotion/relegation with larger groups
+
+For 16 players (= 16):
+- Verify all 4 courts are used
+- Check that no one sits out (perfect fit)
+- Confirm each tier has exactly 4 players
+- Test standard promotion/relegation
+
+
+RESTORING YOUR DATA:
+--------------------
+
+To go back to your original data:
+1. Close the application
+2. Delete "seeded_ladder_data.json"
+3. Rename "seeded_ladder_data_backup.json" back to "seeded_ladder_data.json"
+4. Restart the application
+
+
+NOTES:
+------
+- All test files start with players already assigned to tiers (not seeding session)
+- Player numbers are pre-assigned for easy identification
+- No rounds or scores are included - start fresh
+- Court assignments are configured appropriately for each player count
+- You can modify the court assignments in the Settings tab to test different configurations
