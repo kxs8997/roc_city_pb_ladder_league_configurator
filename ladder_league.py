@@ -896,6 +896,11 @@ class MainWindow(QMainWindow):
         big_screen_btn.setStyleSheet('QPushButton { font-size: 14pt; padding: 10px; background-color: #2196F3; color: white; }')
         gen_layout.addWidget(big_screen_btn)
         
+        sim_btn = QPushButton('🎲 Sim Scores')
+        sim_btn.clicked.connect(self.simulate_scores)
+        sim_btn.setStyleSheet('QPushButton { font-size: 14pt; padding: 10px; background-color: #9C27B0; color: white; }')
+        gen_layout.addWidget(sim_btn)
+        
         self.round_count_label = QLabel('Rounds: 0')
         self.round_count_label.setStyleSheet('font-size: 14pt; font-weight: bold;')
         gen_layout.addWidget(self.round_count_label)
@@ -1211,6 +1216,37 @@ class MainWindow(QMainWindow):
         self.update_scores_table()
         self.save_data()
         self.status_label.setText(f'Round {round_data["round_number"]} generated!')
+    
+    def simulate_scores(self):
+        """Simulate random scores for all pending games in current session"""
+        import random
+        
+        if not self.league.session_rounds:
+            QMessageBox.warning(self, 'No Rounds', 'No rounds to simulate scores for.')
+            return
+            
+        count = 0
+        for round_idx, round_data in enumerate(self.league.session_rounds, 1):
+            for court in round_data['courts']:
+                if not court.get('completed', False):
+                    # Generate random realistic scores
+                    if random.random() > 0.5:
+                        s1, s2 = 11, random.randint(0, 9)
+                    else:
+                        s1, s2 = random.randint(0, 9), 11
+                    
+                    self.league.record_game_score(round_idx, court['court'], s1, s2)
+                    count += 1
+        
+        if count > 0:
+            self.update_scores_table()
+            self.update_rounds_display()
+            self.update_rankings()
+            self.save_data()
+            self.status_label.setText(f'Simulated scores for {count} games')
+            QMessageBox.information(self, 'Simulation Complete', f'Successfully simulated scores for {count} pending games.')
+        else:
+            QMessageBox.information(self, 'No Pending Games', 'All games are already completed.')
     
     def update_rounds_display(self):
         output = ''
