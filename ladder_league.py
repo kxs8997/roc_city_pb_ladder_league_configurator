@@ -38,6 +38,8 @@ class RoundRobinLeague:
             self.players.append(name)
             self.player_stats[name] = {
                 'games_played': 0,
+                'wins': 0,
+                'losses': 0,
                 'total_points': 0,
                 'total_points_against': 0,
                 'rounds_sat_out': 0,
@@ -188,8 +190,11 @@ class RoundRobinLeague:
         court['completed'] = True
         
         # Update player stats
+        team1_won = team1_score > team2_score
         for player in court['team1']:
             self.player_stats[player]['games_played'] += 1
+            self.player_stats[player]['wins'] += 1 if team1_won else 0
+            self.player_stats[player]['losses'] += 0 if team1_won else 1
             self.player_stats[player]['total_points'] += team1_score
             self.player_stats[player]['total_points_against'] += team2_score
             self.player_stats[player]['game_scores'].append({
@@ -200,6 +205,8 @@ class RoundRobinLeague:
         
         for player in court['team2']:
             self.player_stats[player]['games_played'] += 1
+            self.player_stats[player]['wins'] += 0 if team1_won else 1
+            self.player_stats[player]['losses'] += 1 if team1_won else 0
             self.player_stats[player]['total_points'] += team2_score
             self.player_stats[player]['total_points_against'] += team1_score
             self.player_stats[player]['game_scores'].append({
@@ -211,39 +218,32 @@ class RoundRobinLeague:
         return True
     
     def get_rankings(self):
-        """Get player rankings based on points (counting only minimum games)"""
+        """Get player rankings based on wins, then differential"""
         if not self.players:
             return []
-        
-        # Find minimum games played
-        min_games = min(self.player_stats[p]['games_played'] for p in self.players)
         
         rankings = []
         for player in self.players:
             stats = self.player_stats[player]
             games_played = stats['games_played']
-            
-            # Count only first min_games
-            points = 0
-            points_against = 0
-            for i, game in enumerate(stats['game_scores']):
-                if i < min_games:
-                    points += game['points_for']
-                    points_against += game['points_against']
-            
+            wins = stats.get('wins', 0)
+            losses = stats.get('losses', 0)
+            points = stats['total_points']
+            points_against = stats['total_points_against']
             differential = points - points_against
             
             rankings.append({
                 'player': player,
                 'games_played': games_played,
-                'counted_games': min_games,
+                'wins': wins,
+                'losses': losses,
                 'points': points,
                 'points_against': points_against,
                 'differential': differential
             })
         
-        # Sort by points (desc), then differential (desc)
-        rankings.sort(key=lambda x: (x['points'], x['differential']), reverse=True)
+        # Sort by wins (desc), then differential (desc), then points (desc)
+        rankings.sort(key=lambda x: (x['wins'], x['differential'], x['points']), reverse=True)
         
         return rankings
     
@@ -274,6 +274,8 @@ class RoundRobinLeague:
         for player in self.players:
             self.player_stats[player] = {
                 'games_played': 0,
+                'wins': 0,
+                'losses': 0,
                 'total_points': 0,
                 'total_points_against': 0,
                 'rounds_sat_out': 0,
@@ -293,6 +295,8 @@ class RoundRobinLeague:
         for player in self.players:
             self.player_stats[player] = {
                 'games_played': 0,
+                'wins': 0,
+                'losses': 0,
                 'total_points': 0,
                 'total_points_against': 0,
                 'rounds_sat_out': 0,
@@ -962,12 +966,12 @@ class MainWindow(QMainWindow):
         widget = QWidget()
         layout = QVBoxLayout(widget)
         
-        info_label = QLabel('Player rankings based on points scored (counting minimum games only)')
+        info_label = QLabel('Player rankings based on wins, then point differential')
         layout.addWidget(info_label)
         
         self.rankings_table = QTableWidget()
-        self.rankings_table.setColumnCount(6)
-        self.rankings_table.setHorizontalHeaderLabels(['Rank', 'Player', 'Games', 'Counted', 'Points', 'Diff'])
+        self.rankings_table.setColumnCount(7)
+        self.rankings_table.setHorizontalHeaderLabels(['Rank', 'Player', 'W', 'L', 'Games', 'Points', 'Diff'])
         layout.addWidget(self.rankings_table)
         
         refresh_btn = QPushButton('Refresh Rankings')
@@ -1324,9 +1328,10 @@ class MainWindow(QMainWindow):
             # Add player number to rankings
             player_num = self.league.player_numbers.get(rank_data['player'], '?')
             self.rankings_table.setItem(i, 1, QTableWidgetItem(f"#{player_num} {rank_data['player']}"))
-            self.rankings_table.setItem(i, 2, QTableWidgetItem(str(rank_data['games_played'])))
-            self.rankings_table.setItem(i, 3, QTableWidgetItem(str(rank_data['counted_games'])))
-            self.rankings_table.setItem(i, 4, QTableWidgetItem(str(rank_data['points'])))
+            self.rankings_table.setItem(i, 2, QTableWidgetItem(str(rank_data.get('wins', 0))))
+            self.rankings_table.setItem(i, 3, QTableWidgetItem(str(rank_data.get('losses', 0))))
+            self.rankings_table.setItem(i, 4, QTableWidgetItem(str(rank_data['games_played'])))
+            self.rankings_table.setItem(i, 5, QTableWidgetItem(str(rank_data['points'])))
             
             diff = rank_data['differential']
             diff_text = f"+{diff}" if diff > 0 else str(diff)
@@ -1335,7 +1340,7 @@ class MainWindow(QMainWindow):
                 diff_item.setForeground(QColor('green'))
             elif diff < 0:
                 diff_item.setForeground(QColor('red'))
-            self.rankings_table.setItem(i, 5, diff_item)
+            self.rankings_table.setItem(i, 6, diff_item)
     
     def update_session_info(self):
         info = f'Session #{self.league.current_session}\n'
