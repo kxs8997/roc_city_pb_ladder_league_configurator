@@ -248,7 +248,7 @@ class RoundRobinLeague:
         return rankings
     
     def new_session(self):
-        """Start a new session, saving current session to history"""
+        """Start a new session, saving current session to history but keeping cumulative stats"""
         # Save current session to history if it has rounds
         if self.session_rounds:
             session_data = {
@@ -260,17 +260,12 @@ class RoundRobinLeague:
             }
             self.session_history.append(session_data)
         
-        # Clear current session
+        # Clear current session rounds but KEEP cumulative stats (no ladder/tiers)
         self.session_rounds = []
+        # Only reset sit-out tracking for new session, keep points cumulative
         for player in self.players:
-            self.player_stats[player] = {
-                'games_played': 0,
-                'total_points': 0,
-                'total_points_against': 0,
-                'rounds_sat_out': 0,
-                'last_sat_out_round': -2,
-                'game_scores': []
-            }
+            self.player_stats[player]['rounds_sat_out'] = 0
+            self.player_stats[player]['last_sat_out_round'] = -2
         self.current_session += 1
     
     def clear_current_session(self):

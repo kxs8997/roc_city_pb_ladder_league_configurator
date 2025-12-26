@@ -271,7 +271,7 @@ class MixedDoublesLeague:
         return rankings
     
     def new_session(self):
-        """Start a new session, saving current session to history"""
+        """Start a new session, saving current session to history but keeping cumulative stats"""
         # Save current session to history if it has rounds
         if self.session_rounds:
             session_data = {
@@ -283,20 +283,13 @@ class MixedDoublesLeague:
             }
             self.session_history.append(session_data)
         
-        # Clear current session
+        # Clear current session rounds but KEEP cumulative stats (no ladder/tiers)
         self.session_rounds = []
+        # Only reset sit-out tracking for new session, keep points/wins cumulative
         for team in self.teams:
             team_name = team['name']
-            self.team_stats[team_name] = {
-                'games_played': 0,
-                'wins': 0,
-                'losses': 0,
-                'total_points': 0,
-                'total_points_against': 0,
-                'rounds_sat_out': 0,
-                'last_sat_out_round': -2,
-                'game_scores': []
-            }
+            self.team_stats[team_name]['rounds_sat_out'] = 0
+            self.team_stats[team_name]['last_sat_out_round'] = -2
         self.current_session += 1
     
     def clear_current_session(self):
