@@ -338,6 +338,14 @@ class RoundRobinLeague:
                 self.session_history = data.get('session_history', [])
                 self.player_numbers = data.get('player_numbers', {})
                 self.next_player_number = data.get('next_player_number', 1)
+                
+                # Migrate old data: add wins/losses if missing
+                for player in self.players:
+                    if player in self.player_stats:
+                        if 'wins' not in self.player_stats[player]:
+                            self.player_stats[player]['wins'] = 0
+                        if 'losses' not in self.player_stats[player]:
+                            self.player_stats[player]['losses'] = 0
             return True
         except:
             return False
@@ -798,6 +806,13 @@ class MainWindow(QMainWindow):
         tabs.addTab(self.create_rankings_tab(), 'Rankings')
         tabs.addTab(self.create_history_tab(), 'History')
         tabs.addTab(self.create_session_tab(), 'Session')
+        
+        # Load existing data into UI
+        self.update_rounds_display()
+        self.update_scores_table()
+        self.update_rankings()
+        self.update_session_info()
+        self.update_history_list()
     
     def create_players_tab(self):
         widget = QWidget()
