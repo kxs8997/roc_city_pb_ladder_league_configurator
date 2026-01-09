@@ -32,6 +32,7 @@ class MixedDoublesLeague:
         self.session_history = []
         self.team_numbers = {}  # Map team name to assigned number
         self.next_team_number = 1  # Track next available number
+        self.forced_sit_out = []  # Teams forced to sit out next round
         
     def add_team(self, player1, player2):
         """Add a doubles team - team name is auto-generated from players"""
@@ -113,29 +114,56 @@ class MixedDoublesLeague:
         if num_sitting <= 0:
             return []
         
-        # Score each team for sitting priority
-        sit_scores = []
-        for team in self.teams:
-            team_name = team['name']
-            if not self.can_sit_out(team_name, current_round_num):
-                continue
-            
-            games_played = self.get_games_played(team_name)
-            rounds_sat = self.team_stats[team_name]['rounds_sat_out']
-            last_sat = self.team_stats[team_name]['last_sat_out_round']
-            
-            # Higher score = more likely to sit
-            score = games_played * 10 - rounds_sat * 20 + (current_round_num - last_sat)
-            sit_scores.append((team_name, score))
+        sitting_teams = []
         
-        # Sort by score (highest first) and select top num_sitting
-        sit_scores.sort(key=lambda x: x[1], reverse=True)
-        sitting_teams = [t for t, _ in sit_scores[:num_sitting]]
+        # First, add any forced sit-outs
+        # BUT skip anyone who sat out last round - they MUST play this round
+        for team_name in self.forced_sit_out:
+            if team_name in [t['name'] for t in self.teams] and team_name not in sitting_teams:
+                last_sat = self.team_stats[team_name]['last_sat_out_round']
+                # Never let someone sit out twice in a row
+                if last_sat == current_round_num - 1:
+                    continue  # Skip - they sat last round, must play now
+                sitting_teams.append(team_name)
+                if len(sitting_teams) >= num_sitting:
+                    break
         
-        # If we don't have enough eligible teams, force some to sit
+        # If we still need more, use the scoring system
+        if len(sitting_teams) < num_sitting:
+            # Score each team for sitting priority
+            sit_scores = []
+            for team in self.teams:
+                team_name = team['name']
+                # Skip already selected
+                if team_name in sitting_teams:
+                    continue
+                
+                games_played = self.get_games_played(team_name)
+                rounds_sat = self.team_stats[team_name]['rounds_sat_out']
+                last_sat = self.team_stats[team_name]['last_sat_out_round']
+                
+                # Skip teams who sat last round (they must play this round)
+                if last_sat == current_round_num - 1:
+                    continue
+                
+                # Higher score = more likely to sit
+                # Prioritize: most games played, fewest times sat out
+                score = (games_played * 100) - (rounds_sat * 50)
+                sit_scores.append((team_name, score))
+            
+            # Sort by score (highest first) and select remaining needed
+            sit_scores.sort(key=lambda x: x[1], reverse=True)
+            remaining_needed = num_sitting - len(sitting_teams)
+            sitting_teams.extend([t for t, _ in sit_scores[:remaining_needed]])
+        
+        # If we still don't have enough eligible teams, force some to sit
+        # But NEVER force someone who sat last round to sit again
         if len(sitting_teams) < num_sitting:
             remaining = [t['name'] for t in self.teams if t['name'] not in sitting_teams]
-            random.shuffle(remaining)
+            # Filter out anyone who sat last round - they MUST play
+            remaining = [t for t in remaining if self.team_stats[t]['last_sat_out_round'] != current_round_num - 1]
+            # Sort by games played (most first), then by rounds sat (least first)
+            remaining.sort(key=lambda t: (self.get_games_played(t), -self.team_stats[t]['rounds_sat_out']), reverse=True)
             sitting_teams.extend(remaining[:num_sitting - len(sitting_teams)])
         
         return sitting_teams
@@ -176,6 +204,9 @@ class MixedDoublesLeague:
         for team_name in sitting_teams:
             self.team_stats[team_name]['rounds_sat_out'] += 1
             self.team_stats[team_name]['last_sat_out_round'] = current_round_num
+        
+        # Clear forced sit-outs after round is generated
+        self.forced_sit_out = []
         
         round_data = {
             'round_number': current_round_num,
@@ -348,7 +379,8 @@ class MixedDoublesLeague:
             'team_stats': self.team_stats,
             'session_history': self.session_history,
             'team_numbers': self.team_numbers,
-            'next_team_number': self.next_team_number
+            'next_team_number': self.next_team_number,
+            'forced_sit_out': self.forced_sit_out
         }
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
@@ -364,6 +396,7 @@ class MixedDoublesLeague:
                 self.session_history = data.get('session_history', [])
                 self.team_numbers = data.get('team_numbers', {})
                 self.next_team_number = data.get('next_team_number', 1)
+                self.forced_sit_out = data.get('forced_sit_out', [])
             return True
         except:
             return False
@@ -414,7 +447,7 @@ class BigScreenDisplay(QWidget):
         self.title_label = QLabel('CURRENT ROUND')
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_font = QFont()
-        title_font.setPointSize(int(self.screen_height * 0.035))
+        title_font.setPointSize(int(self.screen_height * 0.025))
         title_font.setBold(True)
         self.title_label.setFont(title_font)
         self.title_label.setStyleSheet("color: #00d4ff;")
@@ -423,7 +456,7 @@ class BigScreenDisplay(QWidget):
         self.round_label = QLabel()
         self.round_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         round_font = QFont()
-        round_font.setPointSize(int(self.screen_height * 0.028))
+        round_font.setPointSize(int(self.screen_height * 0.018))
         round_font.setBold(True)
         self.round_label.setFont(round_font)
         self.round_label.setStyleSheet("color: #ffffff;")
@@ -433,7 +466,7 @@ class BigScreenDisplay(QWidget):
         self.datetime_label = QLabel()
         self.datetime_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         datetime_font = QFont()
-        datetime_font.setPointSize(int(self.screen_height * 0.018))
+        datetime_font.setPointSize(int(self.screen_height * 0.012))
         self.datetime_label.setFont(datetime_font)
         self.datetime_label.setStyleSheet("color: #aaaaaa;")
         title_container.addWidget(self.datetime_label)
@@ -541,7 +574,7 @@ class BigScreenDisplay(QWidget):
         self.sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.sitting_label.setWordWrap(True)
         sitting_font = QFont()
-        sitting_font.setPointSize(int(self.screen_height * 0.02))
+        sitting_font.setPointSize(int(self.screen_height * 0.014))
         sitting_font.setBold(True)
         self.sitting_label.setFont(sitting_font)
         self.sitting_label.setStyleSheet("color: #ff6b6b; padding: 10px; background-color: #2d2d44; border-radius: 8px;")
@@ -550,8 +583,13 @@ class BigScreenDisplay(QWidget):
         # Track which round is being displayed (None = latest)
         self.displayed_round_index = None
         
-        # Show maximized
-        self.showMaximized()
+        # Start at 80% of screen size, centered (not maximized so user can resize/move)
+        width = int(self.screen_width * 0.8)
+        height = int(self.screen_height * 0.8)
+        x = int((self.screen_width - width) / 2)
+        y = int((self.screen_height - height) / 2)
+        self.setGeometry(x, y, width, height)
+        self.show()
         self.update_display()
     
     def show_previous_round(self):
@@ -652,7 +690,7 @@ class BigScreenDisplay(QWidget):
         layout.setContentsMargins(10, 8, 10, 8)
         
         # Court number - compact sizing
-        court_font_size = int(self.screen_height * 0.022)
+        court_font_size = int(self.screen_height * 0.016)
         court_label = QLabel(f"COURT\n{court_data['court']}")
         court_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         court_font = QFont()
@@ -677,7 +715,7 @@ class BigScreenDisplay(QWidget):
         team1_label = QLabel(f"#{team1_num}  {court_data['team1']['player1']} & {court_data['team1']['player2']}")
         team1_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         name_font = QFont()
-        name_font.setPointSize(int(self.screen_height * 0.02))
+        name_font.setPointSize(int(self.screen_height * 0.014))
         name_font.setBold(True)
         team1_label.setFont(name_font)
         team1_label.setStyleSheet("color: #4ecca3; padding: 5px;")
@@ -687,7 +725,7 @@ class BigScreenDisplay(QWidget):
         vs_label = QLabel("VS")
         vs_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         vs_font = QFont()
-        vs_font.setPointSize(int(self.screen_height * 0.022))
+        vs_font.setPointSize(int(self.screen_height * 0.016))
         vs_font.setBold(True)
         vs_label.setFont(vs_font)
         vs_label.setStyleSheet("color: #ff6b6b; padding: 5px 15px;")
@@ -905,6 +943,41 @@ class MainWindow(QMainWindow):
         
         demo_group.setLayout(demo_layout)
         layout.addWidget(demo_group)
+        
+        # Forced sit-out section
+        sitout_group = QGroupBox('Force Sit Out Next Round')
+        sitout_layout = QVBoxLayout()
+        
+        sitout_info = QLabel('Select teams who must sit out the next round (e.g., late arrivals)')
+        sitout_info.setWordWrap(True)
+        sitout_layout.addWidget(sitout_info)
+        
+        self.sitout_list = QListWidget()
+        self.sitout_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        self.sitout_list.setMaximumHeight(120)
+        sitout_layout.addWidget(self.sitout_list)
+        
+        sitout_btn_layout = QHBoxLayout()
+        
+        set_sitout_btn = QPushButton('Set Selected to Sit Out')
+        set_sitout_btn.clicked.connect(self.set_forced_sitout)
+        set_sitout_btn.setStyleSheet('QPushButton { background-color: #f44336; color: white; padding: 8px; }')
+        sitout_btn_layout.addWidget(set_sitout_btn)
+        
+        clear_sitout_btn = QPushButton('Clear Sit Outs')
+        clear_sitout_btn.clicked.connect(self.clear_forced_sitout)
+        sitout_btn_layout.addWidget(clear_sitout_btn)
+        
+        sitout_layout.addLayout(sitout_btn_layout)
+        
+        self.sitout_status_label = QLabel('')
+        self.sitout_status_label.setStyleSheet('color: #f44336; font-weight: bold;')
+        sitout_layout.addWidget(self.sitout_status_label)
+        
+        sitout_group.setLayout(sitout_layout)
+        layout.addWidget(sitout_group)
+        
+        self.update_sitout_list()
         
         return widget
     
@@ -1154,6 +1227,69 @@ class MainWindow(QMainWindow):
         
         num_courts = self.league.get_active_courts()
         self.status_label.setText(f'Total teams: {len(self.league.teams)} | Active courts: {num_courts}')
+        
+        # Update sit-out list if it exists
+        if hasattr(self, 'sitout_list'):
+            self.update_sitout_list()
+    
+    def update_sitout_list(self):
+        """Update the sit-out team selection list"""
+        self.sitout_list.clear()
+        
+        for team in sorted(self.league.teams, key=lambda t: t['name']):
+            team_num = self.league.team_numbers.get(team['name'], '?')
+            item_text = f"#{team_num} - {team['name']}"
+            self.sitout_list.addItem(item_text)
+            
+            # Pre-select if already in forced sit-out list
+            if team['name'] in self.league.forced_sit_out:
+                self.sitout_list.item(self.sitout_list.count() - 1).setSelected(True)
+        
+        # Update status label
+        self.update_sitout_status()
+    
+    def update_sitout_status(self):
+        """Update the sit-out status label"""
+        if self.league.forced_sit_out:
+            names = [f"#{self.league.team_numbers.get(t, '?')} {t}" for t in self.league.forced_sit_out]
+            self.sitout_status_label.setText(f"Will sit out next round: {', '.join(names)}")
+        else:
+            self.sitout_status_label.setText("")
+    
+    def set_forced_sitout(self):
+        """Set selected teams to sit out next round"""
+        selected_items = self.sitout_list.selectedItems()
+        self.league.forced_sit_out = []
+        
+        for item in selected_items:
+            # Extract team name from item text (format: "#N - TeamName")
+            text = item.text()
+            start = text.find('- ') + 2
+            if start > 1:
+                team_name = text[start:]
+                if team_name in [t['name'] for t in self.league.teams]:
+                    self.league.forced_sit_out.append(team_name)
+        
+        self.update_sitout_status()
+        self.save_data()
+        
+        if self.league.forced_sit_out:
+            names = ', '.join(self.league.forced_sit_out)
+            QMessageBox.information(self, 'Forced Sit-Out Set', 
+                                   f'The following teams will sit out the NEXT round:\n\n{names}\n\n'
+                                   'Generate a new round for this to take effect.')
+            self.status_label.setText(f'{len(self.league.forced_sit_out)} team(s) will sit out next round')
+        else:
+            QMessageBox.information(self, 'No Teams Selected', 
+                                   'No teams selected. Select teams from the list first.')
+    
+    def clear_forced_sitout(self):
+        """Clear all forced sit-outs"""
+        self.league.forced_sit_out = []
+        self.sitout_list.clearSelection()
+        self.update_sitout_status()
+        self.save_data()
+        self.status_label.setText('Cleared forced sit-outs')
     
     def update_team_numbers_table(self):
         # Sort teams by their assigned number
