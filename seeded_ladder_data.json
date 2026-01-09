@@ -1,409 +1,251 @@
 {
   "players": [
-    "Alex Martinez",
-    "Blake Johnson",
-    "Casey Williams",
-    "Drew Anderson",
-    "Emma Thompson",
-    "Frank Garcia",
-    "Grace Miller",
-    "Henry Davis",
-    "Iris Rodriguez",
-    "Jack Wilson",
-    "Kelly Moore",
-    "Logan Taylor",
-    "Maya Jackson",
-    "Noah White",
-    "Olivia Harris",
-    "Parker Martin",
-    "Quinn Roberts",
-    "Riley Cooper",
-    "Sam Peterson",
-    "Taylor Brooks"
+    "Abby A",
+    "April S",
+    "Ash M",
+    "Carolyn G",
+    "Catherine B",
+    "Courtney B",
+    "Elise L",
+    "Gabrielle H",
+    "Hala A",
+    "Jaclyn C",
+    "Jena C",
+    "Jenny G-H",
+    "Julia I",
+    "Karen K",
+    "Kayla O",
+    "Laurie C",
+    "Leigh B",
+    "Linda D",
+    "Loren N",
+    "Nicara M",
+    "Teresa S",
+    "Tricia T",
+    "Nicole A",
+    "Rachel A",
+    "Stacie E",
+    "Susan C",
+    "Tracie G",
+    "Susan M"
   ],
   "session_rounds": [
     {
       "round_number": 1,
       "courts": [
         {
-          "court": 3,
-          "players": [
-            "Maya Jackson",
-            "Olivia Harris",
-            "Logan Taylor",
-            "Sam Peterson"
-          ],
-          "team1": [
-            "Maya Jackson",
-            "Olivia Harris"
-          ],
-          "team2": [
-            "Logan Taylor",
-            "Sam Peterson"
-          ],
-          "team1_score": 11,
-          "team2_score": 0,
-          "completed": true
-        },
-        {
-          "court": 1,
-          "players": [
-            "Henry Davis",
-            "Kelly Moore",
-            "Iris Rodriguez",
-            "Taylor Brooks"
-          ],
-          "team1": [
-            "Henry Davis",
-            "Kelly Moore"
-          ],
-          "team2": [
-            "Iris Rodriguez",
-            "Taylor Brooks"
-          ],
-          "team1_score": 11,
-          "team2_score": 7,
-          "completed": true
-        },
-        {
           "court": 2,
           "players": [
-            "Blake Johnson",
-            "Riley Cooper",
-            "Drew Anderson",
-            "Grace Miller"
+            "Elise L",
+            "Jaclyn C",
+            "Courtney B",
+            "Gabrielle H"
           ],
           "team1": [
-            "Blake Johnson",
-            "Riley Cooper"
+            "Elise L",
+            "Jaclyn C"
           ],
           "team2": [
-            "Drew Anderson",
-            "Grace Miller"
+            "Courtney B",
+            "Gabrielle H"
           ],
-          "team1_score": 11,
-          "team2_score": 8,
-          "completed": true
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
         },
         {
           "court": 1,
           "players": [
-            "Parker Martin",
-            "Quinn Roberts",
-            "Emma Thompson",
-            "Noah White"
+            "Tricia T",
+            "Nicara M",
+            "Teresa S",
+            "Loren N"
           ],
           "team1": [
-            "Parker Martin",
-            "Quinn Roberts"
+            "Tricia T",
+            "Nicara M"
           ],
           "team2": [
-            "Emma Thompson",
-            "Noah White"
+            "Teresa S",
+            "Loren N"
           ],
-          "team1_score": 8,
-          "team2_score": 11,
-          "completed": true
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel A",
+            "Julia I",
+            "Kayla O",
+            "Nicole A"
+          ],
+          "team1": [
+            "Rachel A",
+            "Julia I"
+          ],
+          "team2": [
+            "Kayla O",
+            "Nicole A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Susan M",
+            "Tracie G",
+            "Stacie E",
+            "Susan C"
+          ],
+          "team1": [
+            "Susan M",
+            "Tracie G"
+          ],
+          "team2": [
+            "Stacie E",
+            "Susan C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
         }
       ],
       "sitting_players": [
-        "Jack Wilson",
-        "Frank Garcia",
-        "Alex Martinez",
-        "Casey Williams"
+        "Linda D",
+        "Abby A",
+        "Ash M",
+        "April S",
+        "Carolyn G",
+        "Jena C",
+        "Catherine B",
+        "Hala A",
+        "Jenny G-H",
+        "Karen K",
+        "Laurie C",
+        "Leigh B"
       ]
     },
     {
       "round_number": 2,
       "courts": [
         {
-          "court": 3,
-          "players": [
-            "Jack Wilson",
-            "Olivia Harris",
-            "Maya Jackson",
-            "Sam Peterson"
-          ],
-          "team1": [
-            "Jack Wilson",
-            "Olivia Harris"
-          ],
-          "team2": [
-            "Maya Jackson",
-            "Sam Peterson"
-          ],
-          "team1_score": 11,
-          "team2_score": 3,
-          "completed": true
-        },
-        {
-          "court": 1,
-          "players": [
-            "Iris Rodriguez",
-            "Frank Garcia",
-            "Kelly Moore",
-            "Taylor Brooks"
-          ],
-          "team1": [
-            "Iris Rodriguez",
-            "Frank Garcia"
-          ],
-          "team2": [
-            "Kelly Moore",
-            "Taylor Brooks"
-          ],
-          "team1_score": 3,
-          "team2_score": 11,
-          "completed": true
-        },
-        {
           "court": 2,
           "players": [
-            "Alex Martinez",
-            "Drew Anderson",
-            "Riley Cooper",
-            "Grace Miller"
+            "Linda D",
+            "Ash M",
+            "Abby A",
+            "Jaclyn C"
           ],
           "team1": [
-            "Alex Martinez",
-            "Drew Anderson"
+            "Linda D",
+            "Ash M"
           ],
           "team2": [
-            "Riley Cooper",
-            "Grace Miller"
+            "Abby A",
+            "Jaclyn C"
           ],
-          "team1_score": 11,
-          "team2_score": 2,
-          "completed": true
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
         },
         {
           "court": 1,
           "players": [
-            "Casey Williams",
-            "Quinn Roberts",
-            "Parker Martin",
-            "Noah White"
+            "Tricia T",
+            "Carolyn G",
+            "Jena C",
+            "April S"
           ],
           "team1": [
-            "Casey Williams",
-            "Quinn Roberts"
+            "Tricia T",
+            "Carolyn G"
           ],
           "team2": [
-            "Parker Martin",
-            "Noah White"
+            "Jena C",
+            "April S"
           ],
-          "team1_score": 11,
-          "team2_score": 6,
-          "completed": true
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel A",
+            "Hala A",
+            "Catherine B",
+            "Jenny G-H"
+          ],
+          "team1": [
+            "Rachel A",
+            "Hala A"
+          ],
+          "team2": [
+            "Catherine B",
+            "Jenny G-H"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Laurie C",
+            "Leigh B",
+            "Susan M",
+            "Karen K"
+          ],
+          "team1": [
+            "Laurie C",
+            "Leigh B"
+          ],
+          "team2": [
+            "Susan M",
+            "Karen K"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
         }
       ],
       "sitting_players": [
-        "Logan Taylor",
-        "Henry Davis",
-        "Blake Johnson",
-        "Emma Thompson"
+        "Courtney B",
+        "Elise L",
+        "Gabrielle H",
+        "Loren N",
+        "Nicara M",
+        "Teresa S",
+        "Julia I",
+        "Kayla O",
+        "Nicole A",
+        "Stacie E",
+        "Susan C",
+        "Tracie G"
       ]
     },
     {
       "round_number": 3,
       "courts": [
         {
-          "court": 3,
-          "players": [
-            "Olivia Harris",
-            "Logan Taylor",
-            "Jack Wilson",
-            "Sam Peterson"
-          ],
-          "team1": [
-            "Olivia Harris",
-            "Logan Taylor"
-          ],
-          "team2": [
-            "Jack Wilson",
-            "Sam Peterson"
-          ],
-          "team1_score": 11,
-          "team2_score": 6,
-          "completed": true
-        },
-        {
-          "court": 1,
-          "players": [
-            "Henry Davis",
-            "Frank Garcia",
-            "Kelly Moore",
-            "Taylor Brooks"
-          ],
-          "team1": [
-            "Henry Davis",
-            "Frank Garcia"
-          ],
-          "team2": [
-            "Kelly Moore",
-            "Taylor Brooks"
-          ],
-          "team1_score": 11,
-          "team2_score": 5,
-          "completed": true
-        },
-        {
           "court": 2,
           "players": [
-            "Alex Martinez",
-            "Blake Johnson",
-            "Grace Miller",
-            "Riley Cooper"
+            "Courtney B",
+            "Elise L",
+            "Linda D",
+            "Gabrielle H"
           ],
           "team1": [
-            "Alex Martinez",
-            "Blake Johnson"
+            "Courtney B",
+            "Elise L"
           ],
           "team2": [
-            "Grace Miller",
-            "Riley Cooper"
-          ],
-          "team1_score": 2,
-          "team2_score": 11,
-          "completed": true
-        },
-        {
-          "court": 1,
-          "players": [
-            "Casey Williams",
-            "Emma Thompson",
-            "Quinn Roberts",
-            "Parker Martin"
-          ],
-          "team1": [
-            "Casey Williams",
-            "Emma Thompson"
-          ],
-          "team2": [
-            "Quinn Roberts",
-            "Parker Martin"
-          ],
-          "team1_score": 11,
-          "team2_score": 9,
-          "completed": true
-        }
-      ],
-      "sitting_players": [
-        "Maya Jackson",
-        "Iris Rodriguez",
-        "Drew Anderson",
-        "Noah White"
-      ]
-    },
-    {
-      "round_number": 4,
-      "courts": [
-        {
-          "court": 3,
-          "players": [
-            "Jack Wilson",
-            "Maya Jackson",
-            "Sam Peterson",
-            "Logan Taylor"
-          ],
-          "team1": [
-            "Jack Wilson",
-            "Maya Jackson"
-          ],
-          "team2": [
-            "Sam Peterson",
-            "Logan Taylor"
-          ],
-          "team1_score": 11,
-          "team2_score": 4,
-          "completed": true
-        },
-        {
-          "court": 1,
-          "players": [
-            "Henry Davis",
-            "Taylor Brooks",
-            "Frank Garcia",
-            "Iris Rodriguez"
-          ],
-          "team1": [
-            "Henry Davis",
-            "Taylor Brooks"
-          ],
-          "team2": [
-            "Frank Garcia",
-            "Iris Rodriguez"
-          ],
-          "team1_score": 11,
-          "team2_score": 8,
-          "completed": true
-        },
-        {
-          "court": 2,
-          "players": [
-            "Drew Anderson",
-            "Blake Johnson",
-            "Alex Martinez",
-            "Riley Cooper"
-          ],
-          "team1": [
-            "Drew Anderson",
-            "Blake Johnson"
-          ],
-          "team2": [
-            "Alex Martinez",
-            "Riley Cooper"
-          ],
-          "team1_score": 11,
-          "team2_score": 0,
-          "completed": true
-        },
-        {
-          "court": 1,
-          "players": [
-            "Casey Williams",
-            "Noah White",
-            "Emma Thompson",
-            "Quinn Roberts"
-          ],
-          "team1": [
-            "Casey Williams",
-            "Noah White"
-          ],
-          "team2": [
-            "Emma Thompson",
-            "Quinn Roberts"
-          ],
-          "team1_score": 11,
-          "team2_score": 8,
-          "completed": true
-        }
-      ],
-      "sitting_players": [
-        "Olivia Harris",
-        "Kelly Moore",
-        "Grace Miller",
-        "Parker Martin"
-      ]
-    },
-    {
-      "round_number": 5,
-      "courts": [
-        {
-          "court": 3,
-          "players": [
-            "Maya Jackson",
-            "Logan Taylor",
-            "Olivia Harris",
-            "Jack Wilson"
-          ],
-          "team1": [
-            "Maya Jackson",
-            "Logan Taylor"
-          ],
-          "team2": [
-            "Olivia Harris",
-            "Jack Wilson"
+            "Linda D",
+            "Gabrielle H"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -412,58 +254,58 @@
         {
           "court": 1,
           "players": [
-            "Kelly Moore",
-            "Henry Davis",
-            "Iris Rodriguez",
-            "Frank Garcia"
+            "Jena C",
+            "Loren N",
+            "Nicara M",
+            "Teresa S"
           ],
           "team1": [
-            "Kelly Moore",
-            "Henry Davis"
+            "Jena C",
+            "Loren N"
           ],
           "team2": [
-            "Iris Rodriguez",
-            "Frank Garcia"
+            "Nicara M",
+            "Teresa S"
           ],
           "team1_score": 0,
           "team2_score": 0,
           "completed": false
         },
         {
-          "court": 2,
+          "court": 3,
           "players": [
-            "Grace Miller",
-            "Alex Martinez",
-            "Blake Johnson",
-            "Drew Anderson"
+            "Jenny G-H",
+            "Kayla O",
+            "Nicole A",
+            "Julia I"
           ],
           "team1": [
-            "Grace Miller",
-            "Alex Martinez"
+            "Jenny G-H",
+            "Kayla O"
           ],
           "team2": [
-            "Blake Johnson",
-            "Drew Anderson"
+            "Nicole A",
+            "Julia I"
           ],
           "team1_score": 0,
           "team2_score": 0,
           "completed": false
         },
         {
-          "court": 1,
+          "court": 4,
           "players": [
-            "Emma Thompson",
-            "Noah White",
-            "Casey Williams",
-            "Parker Martin"
+            "Leigh B",
+            "Susan C",
+            "Tracie G",
+            "Stacie E"
           ],
           "team1": [
-            "Emma Thompson",
-            "Noah White"
+            "Leigh B",
+            "Susan C"
           ],
           "team2": [
-            "Casey Williams",
-            "Parker Martin"
+            "Tracie G",
+            "Stacie E"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -471,2172 +313,324 @@
         }
       ],
       "sitting_players": [
-        "Sam Peterson",
-        "Taylor Brooks",
-        "Riley Cooper",
-        "Quinn Roberts"
+        "Jaclyn C",
+        "Abby A",
+        "Ash M",
+        "Tricia T",
+        "April S",
+        "Carolyn G",
+        "Rachel A",
+        "Catherine B",
+        "Hala A",
+        "Susan M",
+        "Karen K",
+        "Laurie C"
       ]
     }
   ],
-  "current_session": 3,
+  "current_session": 1,
   "player_stats": {
-    "Alex Martinez": {
-      "games_played": 3,
-      "total_points": 13,
-      "total_points_against": 24,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 1,
+    "Abby A": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 3,
       "game_scores": []
     },
-    "Blake Johnson": {
-      "games_played": 3,
-      "total_points": 24,
-      "total_points_against": 19,
+    "April S": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Ash M": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Carolyn G": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Catherine B": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Courtney B": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
       "last_sat_out_round": 2,
       "game_scores": []
     },
-    "Casey Williams": {
-      "games_played": 3,
-      "total_points": 33,
-      "total_points_against": 23,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Drew Anderson": {
-      "games_played": 3,
-      "total_points": 30,
-      "total_points_against": 13,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 3,
-      "game_scores": []
-    },
-    "Emma Thompson": {
-      "games_played": 3,
-      "total_points": 30,
-      "total_points_against": 28,
+    "Elise L": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
       "last_sat_out_round": 2,
       "game_scores": []
     },
-    "Frank Garcia": {
-      "games_played": 3,
-      "total_points": 22,
-      "total_points_against": 27,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Grace Miller": {
-      "games_played": 3,
-      "total_points": 21,
-      "total_points_against": 24,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 4,
-      "game_scores": []
-    },
-    "Henry Davis": {
-      "games_played": 3,
-      "total_points": 33,
-      "total_points_against": 20,
+    "Gabrielle H": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
       "last_sat_out_round": 2,
       "game_scores": []
     },
-    "Iris Rodriguez": {
-      "games_played": 3,
-      "total_points": 18,
-      "total_points_against": 33,
+    "Hala A": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Jaclyn C": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
       "last_sat_out_round": 3,
       "game_scores": []
     },
-    "Jack Wilson": {
-      "games_played": 3,
-      "total_points": 28,
-      "total_points_against": 18,
+    "Jena C": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
       "last_sat_out_round": 1,
       "game_scores": []
     },
-    "Kelly Moore": {
-      "games_played": 3,
-      "total_points": 27,
-      "total_points_against": 21,
+    "Jenny G-H": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
-      "last_sat_out_round": 4,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
-    "Logan Taylor": {
-      "games_played": 3,
-      "total_points": 15,
-      "total_points_against": 28,
+    "Julia I": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
       "last_sat_out_round": 2,
       "game_scores": []
     },
-    "Maya Jackson": {
-      "games_played": 3,
-      "total_points": 25,
-      "total_points_against": 15,
+    "Karen K": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Kayla O": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 2,
+      "game_scores": []
+    },
+    "Laurie C": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 3,
+      "game_scores": []
+    },
+    "Leigh B": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 1,
+      "game_scores": []
+    },
+    "Linda D": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 1,
+      "game_scores": []
+    },
+    "Loren N": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 2,
+      "game_scores": []
+    },
+    "Nicara M": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 2,
+      "game_scores": []
+    },
+    "Teresa S": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 2,
+      "game_scores": []
+    },
+    "Tricia T": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
       "last_sat_out_round": 3,
       "game_scores": []
     },
-    "Noah White": {
-      "games_played": 3,
-      "total_points": 28,
-      "total_points_against": 27,
+    "Nicole A": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 1,
+      "last_sat_out_round": 2,
+      "game_scores": []
+    },
+    "Rachel A": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
       "last_sat_out_round": 3,
       "game_scores": []
     },
-    "Olivia Harris": {
-      "games_played": 3,
-      "total_points": 33,
-      "total_points_against": 9,
+    "Stacie E": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
-      "last_sat_out_round": 4,
+      "last_sat_out_round": 2,
       "game_scores": []
     },
-    "Parker Martin": {
-      "games_played": 3,
-      "total_points": 23,
-      "total_points_against": 33,
+    "Susan C": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
-      "last_sat_out_round": 4,
+      "last_sat_out_round": 2,
       "game_scores": []
     },
-    "Quinn Roberts": {
-      "games_played": 4,
-      "total_points": 36,
-      "total_points_against": 39,
+    "Tracie G": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
-      "last_sat_out_round": 5,
+      "last_sat_out_round": 2,
       "game_scores": []
     },
-    "Riley Cooper": {
-      "games_played": 4,
-      "total_points": 24,
-      "total_points_against": 32,
+    "Susan M": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
       "rounds_sat_out": 1,
-      "last_sat_out_round": 5,
-      "game_scores": []
-    },
-    "Sam Peterson": {
-      "games_played": 4,
-      "total_points": 13,
-      "total_points_against": 44,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 5,
-      "game_scores": []
-    },
-    "Taylor Brooks": {
-      "games_played": 4,
-      "total_points": 34,
-      "total_points_against": 33,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 5,
+      "last_sat_out_round": 3,
       "game_scores": []
     }
   },
-  "session_history": [
-    {
-      "session_number": 1,
-      "date": "2025-12-25 20:19",
-      "rounds": [
-        {
-          "round_number": 1,
-          "courts": [
-            {
-              "court": 1,
-              "players": [
-                "Iris Rodriguez",
-                "Emma Thompson",
-                "Henry Davis",
-                "Frank Garcia"
-              ],
-              "team1": [
-                "Iris Rodriguez",
-                "Emma Thompson"
-              ],
-              "team2": [
-                "Henry Davis",
-                "Frank Garcia"
-              ],
-              "team1_score": 6,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Noah White",
-                "Jack Wilson",
-                "Quinn Roberts",
-                "Riley Cooper"
-              ],
-              "team1": [
-                "Noah White",
-                "Jack Wilson"
-              ],
-              "team2": [
-                "Quinn Roberts",
-                "Riley Cooper"
-              ],
-              "team1_score": 2,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 3,
-              "players": [
-                "Olivia Harris",
-                "Sam Peterson",
-                "Taylor Brooks",
-                "Grace Miller"
-              ],
-              "team1": [
-                "Olivia Harris",
-                "Sam Peterson"
-              ],
-              "team2": [
-                "Taylor Brooks",
-                "Grace Miller"
-              ],
-              "team1_score": 9,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 4,
-              "players": [
-                "Logan Taylor",
-                "Maya Jackson",
-                "Kelly Moore",
-                "Parker Martin"
-              ],
-              "team1": [
-                "Logan Taylor",
-                "Maya Jackson"
-              ],
-              "team2": [
-                "Kelly Moore",
-                "Parker Martin"
-              ],
-              "team1_score": 11,
-              "team2_score": 7,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Alex Martinez",
-            "Blake Johnson",
-            "Casey Williams",
-            "Drew Anderson"
-          ]
-        },
-        {
-          "round_number": 2,
-          "courts": [
-            {
-              "court": 1,
-              "players": [
-                "Taylor Brooks",
-                "Drew Anderson",
-                "Maya Jackson",
-                "Quinn Roberts"
-              ],
-              "team1": [
-                "Taylor Brooks",
-                "Drew Anderson"
-              ],
-              "team2": [
-                "Maya Jackson",
-                "Quinn Roberts"
-              ],
-              "team1_score": 11,
-              "team2_score": 3,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Blake Johnson",
-                "Kelly Moore",
-                "Parker Martin",
-                "Alex Martinez"
-              ],
-              "team1": [
-                "Blake Johnson",
-                "Kelly Moore"
-              ],
-              "team2": [
-                "Parker Martin",
-                "Alex Martinez"
-              ],
-              "team1_score": 11,
-              "team2_score": 1,
-              "completed": true
-            },
-            {
-              "court": 3,
-              "players": [
-                "Noah White",
-                "Iris Rodriguez",
-                "Riley Cooper",
-                "Sam Peterson"
-              ],
-              "team1": [
-                "Noah White",
-                "Iris Rodriguez"
-              ],
-              "team2": [
-                "Riley Cooper",
-                "Sam Peterson"
-              ],
-              "team1_score": 9,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 4,
-              "players": [
-                "Logan Taylor",
-                "Casey Williams",
-                "Olivia Harris",
-                "Jack Wilson"
-              ],
-              "team1": [
-                "Logan Taylor",
-                "Casey Williams"
-              ],
-              "team2": [
-                "Olivia Harris",
-                "Jack Wilson"
-              ],
-              "team1_score": 11,
-              "team2_score": 5,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Emma Thompson",
-            "Frank Garcia",
-            "Grace Miller",
-            "Henry Davis"
-          ]
-        },
-        {
-          "round_number": 3,
-          "courts": [
-            {
-              "court": 1,
-              "players": [
-                "Olivia Harris",
-                "Noah White",
-                "Riley Cooper",
-                "Alex Martinez"
-              ],
-              "team1": [
-                "Olivia Harris",
-                "Noah White"
-              ],
-              "team2": [
-                "Riley Cooper",
-                "Alex Martinez"
-              ],
-              "team1_score": 11,
-              "team2_score": 2,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Grace Miller",
-                "Henry Davis",
-                "Parker Martin",
-                "Quinn Roberts"
-              ],
-              "team1": [
-                "Grace Miller",
-                "Henry Davis"
-              ],
-              "team2": [
-                "Parker Martin",
-                "Quinn Roberts"
-              ],
-              "team1_score": 11,
-              "team2_score": 0,
-              "completed": true
-            },
-            {
-              "court": 3,
-              "players": [
-                "Taylor Brooks",
-                "Sam Peterson",
-                "Casey Williams",
-                "Emma Thompson"
-              ],
-              "team1": [
-                "Taylor Brooks",
-                "Sam Peterson"
-              ],
-              "team2": [
-                "Casey Williams",
-                "Emma Thompson"
-              ],
-              "team1_score": 11,
-              "team2_score": 5,
-              "completed": true
-            },
-            {
-              "court": 4,
-              "players": [
-                "Frank Garcia",
-                "Drew Anderson",
-                "Blake Johnson",
-                "Maya Jackson"
-              ],
-              "team1": [
-                "Frank Garcia",
-                "Drew Anderson"
-              ],
-              "team2": [
-                "Blake Johnson",
-                "Maya Jackson"
-              ],
-              "team1_score": 11,
-              "team2_score": 6,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Iris Rodriguez",
-            "Jack Wilson",
-            "Kelly Moore",
-            "Logan Taylor"
-          ]
-        },
-        {
-          "round_number": 4,
-          "courts": [
-            {
-              "court": 1,
-              "players": [
-                "Blake Johnson",
-                "Iris Rodriguez",
-                "Taylor Brooks",
-                "Kelly Moore"
-              ],
-              "team1": [
-                "Blake Johnson",
-                "Iris Rodriguez"
-              ],
-              "team2": [
-                "Taylor Brooks",
-                "Kelly Moore"
-              ],
-              "team1_score": 11,
-              "team2_score": 7,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Henry Davis",
-                "Logan Taylor",
-                "Grace Miller",
-                "Alex Martinez"
-              ],
-              "team1": [
-                "Henry Davis",
-                "Logan Taylor"
-              ],
-              "team2": [
-                "Grace Miller",
-                "Alex Martinez"
-              ],
-              "team1_score": 11,
-              "team2_score": 3,
-              "completed": true
-            },
-            {
-              "court": 3,
-              "players": [
-                "Quinn Roberts",
-                "Emma Thompson",
-                "Casey Williams",
-                "Frank Garcia"
-              ],
-              "team1": [
-                "Quinn Roberts",
-                "Emma Thompson"
-              ],
-              "team2": [
-                "Casey Williams",
-                "Frank Garcia"
-              ],
-              "team1_score": 11,
-              "team2_score": 9,
-              "completed": true
-            },
-            {
-              "court": 4,
-              "players": [
-                "Sam Peterson",
-                "Riley Cooper",
-                "Jack Wilson",
-                "Drew Anderson"
-              ],
-              "team1": [
-                "Sam Peterson",
-                "Riley Cooper"
-              ],
-              "team2": [
-                "Jack Wilson",
-                "Drew Anderson"
-              ],
-              "team1_score": 11,
-              "team2_score": 7,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Maya Jackson",
-            "Noah White",
-            "Olivia Harris",
-            "Parker Martin"
-          ]
-        },
-        {
-          "round_number": 5,
-          "courts": [
-            {
-              "court": 1,
-              "players": [
-                "Kelly Moore",
-                "Maya Jackson",
-                "Logan Taylor",
-                "Henry Davis"
-              ],
-              "team1": [
-                "Kelly Moore",
-                "Maya Jackson"
-              ],
-              "team2": [
-                "Logan Taylor",
-                "Henry Davis"
-              ],
-              "team1_score": 11,
-              "team2_score": 2,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Olivia Harris",
-                "Parker Martin",
-                "Casey Williams",
-                "Iris Rodriguez"
-              ],
-              "team1": [
-                "Olivia Harris",
-                "Parker Martin"
-              ],
-              "team2": [
-                "Casey Williams",
-                "Iris Rodriguez"
-              ],
-              "team1_score": 11,
-              "team2_score": 0,
-              "completed": true
-            },
-            {
-              "court": 3,
-              "players": [
-                "Emma Thompson",
-                "Grace Miller",
-                "Drew Anderson",
-                "Frank Garcia"
-              ],
-              "team1": [
-                "Emma Thompson",
-                "Grace Miller"
-              ],
-              "team2": [
-                "Drew Anderson",
-                "Frank Garcia"
-              ],
-              "team1_score": 5,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 4,
-              "players": [
-                "Jack Wilson",
-                "Alex Martinez",
-                "Blake Johnson",
-                "Noah White"
-              ],
-              "team1": [
-                "Jack Wilson",
-                "Alex Martinez"
-              ],
-              "team2": [
-                "Blake Johnson",
-                "Noah White"
-              ],
-              "team1_score": 11,
-              "team2_score": 5,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Quinn Roberts",
-            "Riley Cooper",
-            "Sam Peterson",
-            "Taylor Brooks"
-          ]
-        },
-        {
-          "round_number": 6,
-          "courts": [
-            {
-              "court": 1,
-              "players": [
-                "Iris Rodriguez",
-                "Henry Davis",
-                "Quinn Roberts",
-                "Maya Jackson"
-              ],
-              "team1": [
-                "Iris Rodriguez",
-                "Henry Davis"
-              ],
-              "team2": [
-                "Quinn Roberts",
-                "Maya Jackson"
-              ],
-              "team1_score": 11,
-              "team2_score": 0,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Frank Garcia",
-                "Sam Peterson",
-                "Logan Taylor",
-                "Parker Martin"
-              ],
-              "team1": [
-                "Frank Garcia",
-                "Sam Peterson"
-              ],
-              "team2": [
-                "Logan Taylor",
-                "Parker Martin"
-              ],
-              "team1_score": 3,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 3,
-              "players": [
-                "Jack Wilson",
-                "Emma Thompson",
-                "Noah White",
-                "Kelly Moore"
-              ],
-              "team1": [
-                "Jack Wilson",
-                "Emma Thompson"
-              ],
-              "team2": [
-                "Noah White",
-                "Kelly Moore"
-              ],
-              "team1_score": 11,
-              "team2_score": 4,
-              "completed": true
-            },
-            {
-              "court": 4,
-              "players": [
-                "Riley Cooper",
-                "Grace Miller",
-                "Olivia Harris",
-                "Taylor Brooks"
-              ],
-              "team1": [
-                "Riley Cooper",
-                "Grace Miller"
-              ],
-              "team2": [
-                "Olivia Harris",
-                "Taylor Brooks"
-              ],
-              "team1_score": 4,
-              "team2_score": 11,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Alex Martinez",
-            "Blake Johnson",
-            "Casey Williams",
-            "Drew Anderson"
-          ]
-        },
-        {
-          "round_number": 7,
-          "courts": [
-            {
-              "court": 1,
-              "players": [
-                "Henry Davis",
-                "Drew Anderson",
-                "Logan Taylor",
-                "Emma Thompson"
-              ],
-              "team1": [
-                "Henry Davis",
-                "Drew Anderson"
-              ],
-              "team2": [
-                "Logan Taylor",
-                "Emma Thompson"
-              ],
-              "team1_score": 1,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Noah White",
-                "Maya Jackson",
-                "Alex Martinez",
-                "Kelly Moore"
-              ],
-              "team1": [
-                "Noah White",
-                "Maya Jackson"
-              ],
-              "team2": [
-                "Alex Martinez",
-                "Kelly Moore"
-              ],
-              "team1_score": 9,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 3,
-              "players": [
-                "Parker Martin",
-                "Iris Rodriguez",
-                "Casey Williams",
-                "Jack Wilson"
-              ],
-              "team1": [
-                "Parker Martin",
-                "Iris Rodriguez"
-              ],
-              "team2": [
-                "Casey Williams",
-                "Jack Wilson"
-              ],
-              "team1_score": 11,
-              "team2_score": 3,
-              "completed": true
-            },
-            {
-              "court": 4,
-              "players": [
-                "Grace Miller",
-                "Frank Garcia",
-                "Blake Johnson",
-                "Olivia Harris"
-              ],
-              "team1": [
-                "Grace Miller",
-                "Frank Garcia"
-              ],
-              "team2": [
-                "Blake Johnson",
-                "Olivia Harris"
-              ],
-              "team1_score": 11,
-              "team2_score": 7,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Quinn Roberts",
-            "Riley Cooper",
-            "Sam Peterson",
-            "Taylor Brooks"
-          ]
-        },
-        {
-          "round_number": 8,
-          "courts": [
-            {
-              "court": 1,
-              "players": [
-                "Riley Cooper",
-                "Parker Martin",
-                "Drew Anderson",
-                "Logan Taylor"
-              ],
-              "team1": [
-                "Riley Cooper",
-                "Parker Martin"
-              ],
-              "team2": [
-                "Drew Anderson",
-                "Logan Taylor"
-              ],
-              "team1_score": 5,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Blake Johnson",
-                "Maya Jackson",
-                "Kelly Moore",
-                "Noah White"
-              ],
-              "team1": [
-                "Blake Johnson",
-                "Maya Jackson"
-              ],
-              "team2": [
-                "Kelly Moore",
-                "Noah White"
-              ],
-              "team1_score": 11,
-              "team2_score": 5,
-              "completed": true
-            },
-            {
-              "court": 3,
-              "players": [
-                "Sam Peterson",
-                "Olivia Harris",
-                "Iris Rodriguez",
-                "Taylor Brooks"
-              ],
-              "team1": [
-                "Sam Peterson",
-                "Olivia Harris"
-              ],
-              "team2": [
-                "Iris Rodriguez",
-                "Taylor Brooks"
-              ],
-              "team1_score": 11,
-              "team2_score": 1,
-              "completed": true
-            },
-            {
-              "court": 4,
-              "players": [
-                "Casey Williams",
-                "Quinn Roberts",
-                "Alex Martinez",
-                "Jack Wilson"
-              ],
-              "team1": [
-                "Casey Williams",
-                "Quinn Roberts"
-              ],
-              "team2": [
-                "Alex Martinez",
-                "Jack Wilson"
-              ],
-              "team1_score": 1,
-              "team2_score": 11,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Emma Thompson",
-            "Frank Garcia",
-            "Grace Miller",
-            "Henry Davis"
-          ]
-        }
-      ],
-      "rankings": [
-        {
-          "player": "Logan Taylor",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 68,
-          "points_against": 35,
-          "differential": 33,
-          "tier": 4
-        },
-        {
-          "player": "Olivia Harris",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 65,
-          "points_against": 40,
-          "differential": 25,
-          "tier": 4
-        },
-        {
-          "player": "Sam Peterson",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 56,
-          "points_against": 44,
-          "differential": 12,
-          "tier": 4
-        },
-        {
-          "player": "Frank Garcia",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 56,
-          "points_against": 46,
-          "differential": 10,
-          "tier": 4
-        },
-        {
-          "player": "Kelly Moore",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 56,
-          "points_against": 56,
-          "differential": 0,
-          "tier": 4
-        },
-        {
-          "player": "Drew Anderson",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 52,
-          "points_against": 41,
-          "differential": 11,
-          "tier": 4
-        },
-        {
-          "player": "Taylor Brooks",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 52,
-          "points_against": 43,
-          "differential": 9,
-          "tier": 4
-        },
-        {
-          "player": "Blake Johnson",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 51,
-          "points_against": 46,
-          "differential": 5,
-          "tier": 4
-        },
-        {
-          "player": "Maya Jackson",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 51,
-          "points_against": 58,
-          "differential": -7,
-          "tier": 4
-        },
-        {
-          "player": "Jack Wilson",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 50,
-          "points_against": 54,
-          "differential": -4,
-          "tier": 4
-        },
-        {
-          "player": "Emma Thompson",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 49,
-          "points_against": 47,
-          "differential": 2,
-          "tier": 4
-        },
-        {
-          "player": "Iris Rodriguez",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 49,
-          "points_against": 54,
-          "differential": -5,
-          "tier": 4
-        },
-        {
-          "player": "Henry Davis",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 47,
-          "points_against": 31,
-          "differential": 16,
-          "tier": 4
-        },
-        {
-          "player": "Parker Martin",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 46,
-          "points_against": 50,
-          "differential": -4,
-          "tier": 4
-        },
-        {
-          "player": "Grace Miller",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 45,
-          "points_against": 49,
-          "differential": -4,
-          "tier": 4
-        },
-        {
-          "player": "Noah White",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 45,
-          "points_against": 68,
-          "differential": -23,
-          "tier": 4
-        },
-        {
-          "player": "Riley Cooper",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 44,
-          "points_against": 51,
-          "differential": -7,
-          "tier": 4
-        },
-        {
-          "player": "Alex Martinez",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 39,
-          "points_against": 48,
-          "differential": -9,
-          "tier": 4
-        },
-        {
-          "player": "Casey Williams",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 29,
-          "points_against": 60,
-          "differential": -31,
-          "tier": 4
-        },
-        {
-          "player": "Quinn Roberts",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 26,
-          "points_against": 55,
-          "differential": -29,
-          "tier": 4
-        }
-      ],
-      "player_count": 20,
-      "is_seeding": false,
-      "promoted": [],
-      "relegated": [],
-      "seeded_tier1": [
-        "Logan Taylor",
-        "Olivia Harris",
-        "Sam Peterson",
-        "Frank Garcia",
-        "Kelly Moore"
-      ],
-      "seeded_tier2": [
-        "Drew Anderson",
-        "Taylor Brooks",
-        "Blake Johnson",
-        "Maya Jackson",
-        "Jack Wilson"
-      ],
-      "seeded_tier3": [
-        "Emma Thompson",
-        "Iris Rodriguez",
-        "Henry Davis",
-        "Parker Martin",
-        "Grace Miller"
-      ],
-      "seeded_tier4": [
-        "Noah White",
-        "Riley Cooper",
-        "Alex Martinez",
-        "Casey Williams",
-        "Quinn Roberts"
-      ]
-    },
-    {
-      "session_number": 2,
-      "date": "2025-12-25 20:21",
-      "rounds": [
-        {
-          "round_number": 1,
-          "courts": [
-            {
-              "court": 3,
-              "players": [
-                "Sam Peterson",
-                "Logan Taylor",
-                "Olivia Harris",
-                "Kelly Moore"
-              ],
-              "team1": [
-                "Sam Peterson",
-                "Logan Taylor"
-              ],
-              "team2": [
-                "Olivia Harris",
-                "Kelly Moore"
-              ],
-              "team1_score": 11,
-              "team2_score": 8,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Jack Wilson",
-                "Drew Anderson",
-                "Maya Jackson",
-                "Taylor Brooks"
-              ],
-              "team1": [
-                "Jack Wilson",
-                "Drew Anderson"
-              ],
-              "team2": [
-                "Maya Jackson",
-                "Taylor Brooks"
-              ],
-              "team1_score": 2,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Iris Rodriguez",
-                "Grace Miller",
-                "Henry Davis",
-                "Parker Martin"
-              ],
-              "team1": [
-                "Iris Rodriguez",
-                "Grace Miller"
-              ],
-              "team2": [
-                "Henry Davis",
-                "Parker Martin"
-              ],
-              "team1_score": 11,
-              "team2_score": 8,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Riley Cooper",
-                "Noah White",
-                "Quinn Roberts",
-                "Casey Williams"
-              ],
-              "team1": [
-                "Riley Cooper",
-                "Noah White"
-              ],
-              "team2": [
-                "Quinn Roberts",
-                "Casey Williams"
-              ],
-              "team1_score": 11,
-              "team2_score": 6,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Frank Garcia",
-            "Blake Johnson",
-            "Emma Thompson",
-            "Alex Martinez"
-          ]
-        },
-        {
-          "round_number": 2,
-          "courts": [
-            {
-              "court": 3,
-              "players": [
-                "Frank Garcia",
-                "Olivia Harris",
-                "Sam Peterson",
-                "Logan Taylor"
-              ],
-              "team1": [
-                "Frank Garcia",
-                "Olivia Harris"
-              ],
-              "team2": [
-                "Sam Peterson",
-                "Logan Taylor"
-              ],
-              "team1_score": 8,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Maya Jackson",
-                "Taylor Brooks",
-                "Blake Johnson",
-                "Jack Wilson"
-              ],
-              "team1": [
-                "Maya Jackson",
-                "Taylor Brooks"
-              ],
-              "team2": [
-                "Blake Johnson",
-                "Jack Wilson"
-              ],
-              "team1_score": 11,
-              "team2_score": 9,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Emma Thompson",
-                "Parker Martin",
-                "Henry Davis",
-                "Iris Rodriguez"
-              ],
-              "team1": [
-                "Emma Thompson",
-                "Parker Martin"
-              ],
-              "team2": [
-                "Henry Davis",
-                "Iris Rodriguez"
-              ],
-              "team1_score": 3,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Noah White",
-                "Quinn Roberts",
-                "Alex Martinez",
-                "Riley Cooper"
-              ],
-              "team1": [
-                "Noah White",
-                "Quinn Roberts"
-              ],
-              "team2": [
-                "Alex Martinez",
-                "Riley Cooper"
-              ],
-              "team1_score": 1,
-              "team2_score": 11,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Kelly Moore",
-            "Drew Anderson",
-            "Grace Miller",
-            "Casey Williams"
-          ]
-        },
-        {
-          "round_number": 3,
-          "courts": [
-            {
-              "court": 3,
-              "players": [
-                "Olivia Harris",
-                "Kelly Moore",
-                "Frank Garcia",
-                "Sam Peterson"
-              ],
-              "team1": [
-                "Olivia Harris",
-                "Kelly Moore"
-              ],
-              "team2": [
-                "Frank Garcia",
-                "Sam Peterson"
-              ],
-              "team1_score": 11,
-              "team2_score": 9,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Taylor Brooks",
-                "Blake Johnson",
-                "Maya Jackson",
-                "Drew Anderson"
-              ],
-              "team1": [
-                "Taylor Brooks",
-                "Blake Johnson"
-              ],
-              "team2": [
-                "Maya Jackson",
-                "Drew Anderson"
-              ],
-              "team1_score": 6,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Parker Martin",
-                "Iris Rodriguez",
-                "Grace Miller",
-                "Emma Thompson"
-              ],
-              "team1": [
-                "Parker Martin",
-                "Iris Rodriguez"
-              ],
-              "team2": [
-                "Grace Miller",
-                "Emma Thompson"
-              ],
-              "team1_score": 11,
-              "team2_score": 6,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Riley Cooper",
-                "Quinn Roberts",
-                "Casey Williams",
-                "Alex Martinez"
-              ],
-              "team1": [
-                "Riley Cooper",
-                "Quinn Roberts"
-              ],
-              "team2": [
-                "Casey Williams",
-                "Alex Martinez"
-              ],
-              "team1_score": 11,
-              "team2_score": 5,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Logan Taylor",
-            "Jack Wilson",
-            "Henry Davis",
-            "Noah White"
-          ]
-        },
-        {
-          "round_number": 4,
-          "courts": [
-            {
-              "court": 3,
-              "players": [
-                "Sam Peterson",
-                "Frank Garcia",
-                "Logan Taylor",
-                "Kelly Moore"
-              ],
-              "team1": [
-                "Sam Peterson",
-                "Frank Garcia"
-              ],
-              "team2": [
-                "Logan Taylor",
-                "Kelly Moore"
-              ],
-              "team1_score": 11,
-              "team2_score": 6,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Blake Johnson",
-                "Taylor Brooks",
-                "Drew Anderson",
-                "Jack Wilson"
-              ],
-              "team1": [
-                "Blake Johnson",
-                "Taylor Brooks"
-              ],
-              "team2": [
-                "Drew Anderson",
-                "Jack Wilson"
-              ],
-              "team1_score": 4,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Grace Miller",
-                "Parker Martin",
-                "Henry Davis",
-                "Emma Thompson"
-              ],
-              "team1": [
-                "Grace Miller",
-                "Parker Martin"
-              ],
-              "team2": [
-                "Henry Davis",
-                "Emma Thompson"
-              ],
-              "team1_score": 9,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Alex Martinez",
-                "Noah White",
-                "Casey Williams",
-                "Riley Cooper"
-              ],
-              "team1": [
-                "Alex Martinez",
-                "Noah White"
-              ],
-              "team2": [
-                "Casey Williams",
-                "Riley Cooper"
-              ],
-              "team1_score": 9,
-              "team2_score": 11,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Olivia Harris",
-            "Maya Jackson",
-            "Iris Rodriguez",
-            "Quinn Roberts"
-          ]
-        },
-        {
-          "round_number": 5,
-          "courts": [
-            {
-              "court": 3,
-              "players": [
-                "Kelly Moore",
-                "Logan Taylor",
-                "Frank Garcia",
-                "Olivia Harris"
-              ],
-              "team1": [
-                "Kelly Moore",
-                "Logan Taylor"
-              ],
-              "team2": [
-                "Frank Garcia",
-                "Olivia Harris"
-              ],
-              "team1_score": 11,
-              "team2_score": 8,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Drew Anderson",
-                "Jack Wilson",
-                "Blake Johnson",
-                "Maya Jackson"
-              ],
-              "team1": [
-                "Drew Anderson",
-                "Jack Wilson"
-              ],
-              "team2": [
-                "Blake Johnson",
-                "Maya Jackson"
-              ],
-              "team1_score": 11,
-              "team2_score": 6,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Emma Thompson",
-                "Henry Davis",
-                "Grace Miller",
-                "Iris Rodriguez"
-              ],
-              "team1": [
-                "Emma Thompson",
-                "Henry Davis"
-              ],
-              "team2": [
-                "Grace Miller",
-                "Iris Rodriguez"
-              ],
-              "team1_score": 7,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Alex Martinez",
-                "Quinn Roberts",
-                "Noah White",
-                "Casey Williams"
-              ],
-              "team1": [
-                "Alex Martinez",
-                "Quinn Roberts"
-              ],
-              "team2": [
-                "Noah White",
-                "Casey Williams"
-              ],
-              "team1_score": 11,
-              "team2_score": 1,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Sam Peterson",
-            "Taylor Brooks",
-            "Parker Martin",
-            "Riley Cooper"
-          ]
-        },
-        {
-          "round_number": 6,
-          "courts": [
-            {
-              "court": 3,
-              "players": [
-                "Kelly Moore",
-                "Logan Taylor",
-                "Sam Peterson",
-                "Olivia Harris"
-              ],
-              "team1": [
-                "Kelly Moore",
-                "Logan Taylor"
-              ],
-              "team2": [
-                "Sam Peterson",
-                "Olivia Harris"
-              ],
-              "team1_score": 7,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Maya Jackson",
-                "Taylor Brooks",
-                "Drew Anderson",
-                "Jack Wilson"
-              ],
-              "team1": [
-                "Maya Jackson",
-                "Taylor Brooks"
-              ],
-              "team2": [
-                "Drew Anderson",
-                "Jack Wilson"
-              ],
-              "team1_score": 9,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Iris Rodriguez",
-                "Henry Davis",
-                "Grace Miller",
-                "Parker Martin"
-              ],
-              "team1": [
-                "Iris Rodriguez",
-                "Henry Davis"
-              ],
-              "team2": [
-                "Grace Miller",
-                "Parker Martin"
-              ],
-              "team1_score": 11,
-              "team2_score": 3,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Quinn Roberts",
-                "Noah White",
-                "Riley Cooper",
-                "Casey Williams"
-              ],
-              "team1": [
-                "Quinn Roberts",
-                "Noah White"
-              ],
-              "team2": [
-                "Riley Cooper",
-                "Casey Williams"
-              ],
-              "team1_score": 5,
-              "team2_score": 11,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Frank Garcia",
-            "Blake Johnson",
-            "Emma Thompson",
-            "Alex Martinez"
-          ]
-        },
-        {
-          "round_number": 7,
-          "courts": [
-            {
-              "court": 3,
-              "players": [
-                "Olivia Harris",
-                "Logan Taylor",
-                "Frank Garcia",
-                "Kelly Moore"
-              ],
-              "team1": [
-                "Olivia Harris",
-                "Logan Taylor"
-              ],
-              "team2": [
-                "Frank Garcia",
-                "Kelly Moore"
-              ],
-              "team1_score": 7,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Jack Wilson",
-                "Maya Jackson",
-                "Drew Anderson",
-                "Blake Johnson"
-              ],
-              "team1": [
-                "Jack Wilson",
-                "Maya Jackson"
-              ],
-              "team2": [
-                "Drew Anderson",
-                "Blake Johnson"
-              ],
-              "team1_score": 11,
-              "team2_score": 5,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Grace Miller",
-                "Henry Davis",
-                "Emma Thompson",
-                "Iris Rodriguez"
-              ],
-              "team1": [
-                "Grace Miller",
-                "Henry Davis"
-              ],
-              "team2": [
-                "Emma Thompson",
-                "Iris Rodriguez"
-              ],
-              "team1_score": 11,
-              "team2_score": 2,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Noah White",
-                "Alex Martinez",
-                "Casey Williams",
-                "Quinn Roberts"
-              ],
-              "team1": [
-                "Noah White",
-                "Alex Martinez"
-              ],
-              "team2": [
-                "Casey Williams",
-                "Quinn Roberts"
-              ],
-              "team1_score": 11,
-              "team2_score": 0,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Sam Peterson",
-            "Taylor Brooks",
-            "Parker Martin",
-            "Riley Cooper"
-          ]
-        },
-        {
-          "round_number": 8,
-          "courts": [
-            {
-              "court": 3,
-              "players": [
-                "Frank Garcia",
-                "Olivia Harris",
-                "Sam Peterson",
-                "Logan Taylor"
-              ],
-              "team1": [
-                "Frank Garcia",
-                "Olivia Harris"
-              ],
-              "team2": [
-                "Sam Peterson",
-                "Logan Taylor"
-              ],
-              "team1_score": 8,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Jack Wilson",
-                "Maya Jackson",
-                "Blake Johnson",
-                "Taylor Brooks"
-              ],
-              "team1": [
-                "Jack Wilson",
-                "Maya Jackson"
-              ],
-              "team2": [
-                "Blake Johnson",
-                "Taylor Brooks"
-              ],
-              "team1_score": 0,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 2,
-              "players": [
-                "Parker Martin",
-                "Henry Davis",
-                "Emma Thompson",
-                "Iris Rodriguez"
-              ],
-              "team1": [
-                "Parker Martin",
-                "Henry Davis"
-              ],
-              "team2": [
-                "Emma Thompson",
-                "Iris Rodriguez"
-              ],
-              "team1_score": 0,
-              "team2_score": 11,
-              "completed": true
-            },
-            {
-              "court": 1,
-              "players": [
-                "Alex Martinez",
-                "Quinn Roberts",
-                "Noah White",
-                "Riley Cooper"
-              ],
-              "team1": [
-                "Alex Martinez",
-                "Quinn Roberts"
-              ],
-              "team2": [
-                "Noah White",
-                "Riley Cooper"
-              ],
-              "team1_score": 4,
-              "team2_score": 11,
-              "completed": true
-            }
-          ],
-          "sitting_players": [
-            "Kelly Moore",
-            "Drew Anderson",
-            "Grace Miller",
-            "Casey Williams"
-          ]
-        }
-      ],
-      "rankings": [
-        {
-          "player": "Sam Peterson",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 64,
-          "points_against": 48,
-          "differential": 16,
-          "tier": 1
-        },
-        {
-          "player": "Logan Taylor",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 64,
-          "points_against": 65,
-          "differential": -1,
-          "tier": 1
-        },
-        {
-          "player": "Olivia Harris",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 61,
-          "points_against": 71,
-          "differential": -10,
-          "tier": 1
-        },
-        {
-          "player": "Frank Garcia",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 55,
-          "points_against": 57,
-          "differential": -2,
-          "tier": 1
-        },
-        {
-          "player": "Kelly Moore",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 54,
-          "points_against": 57,
-          "differential": -3,
-          "tier": 1
-        },
-        {
-          "player": "Maya Jackson",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 59,
-          "points_against": 55,
-          "differential": 4,
-          "tier": 2
-        },
-        {
-          "player": "Jack Wilson",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 55,
-          "points_against": 57,
-          "differential": -2,
-          "tier": 2
-        },
-        {
-          "player": "Taylor Brooks",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 52,
-          "points_against": 44,
-          "differential": 8,
-          "tier": 2
-        },
-        {
-          "player": "Drew Anderson",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 51,
-          "points_against": 47,
-          "differential": 4,
-          "tier": 2
-        },
-        {
-          "player": "Blake Johnson",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 41,
-          "points_against": 55,
-          "differential": -14,
-          "tier": 2
-        },
-        {
-          "player": "Iris Rodriguez",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 68,
-          "points_against": 38,
-          "differential": 30,
-          "tier": 3
-        },
-        {
-          "player": "Henry Davis",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 59,
-          "points_against": 50,
-          "differential": 9,
-          "tier": 3
-        },
-        {
-          "player": "Grace Miller",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 51,
-          "points_against": 50,
-          "differential": 1,
-          "tier": 3
-        },
-        {
-          "player": "Emma Thompson",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 40,
-          "points_against": 53,
-          "differential": -13,
-          "tier": 3
-        },
-        {
-          "player": "Parker Martin",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 34,
-          "points_against": 61,
-          "differential": -27,
-          "tier": 3
-        },
-        {
-          "player": "Riley Cooper",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 66,
-          "points_against": 30,
-          "differential": 36,
-          "tier": 4
-        },
-        {
-          "player": "Alex Martinez",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 51,
-          "points_against": 35,
-          "differential": 16,
-          "tier": 4
-        },
-        {
-          "player": "Noah White",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 49,
-          "points_against": 54,
-          "differential": -5,
-          "tier": 4
-        },
-        {
-          "player": "Quinn Roberts",
-          "games_played": 7,
-          "counted_games": 7,
-          "points": 38,
-          "points_against": 61,
-          "differential": -23,
-          "tier": 4
-        },
-        {
-          "player": "Casey Williams",
-          "games_played": 6,
-          "counted_games": 6,
-          "points": 34,
-          "points_against": 58,
-          "differential": -24,
-          "tier": 4
-        }
-      ],
-      "player_count": 20,
-      "is_seeding": false,
-      "promoted": [
-        [
-          "Maya Jackson",
-          2,
-          1
-        ],
-        [
-          "Jack Wilson",
-          2,
-          1
-        ],
-        [
-          "Iris Rodriguez",
-          3,
-          2
-        ],
-        [
-          "Henry Davis",
-          3,
-          2
-        ],
-        [
-          "Riley Cooper",
-          4,
-          3
-        ],
-        [
-          "Alex Martinez",
-          4,
-          3
-        ]
-      ],
-      "relegated": [
-        [
-          "Frank Garcia",
-          1,
-          2
-        ],
-        [
-          "Kelly Moore",
-          1,
-          2
-        ],
-        [
-          "Drew Anderson",
-          2,
-          3
-        ],
-        [
-          "Blake Johnson",
-          2,
-          3
-        ],
-        [
-          "Emma Thompson",
-          3,
-          4
-        ],
-        [
-          "Parker Martin",
-          3,
-          4
-        ]
-      ],
-      "seeded_tier1": [],
-      "seeded_tier2": [],
-      "seeded_tier3": [],
-      "seeded_tier4": []
-    }
-  ],
+  "session_history": [],
   "player_tiers": {
-    "Alex Martinez": 3,
-    "Blake Johnson": 3,
-    "Casey Williams": 4,
-    "Drew Anderson": 3,
-    "Emma Thompson": 4,
-    "Frank Garcia": 2,
-    "Grace Miller": 3,
-    "Henry Davis": 2,
-    "Iris Rodriguez": 2,
-    "Jack Wilson": 1,
-    "Kelly Moore": 2,
-    "Logan Taylor": 1,
-    "Maya Jackson": 1,
-    "Noah White": 4,
-    "Olivia Harris": 1,
-    "Parker Martin": 4,
-    "Quinn Roberts": 4,
-    "Riley Cooper": 3,
-    "Sam Peterson": 1,
-    "Taylor Brooks": 2
+    "Abby A": 1,
+    "April S": 2,
+    "Ash M": 1,
+    "Carolyn G": 2,
+    "Catherine B": 3,
+    "Courtney B": 1,
+    "Elise L": 1,
+    "Gabrielle H": 1,
+    "Hala A": 3,
+    "Jaclyn C": 1,
+    "Jena C": 2,
+    "Jenny G-H": 3,
+    "Julia I": 3,
+    "Karen K": 4,
+    "Kayla O": 3,
+    "Laurie C": 4,
+    "Leigh B": 4,
+    "Linda D": 1,
+    "Loren N": 2,
+    "Nicara M": 2,
+    "Teresa S": 2,
+    "Tricia T": 2,
+    "Nicole A": 3,
+    "Rachel A": 3,
+    "Stacie E": 4,
+    "Susan C": 4,
+    "Tracie G": 4,
+    "Susan M": 4
   },
   "is_seeding_session": false,
   "player_numbers": {
-    "Alex Martinez": 1,
-    "Blake Johnson": 2,
-    "Casey Williams": 3,
-    "Drew Anderson": 4,
-    "Emma Thompson": 5,
-    "Frank Garcia": 6,
-    "Grace Miller": 7,
-    "Henry Davis": 8,
-    "Iris Rodriguez": 9,
-    "Jack Wilson": 10,
-    "Kelly Moore": 11,
-    "Logan Taylor": 12,
-    "Maya Jackson": 13,
-    "Noah White": 14,
-    "Olivia Harris": 15,
-    "Parker Martin": 16,
-    "Quinn Roberts": 17,
-    "Riley Cooper": 18,
-    "Sam Peterson": 19,
-    "Taylor Brooks": 20
+    "Abby A": 7,
+    "April S": 9,
+    "Ash M": 3,
+    "Carolyn G": 10,
+    "Catherine B": 20,
+    "Courtney B": 6,
+    "Elise L": 4,
+    "Gabrielle H": 1,
+    "Hala A": 16,
+    "Jaclyn C": 2,
+    "Jena C": 13,
+    "Jenny G-H": 19,
+    "Julia I": 21,
+    "Karen K": 23,
+    "Kayla O": 15,
+    "Laurie C": 26,
+    "Leigh B": 25,
+    "Linda D": 5,
+    "Loren N": 11,
+    "Nicara M": 8,
+    "Teresa S": 27,
+    "Tricia T": 28,
+    "Nicole A": 29,
+    "Rachel A": 30,
+    "Stacie E": 31,
+    "Susan C": 32,
+    "Tracie G": 33,
+    "Susan M": 34
   },
-  "next_player_number": 21,
+  "next_player_number": 35,
   "tier_court_assignments": {
     "1": [
-      3,
-      4
+      2
     ],
     "2": [
-      1,
-      2
+      1
     ],
     "3": [
-      2
+      3
     ],
     "4": [
-      1
+      4
     ]
-  }
+  },
+  "forced_sit_out": []
 }

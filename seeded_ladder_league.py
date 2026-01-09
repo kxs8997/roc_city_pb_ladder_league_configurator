@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QLineEdit, QSpinBox, QTabWidget, QTextEdit,
                              QMessageBox, QGroupBox, QScrollArea, QTableWidget,
                              QTableWidgetItem, QHeaderView, QDialog, QDialogButtonBox,
-                             QFormLayout, QFileDialog, QComboBox)
+                             QFormLayout, QFileDialog, QComboBox, QInputDialog)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap, QFont, QColor
 
@@ -31,15 +31,16 @@ class SeededLadderLeague:
         self.player_stats = {}
         self.session_history = []
         self.player_tiers = {}  # Map player name to tier (1-4, where 1 is highest)
-        self.is_seeding_session = True # First session is seeding by default
+        self.is_seeding_session = False # Default to tiered session
         self.player_numbers = {}  # Map player name to assigned number
         self.next_player_number = 1  # Track next available number
+        self.forced_sit_out = []  # Players forced to sit out next round
         # Configurable tier-to-court assignments (default: one court per tier for 4-tier system)
         self.tier_court_assignments = {
-            1: [4],  # Tier 1 (best) gets Court 4
-            2: [3],  # Tier 2 gets Court 3
-            3: [2],  # Tier 3 gets Court 2
-            4: [1]   # Tier 4 gets Court 1
+            1: [2],  # Tier 1 plays on court 2
+            2: [1],  # Tier 2 plays on court 1
+            3: [3],  # Tier 3 plays on court 3
+            4: [4]   # Tier 4 plays on court 4
         }
         
     def add_player(self, name):
@@ -95,8 +96,12 @@ class SeededLadderLeague:
         return self.player_stats.get(player, {}).get('games_played', 0)
 
     def can_sit_out(self, player, current_round_num):
-        """Check if player can sit out this round (didn't sit out last round)"""
+        """Check if a player can sit out (didn't sit out last round)"""
         last_sat = self.player_stats[player]['last_sat_out_round']
+        # Can sit if they didn't sit last round (gap of at least 1 round)
+        # last_sat of -2 means never sat, so always eligible
+        if last_sat < 0:
+            return True
         return (current_round_num - last_sat) > 1
     
     def select_sitting_players(self, players_pool, num_needed, current_round_num):
@@ -107,30 +112,56 @@ class SeededLadderLeague:
         if num_sitting <= 0:
             return []
         
-        # Score each player for sitting priority
-        sit_scores = []
-        for player in players_pool:
-            if not self.can_sit_out(player, current_round_num):
-                continue
-            
-            games_played = self.get_games_played(player)
-            rounds_sat = self.player_stats[player]['rounds_sat_out']
-            last_sat = self.player_stats[player]['last_sat_out_round']
-            
-            # Higher score = more likely to sit
-            # Prioritize balancing games played, then rotation
-            score = games_played * 10 - rounds_sat * 20 + (current_round_num - last_sat)
-            sit_scores.append((player, score))
+        sitting_players = []
         
-        # Sort by score (highest first) and select top num_sitting
-        sit_scores.sort(key=lambda x: x[1], reverse=True)
-        sitting_players = [p for p, _ in sit_scores[:num_sitting]]
+        # First, add any forced sit-outs from this pool
+        # BUT skip anyone who sat out last round - they MUST play this round
+        for player in self.forced_sit_out:
+            if player in players_pool and player not in sitting_players:
+                last_sat = self.player_stats[player]['last_sat_out_round']
+                # Never let someone sit out twice in a row
+                if last_sat == current_round_num - 1:
+                    continue  # Skip - they sat last round, must play now
+                sitting_players.append(player)
+                if len(sitting_players) >= num_sitting:
+                    break
         
-        # If we don't have enough eligible players (e.g. everyone sat recently), force some to sit
+        # If we still need more, use the scoring system
+        if len(sitting_players) < num_sitting:
+            # Score each player for sitting priority
+            # Players who played more and sat less should sit next
+            sit_scores = []
+            for player in players_pool:
+                # Skip already selected
+                if player in sitting_players:
+                    continue
+                    
+                games_played = self.get_games_played(player)
+                rounds_sat = self.player_stats[player]['rounds_sat_out']
+                last_sat = self.player_stats[player]['last_sat_out_round']
+                
+                # Skip players who sat last round (they must play this round)
+                if last_sat == current_round_num - 1:
+                    continue
+                
+                # Higher score = more likely to sit
+                # Prioritize: most games played, fewest times sat out
+                score = (games_played * 100) - (rounds_sat * 50)
+                sit_scores.append((player, score))
+            
+            # Sort by score (highest first) and select remaining needed
+            sit_scores.sort(key=lambda x: x[1], reverse=True)
+            remaining_needed = num_sitting - len(sitting_players)
+            sitting_players.extend([p for p, _ in sit_scores[:remaining_needed]])
+        
+        # If we still don't have enough eligible players, force some to sit
+        # But NEVER force someone who sat last round to sit again
         if len(sitting_players) < num_sitting:
             remaining = [p for p in players_pool if p not in sitting_players]
-            # Prioritize those with most games played among remaining
-            remaining.sort(key=lambda p: self.get_games_played(p), reverse=True)
+            # Filter out anyone who sat last round - they MUST play
+            remaining = [p for p in remaining if self.player_stats[p]['last_sat_out_round'] != current_round_num - 1]
+            # Sort by games played (most first), then by rounds sat (least first)
+            remaining.sort(key=lambda p: (self.get_games_played(p), -self.player_stats[p]['rounds_sat_out']), reverse=True)
             sitting_players.extend(remaining[:num_sitting - len(sitting_players)])
         
         return sitting_players
@@ -247,6 +278,9 @@ class SeededLadderLeague:
         for player in sitting_players:
             self.player_stats[player]['rounds_sat_out'] += 1
             self.player_stats[player]['last_sat_out_round'] = current_round_num
+        
+        # Clear forced sit-outs after round is generated
+        self.forced_sit_out = []
         
         round_data = {
             'round_number': current_round_num,
@@ -540,7 +574,8 @@ class SeededLadderLeague:
             'is_seeding_session': self.is_seeding_session,
             'player_numbers': self.player_numbers,
             'next_player_number': self.next_player_number,
-            'tier_court_assignments': self.tier_court_assignments
+            'tier_court_assignments': self.tier_court_assignments,
+            'forced_sit_out': self.forced_sit_out
         }
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
@@ -583,6 +618,8 @@ class SeededLadderLeague:
                     }
                 else:
                     self.tier_court_assignments = loaded_assignments
+                
+                self.forced_sit_out = data.get('forced_sit_out', [])
             return True
         except:
             return False
@@ -635,7 +672,7 @@ class BigScreenDisplay(QWidget):
         self.title_label = QLabel('CURRENT ROUND')
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_font = QFont()
-        title_font.setPointSize(int(self.screen_height * 0.035))
+        title_font.setPointSize(int(self.screen_height * 0.025))
         title_font.setBold(True)
         self.title_label.setFont(title_font)
         self.title_label.setStyleSheet("color: #00d4ff;")
@@ -645,7 +682,7 @@ class BigScreenDisplay(QWidget):
         self.round_label = QLabel()
         self.round_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         round_font = QFont()
-        round_font.setPointSize(int(self.screen_height * 0.028))
+        round_font.setPointSize(int(self.screen_height * 0.018))
         round_font.setBold(True)
         self.round_label.setFont(round_font)
         self.round_label.setStyleSheet("color: #ffffff;")
@@ -655,7 +692,7 @@ class BigScreenDisplay(QWidget):
         self.datetime_label = QLabel()
         self.datetime_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         datetime_font = QFont()
-        datetime_font.setPointSize(int(self.screen_height * 0.018))
+        datetime_font.setPointSize(int(self.screen_height * 0.012))
         self.datetime_label.setFont(datetime_font)
         self.datetime_label.setStyleSheet("color: #aaaaaa;")
         title_container.addWidget(self.datetime_label)
@@ -664,7 +701,7 @@ class BigScreenDisplay(QWidget):
         self.mode_label = QLabel()
         self.mode_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         mode_font = QFont()
-        mode_font.setPointSize(int(self.screen_height * 0.015))
+        mode_font.setPointSize(int(self.screen_height * 0.011))
         mode_font.setBold(True)
         self.mode_label.setFont(mode_font)
         title_container.addWidget(self.mode_label)
@@ -772,7 +809,7 @@ class BigScreenDisplay(QWidget):
         self.sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.sitting_label.setWordWrap(True)
         sitting_font = QFont()
-        sitting_font.setPointSize(int(self.screen_height * 0.02))
+        sitting_font.setPointSize(int(self.screen_height * 0.014))
         sitting_font.setBold(True)
         self.sitting_label.setFont(sitting_font)
         self.sitting_label.setStyleSheet("color: #ff6b6b; padding: 10px; background-color: #2d2d44; border-radius: 8px;")
@@ -781,8 +818,13 @@ class BigScreenDisplay(QWidget):
         # Track which round is being displayed (None = latest)
         self.displayed_round_index = None
         
-        # Show maximized
-        self.showMaximized()
+        # Start at 80% of screen size, centered (not maximized so user can resize/move)
+        width = int(self.screen_width * 0.8)
+        height = int(self.screen_height * 0.8)
+        x = int((self.screen_width - width) / 2)
+        y = int((self.screen_height - height) / 2)
+        self.setGeometry(x, y, width, height)
+        self.show()
         self.update_display()
     
     def show_previous_round(self):
@@ -901,7 +943,7 @@ class BigScreenDisplay(QWidget):
         layout.setContentsMargins(10, 8, 10, 8)
         
         # Court number - compact sizing with responsive font
-        court_font_size = int(self.screen_height * 0.022)
+        court_font_size = int(self.screen_height * 0.016)
         court_label = QLabel(f"COURT\n{court_data['court']}")
         court_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         court_font = QFont()
@@ -930,7 +972,7 @@ class BigScreenDisplay(QWidget):
         team1_label = QLabel(" & ".join(team1_players))
         team1_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         name_font = QFont()
-        name_font.setPointSize(int(self.screen_height * 0.02))
+        name_font.setPointSize(int(self.screen_height * 0.014))
         name_font.setBold(True)
         team1_label.setFont(name_font)
         team1_label.setStyleSheet("color: #4ecca3; padding: 5px;")
@@ -940,7 +982,7 @@ class BigScreenDisplay(QWidget):
         vs_label = QLabel("VS")
         vs_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         vs_font = QFont()
-        vs_font.setPointSize(int(self.screen_height * 0.022))
+        vs_font.setPointSize(int(self.screen_height * 0.016))
         vs_font.setBold(True)
         vs_label.setFont(vs_font)
         vs_label.setStyleSheet("color: #ff6b6b; padding: 5px 15px;")
@@ -965,7 +1007,7 @@ class BigScreenDisplay(QWidget):
             score_label = QLabel(f"{court_data['team1_score']}\n-\n{court_data['team2_score']}")
             score_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             score_font = QFont()
-            score_font.setPointSize(int(self.screen_height * 0.025))
+            score_font.setPointSize(int(self.screen_height * 0.018))
             score_font.setBold(True)
             score_label.setFont(score_font)
             score_label.setStyleSheet("""
@@ -978,6 +1020,245 @@ class BigScreenDisplay(QWidget):
             layout.addWidget(score_label)
         
         return widget
+
+
+class EditPlayersDialog(QDialog):
+    """Dialog to edit player tiers and stats for mid-season start"""
+    def __init__(self, league, parent=None):
+        super().__init__(parent)
+        self.league = league
+        self.setWindowTitle('Edit Player Tiers & Stats')
+        self.setModal(True)
+        self.setMinimumSize(800, 600)
+        
+        layout = QVBoxLayout(self)
+        
+        info_label = QLabel('Edit player tiers and stats. Useful when starting mid-season.')
+        info_label.setStyleSheet('font-size: 11pt; margin-bottom: 10px;')
+        layout.addWidget(info_label)
+        
+        # Create table
+        self.table = QTableWidget()
+        self.table.setColumnCount(6)
+        self.table.setHorizontalHeaderLabels(['Player', 'Tier', 'Games', 'Points', 'Points Against', 'Diff'])
+        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        layout.addWidget(self.table)
+        
+        # Populate table
+        self.populate_table()
+        
+        # Buttons
+        btn_layout = QHBoxLayout()
+        
+        set_all_tier_btn = QPushButton('Set All to Tier...')
+        set_all_tier_btn.clicked.connect(self.set_all_tier)
+        btn_layout.addWidget(set_all_tier_btn)
+        
+        reset_stats_btn = QPushButton('Reset All Stats to Zero')
+        reset_stats_btn.clicked.connect(self.reset_all_stats)
+        reset_stats_btn.setStyleSheet('QPushButton { background-color: #f44336; color: white; }')
+        btn_layout.addWidget(reset_stats_btn)
+        
+        reset_keep_tiers_btn = QPushButton('Reset Stats (Keep Tiers)')
+        reset_keep_tiers_btn.clicked.connect(self.reset_stats_keep_tiers)
+        reset_keep_tiers_btn.setStyleSheet('QPushButton { background-color: #FF9800; color: white; }')
+        btn_layout.addWidget(reset_keep_tiers_btn)
+        
+        layout.addLayout(btn_layout)
+        
+        # Danger zone - clear rounds only
+        danger_layout = QHBoxLayout()
+        clear_rounds_btn = QPushButton('⚠️ Clear All Rounds (Dangerous!)')
+        clear_rounds_btn.clicked.connect(self.clear_all_rounds)
+        clear_rounds_btn.setStyleSheet('QPushButton { background-color: #b71c1c; color: white; font-weight: bold; }')
+        danger_layout.addWidget(clear_rounds_btn)
+        layout.addLayout(danger_layout)
+        
+        # Seeding session checkbox
+        seeding_layout = QHBoxLayout()
+        self.seeding_checkbox = QComboBox()
+        self.seeding_checkbox.addItems(['Seeding Session (random matchmaking)', 'Tiered Session (tier-based matchmaking)'])
+        self.seeding_checkbox.setCurrentIndex(0 if self.league.is_seeding_session else 1)
+        seeding_layout.addWidget(QLabel('Session Mode:'))
+        seeding_layout.addWidget(self.seeding_checkbox)
+        layout.addLayout(seeding_layout)
+        
+        seeding_info = QLabel('• Seeding Session: Players matched randomly to determine initial rankings\n'
+                              '• Tiered Session: Players matched within their assigned tiers')
+        seeding_info.setStyleSheet('color: #666; font-size: 10pt;')
+        layout.addWidget(seeding_info)
+        
+        # Dialog buttons
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        buttons.accepted.connect(self.save_and_accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
+    
+    def populate_table(self):
+        sorted_players = sorted(self.league.players, key=lambda p: (self.league.player_tiers.get(p, 4), p))
+        self.table.setRowCount(len(sorted_players))
+        
+        # Store widget references to prevent garbage collection
+        self.player_widgets = {}
+        
+        for i, player in enumerate(sorted_players):
+            stats = self.league.player_stats.get(player, {})
+            tier = self.league.player_tiers.get(player, 4)
+            
+            # Player name (read-only)
+            name_item = QTableWidgetItem(player)
+            name_item.setFlags(name_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(i, 0, name_item)
+            
+            # Tier (editable spinbox)
+            tier_spin = QSpinBox()
+            tier_spin.setRange(1, 4)
+            tier_spin.setValue(tier)
+            self.table.setCellWidget(i, 1, tier_spin)
+            
+            # Games played
+            games_spin = QSpinBox()
+            games_spin.setRange(0, 999)
+            games_spin.setValue(stats.get('games_played', 0))
+            self.table.setCellWidget(i, 2, games_spin)
+            
+            # Points
+            points_spin = QSpinBox()
+            points_spin.setRange(0, 9999)
+            points_spin.setValue(stats.get('total_points', 0))
+            self.table.setCellWidget(i, 3, points_spin)
+            
+            # Points against
+            pa_spin = QSpinBox()
+            pa_spin.setRange(0, 9999)
+            pa_spin.setValue(stats.get('total_points_against', 0))
+            self.table.setCellWidget(i, 4, pa_spin)
+            
+            # Differential (calculated, read-only)
+            diff = stats.get('total_points', 0) - stats.get('total_points_against', 0)
+            diff_item = QTableWidgetItem(str(diff))
+            diff_item.setFlags(diff_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(i, 5, diff_item)
+            
+            # Store references
+            self.player_widgets[player] = {
+                'row': i,
+                'tier': tier_spin,
+                'games': games_spin,
+                'points': points_spin,
+                'points_against': pa_spin
+            }
+        
+        self.table.resizeColumnsToContents()
+    
+    def set_all_tier(self):
+        tier, ok = QInputDialog.getInt(self, 'Set All Tiers', 'Set all players to tier:', 4, 1, 4)
+        if ok:
+            for player, widgets in self.player_widgets.items():
+                widgets['tier'].setValue(tier)
+    
+    def reset_all_stats(self):
+        reply = QMessageBox.question(self, 'Reset Stats', 
+                                     'Reset all player stats to zero?',
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
+            for player, widgets in self.player_widgets.items():
+                widgets['games'].setValue(0)
+                widgets['points'].setValue(0)
+                widgets['points_against'].setValue(0)
+                row = widgets['row']
+                self.table.item(row, 5).setText('0')
+    
+    def reset_stats_keep_tiers(self):
+        """Reset all stats but keep tier assignments"""
+        reply = QMessageBox.question(self, 'Reset Stats (Keep Tiers)', 
+                                     'Reset all player stats to zero and clear rounds?\n\nTier assignments will be preserved.',
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
+            for player, widgets in self.player_widgets.items():
+                widgets['games'].setValue(0)
+                widgets['points'].setValue(0)
+                widgets['points_against'].setValue(0)
+                row = widgets['row']
+                self.table.item(row, 5).setText('0')
+            
+            # Also clear session rounds and reset sit-out tracking in the league
+            self.league.session_rounds = []
+            self.league.forced_sit_out = []
+            for player in self.league.player_stats:
+                self.league.player_stats[player]['rounds_sat_out'] = 0
+                self.league.player_stats[player]['last_sat_out_round'] = -2
+                self.league.player_stats[player]['game_scores'] = []
+            
+            QMessageBox.information(self, 'Reset Complete', 
+                                   'Stats reset to zero. Tier assignments preserved.\nSession rounds cleared.')
+    
+    def clear_all_rounds(self):
+        """Clear all rounds - dangerous operation with multiple warnings"""
+        # First warning
+        reply = QMessageBox.warning(self, '⚠️ DANGER - Clear All Rounds', 
+                                    '⚠️ WARNING: This will DELETE all round data!\n\n'
+                                    'This action CANNOT be undone.\n\n'
+                                    'Player stats will NOT be affected.\n'
+                                    'Tier assignments will NOT be affected.\n\n'
+                                    'Are you sure you want to continue?',
+                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                                    QMessageBox.StandardButton.No)
+        
+        if reply != QMessageBox.StandardButton.Yes:
+            return
+        
+        # Second confirmation
+        reply2 = QMessageBox.critical(self, '⚠️ FINAL WARNING', 
+                                      '⚠️ FINAL WARNING!\n\n'
+                                      f'You are about to delete {len(self.league.session_rounds)} round(s).\n\n'
+                                      'Type "DELETE" in the next dialog to confirm.',
+                                      QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
+                                      QMessageBox.StandardButton.Cancel)
+        
+        if reply2 != QMessageBox.StandardButton.Ok:
+            return
+        
+        # Require typing DELETE
+        text, ok = QInputDialog.getText(self, 'Confirm Deletion', 
+                                        'Type DELETE to confirm:')
+        
+        if ok and text.upper() == 'DELETE':
+            self.league.session_rounds = []
+            self.league.forced_sit_out = []
+            # Reset sit-out tracking only
+            for player in self.league.player_stats:
+                self.league.player_stats[player]['rounds_sat_out'] = 0
+                self.league.player_stats[player]['last_sat_out_round'] = -2
+            
+            QMessageBox.information(self, 'Rounds Cleared', 
+                                   'All rounds have been deleted.\n'
+                                   'Player stats and tiers are unchanged.')
+        else:
+            QMessageBox.information(self, 'Cancelled', 'Operation cancelled. No data was deleted.')
+    
+    def save_and_accept(self):
+        """Save all changes to the league"""
+        for player, widgets in self.player_widgets.items():
+            # Update tier
+            tier = widgets['tier'].value()
+            self.league.player_tiers[player] = tier
+            
+            # Update stats
+            games = widgets['games'].value()
+            points = widgets['points'].value()
+            points_against = widgets['points_against'].value()
+            
+            if player in self.league.player_stats:
+                self.league.player_stats[player]['games_played'] = games
+                self.league.player_stats[player]['total_points'] = points
+                self.league.player_stats[player]['total_points_against'] = points_against
+        
+        # Update session mode (0 = seeding, 1 = tiered)
+        self.league.is_seeding_session = (self.seeding_checkbox.currentIndex() == 0)
+        
+        self.accept()
 
 
 class ScoreDialog(QDialog):
@@ -1128,7 +1409,53 @@ class MainWindow(QMainWindow):
         demo_btn_20.setStyleSheet('QPushButton { background-color: #4CAF50; color: white; padding: 8px; }')
         buttons_layout.addWidget(demo_btn_20)
         
+        demo_btn_22 = QPushButton('Load ROC City Players (22)')
+        demo_btn_22.clicked.connect(lambda checked: self.load_demo_players(22))
+        demo_btn_22.setStyleSheet('QPushButton { background-color: #2196F3; color: white; padding: 8px; }')
+        buttons_layout.addWidget(demo_btn_22)
+        
         layout.addLayout(buttons_layout)
+        
+        # Edit player stats button
+        edit_btn = QPushButton('Edit Player Tiers & Stats')
+        edit_btn.clicked.connect(self.open_edit_players_dialog)
+        edit_btn.setStyleSheet('QPushButton { background-color: #FF9800; color: white; padding: 10px; font-size: 12pt; }')
+        layout.addWidget(edit_btn)
+        
+        # Forced sit-out section
+        sitout_group = QGroupBox('Force Sit Out Next Round')
+        sitout_layout = QVBoxLayout()
+        
+        sitout_info = QLabel('Select players who must sit out the next round (e.g., late arrivals)')
+        sitout_info.setWordWrap(True)
+        sitout_layout.addWidget(sitout_info)
+        
+        self.sitout_list = QListWidget()
+        self.sitout_list.setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        self.sitout_list.setMaximumHeight(120)
+        sitout_layout.addWidget(self.sitout_list)
+        
+        sitout_btn_layout = QHBoxLayout()
+        
+        set_sitout_btn = QPushButton('Set Selected to Sit Out')
+        set_sitout_btn.clicked.connect(self.set_forced_sitout)
+        set_sitout_btn.setStyleSheet('QPushButton { background-color: #f44336; color: white; padding: 8px; }')
+        sitout_btn_layout.addWidget(set_sitout_btn)
+        
+        clear_sitout_btn = QPushButton('Clear Sit Outs')
+        clear_sitout_btn.clicked.connect(self.clear_forced_sitout)
+        sitout_btn_layout.addWidget(clear_sitout_btn)
+        
+        sitout_layout.addLayout(sitout_btn_layout)
+        
+        self.sitout_status_label = QLabel('')
+        self.sitout_status_label.setStyleSheet('color: #f44336; font-weight: bold;')
+        sitout_layout.addWidget(self.sitout_status_label)
+        
+        sitout_group.setLayout(sitout_layout)
+        layout.addWidget(sitout_group)
+        
+        self.update_sitout_list()
         
         return widget
     
@@ -1443,6 +1770,16 @@ class MainWindow(QMainWindow):
             # Clear existing data
             self.league = SeededLadderLeague()
             
+            # Special case: Load ROC City players from file
+            if count == 22:
+                demo_file = Path('seeded_ladder_data_22players.json')
+                if demo_file.exists():
+                    self.league.load_from_file(demo_file)
+                    self.update_all_ui()
+                    self.save_data()
+                    self.status_label.setText(f'Loaded ROC City players (22)')
+                    return
+            
             # Player names
             names = [
                 "Alex Martinez", "Blake Johnson", "Casey Williams", "Drew Anderson",
@@ -1505,6 +1842,31 @@ class MainWindow(QMainWindow):
             self.save_data()
             self.status_label.setText(f'Loaded {count} demo players with tier assignments')
     
+    def update_all_ui(self):
+        """Update all UI elements with current data"""
+        self.update_players_list()
+        self.update_player_numbers_table()
+        self.update_scores_player_numbers()
+        self.update_rounds_display()
+        self.update_scores_table()
+        self.update_rankings()
+        self.update_session_info()
+        self.update_history_list()
+        
+        # Update tier court inputs if they exist
+        if hasattr(self, 'tier_court_inputs'):
+            for tier_num, input_field in self.tier_court_inputs.items():
+                courts = self.league.tier_court_assignments.get(tier_num, [])
+                input_field.setText(','.join(map(str, courts)))
+    
+    def open_edit_players_dialog(self):
+        """Open dialog to edit player tiers and stats"""
+        dialog = EditPlayersDialog(self.league, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.update_all_ui()
+            self.save_data()
+            self.status_label.setText('Player data updated')
+    
     def update_players_list(self):
         self.players_list.clear()
         
@@ -1520,6 +1882,75 @@ class MainWindow(QMainWindow):
         
         num_courts = self.league.get_active_courts()
         self.status_label.setText(f'Total players: {len(self.league.players)} | Active courts: {num_courts}')
+        
+        # Update sit-out list if it exists
+        if hasattr(self, 'sitout_list'):
+            self.update_sitout_list()
+    
+    def update_sitout_list(self):
+        """Update the sit-out player selection list"""
+        self.sitout_list.clear()
+        
+        # Sort by Tier then Name
+        sorted_players = sorted(self.league.players, key=lambda p: (self.league.player_tiers.get(p, 4), p))
+        
+        for player in sorted_players:
+            tier = self.league.player_tiers.get(player, 4)
+            player_num = self.league.player_numbers.get(player, '?')
+            item_text = f"#{player_num} - {player} (Tier {tier})"
+            self.sitout_list.addItem(item_text)
+            
+            # Pre-select if already in forced sit-out list
+            if player in self.league.forced_sit_out:
+                self.sitout_list.item(self.sitout_list.count() - 1).setSelected(True)
+        
+        # Update status label
+        self.update_sitout_status()
+    
+    def update_sitout_status(self):
+        """Update the sit-out status label"""
+        if self.league.forced_sit_out:
+            names = [f"#{self.league.player_numbers.get(p, '?')} {p}" for p in self.league.forced_sit_out]
+            self.sitout_status_label.setText(f"Will sit out next round: {', '.join(names)}")
+        else:
+            self.sitout_status_label.setText("")
+    
+    def set_forced_sitout(self):
+        """Set selected players to sit out next round"""
+        selected_items = self.sitout_list.selectedItems()
+        self.league.forced_sit_out = []
+        
+        for item in selected_items:
+            # Extract player name from item text (format: "#N - Name (Tier X)")
+            text = item.text()
+            # Find the name between "- " and " (Tier"
+            start = text.find('- ') + 2
+            end = text.find(' (Tier')
+            if start > 1 and end > start:
+                player_name = text[start:end]
+                if player_name in self.league.players:
+                    self.league.forced_sit_out.append(player_name)
+        
+        self.update_sitout_status()
+        self.save_data()
+        
+        if self.league.forced_sit_out:
+            names = ', '.join(self.league.forced_sit_out)
+            QMessageBox.information(self, 'Forced Sit-Out Set', 
+                                   f'The following players will sit out the NEXT round:\n\n{names}\n\n'
+                                   'Generate a new round for this to take effect.')
+            self.status_label.setText(f'{len(self.league.forced_sit_out)} player(s) will sit out next round')
+        else:
+            QMessageBox.information(self, 'No Players Selected', 
+                                   'No players selected. Select players from the list first.')
+    
+    def clear_forced_sitout(self):
+        """Clear all forced sit-outs"""
+        self.league.forced_sit_out = []
+        self.sitout_list.clearSelection()
+        self.update_sitout_status()
+        self.save_data()
+        self.status_label.setText('Cleared forced sit-outs')
     
     def update_player_numbers_table(self):
         # Sort players by their assigned number
