@@ -37,17 +37,17 @@
           "court": 2,
           "players": [
             "Elise L",
-            "Jaclyn C",
             "Courtney B",
-            "Gabrielle H"
+            "Gabrielle H",
+            "Jaclyn C"
           ],
           "team1": [
             "Elise L",
-            "Jaclyn C"
+            "Courtney B"
           ],
           "team2": [
-            "Courtney B",
-            "Gabrielle H"
+            "Gabrielle H",
+            "Jaclyn C"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -57,17 +57,17 @@
           "court": 1,
           "players": [
             "Tricia T",
-            "Nicara M",
-            "Teresa S",
-            "Loren N"
+            "Jena C",
+            "Carolyn G",
+            "April S"
           ],
           "team1": [
             "Tricia T",
-            "Nicara M"
+            "Jena C"
           ],
           "team2": [
-            "Teresa S",
-            "Loren N"
+            "Carolyn G",
+            "April S"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -76,18 +76,18 @@
         {
           "court": 3,
           "players": [
-            "Rachel A",
-            "Julia I",
+            "Laurie C",
             "Kayla O",
-            "Nicole A"
+            "Julia I",
+            "Karen K"
           ],
           "team1": [
-            "Rachel A",
-            "Julia I"
+            "Laurie C",
+            "Kayla O"
           ],
           "team2": [
-            "Kayla O",
-            "Nicole A"
+            "Julia I",
+            "Karen K"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -98,16 +98,16 @@
           "players": [
             "Susan M",
             "Tracie G",
-            "Stacie E",
-            "Susan C"
+            "Susan C",
+            "Stacie E"
           ],
           "team1": [
             "Susan M",
             "Tracie G"
           ],
           "team2": [
-            "Stacie E",
-            "Susan C"
+            "Susan C",
+            "Stacie E"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -118,15 +118,15 @@
         "Linda D",
         "Abby A",
         "Ash M",
-        "April S",
-        "Carolyn G",
-        "Jena C",
+        "Loren N",
+        "Nicara M",
+        "Teresa S",
         "Catherine B",
         "Hala A",
         "Jenny G-H",
-        "Karen K",
-        "Laurie C",
-        "Leigh B"
+        "Leigh B",
+        "Nicole A",
+        "Rachel A"
       ]
     },
     {
@@ -135,17 +135,17 @@
         {
           "court": 2,
           "players": [
+            "Courtney B",
             "Linda D",
-            "Ash M",
-            "Abby A",
+            "Gabrielle H",
             "Jaclyn C"
           ],
           "team1": [
-            "Linda D",
-            "Ash M"
+            "Courtney B",
+            "Linda D"
           ],
           "team2": [
-            "Abby A",
+            "Gabrielle H",
             "Jaclyn C"
           ],
           "team1_score": 0,
@@ -155,117 +155,18 @@
         {
           "court": 1,
           "players": [
-            "Tricia T",
-            "Carolyn G",
-            "Jena C",
-            "April S"
-          ],
-          "team1": [
-            "Tricia T",
-            "Carolyn G"
-          ],
-          "team2": [
-            "Jena C",
-            "April S"
-          ],
-          "team1_score": 0,
-          "team2_score": 0,
-          "completed": false
-        },
-        {
-          "court": 3,
-          "players": [
-            "Rachel A",
-            "Hala A",
-            "Catherine B",
-            "Jenny G-H"
-          ],
-          "team1": [
-            "Rachel A",
-            "Hala A"
-          ],
-          "team2": [
-            "Catherine B",
-            "Jenny G-H"
-          ],
-          "team1_score": 0,
-          "team2_score": 0,
-          "completed": false
-        },
-        {
-          "court": 4,
-          "players": [
-            "Laurie C",
-            "Leigh B",
-            "Susan M",
-            "Karen K"
-          ],
-          "team1": [
-            "Laurie C",
-            "Leigh B"
-          ],
-          "team2": [
-            "Susan M",
-            "Karen K"
-          ],
-          "team1_score": 0,
-          "team2_score": 0,
-          "completed": false
-        }
-      ],
-      "sitting_players": [
-        "Courtney B",
-        "Elise L",
-        "Gabrielle H",
-        "Loren N",
-        "Nicara M",
-        "Teresa S",
-        "Julia I",
-        "Kayla O",
-        "Nicole A",
-        "Stacie E",
-        "Susan C",
-        "Tracie G"
-      ]
-    },
-    {
-      "round_number": 3,
-      "courts": [
-        {
-          "court": 2,
-          "players": [
-            "Courtney B",
-            "Elise L",
-            "Linda D",
-            "Gabrielle H"
-          ],
-          "team1": [
-            "Courtney B",
-            "Elise L"
-          ],
-          "team2": [
-            "Linda D",
-            "Gabrielle H"
-          ],
-          "team1_score": 0,
-          "team2_score": 0,
-          "completed": false
-        },
-        {
-          "court": 1,
-          "players": [
-            "Jena C",
             "Loren N",
-            "Nicara M",
-            "Teresa S"
+            "April S",
+            "Tricia T",
+            "Jena C"
           ],
           "team1": [
-            "Jena C",
-            "Loren N"
+            "Loren N",
+            "April S"
           ],
           "team2": [
-            "Nicara M",
-            "Teresa S"
+            "Tricia T",
+            "Jena C"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -274,18 +175,18 @@
         {
           "court": 3,
           "players": [
+            "Karen K",
+            "Catherine B",
             "Jenny G-H",
-            "Kayla O",
-            "Nicole A",
-            "Julia I"
+            "Laurie C"
           ],
           "team1": [
-            "Jenny G-H",
-            "Kayla O"
+            "Karen K",
+            "Catherine B"
           ],
           "team2": [
-            "Nicole A",
-            "Julia I"
+            "Jenny G-H",
+            "Laurie C"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -313,18 +214,18 @@
         }
       ],
       "sitting_players": [
-        "Jaclyn C",
-        "Abby A",
         "Ash M",
-        "Tricia T",
-        "April S",
+        "Abby A",
+        "Elise L",
+        "Teresa S",
         "Carolyn G",
-        "Rachel A",
-        "Catherine B",
+        "Nicara M",
+        "Kayla O",
+        "Julia I",
         "Hala A",
-        "Susan M",
-        "Karen K",
-        "Laurie C"
+        "Nicole A",
+        "Rachel A",
+        "Susan M"
       ]
     }
   ],
@@ -334,55 +235,55 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 5,
+      "last_sat_out_round": 2,
       "game_scores": []
     },
     "April S": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 3,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Ash M": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 5,
+      "last_sat_out_round": 2,
       "game_scores": []
     },
     "Carolyn G": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 4,
+      "last_sat_out_round": 2,
       "game_scores": []
     },
     "Catherine B": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 4,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Courtney B": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 3,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Elise L": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 4,
       "last_sat_out_round": 2,
       "game_scores": []
     },
@@ -390,31 +291,31 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 3,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Hala A": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 5,
+      "last_sat_out_round": 2,
       "game_scores": []
     },
     "Jaclyn C": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 3,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Jena C": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 3,
       "last_sat_out_round": 1,
       "game_scores": []
     },
@@ -422,7 +323,7 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 4,
       "last_sat_out_round": 1,
       "game_scores": []
     },
@@ -430,7 +331,7 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 4,
       "last_sat_out_round": 2,
       "game_scores": []
     },
@@ -438,15 +339,15 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 3,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Kayla O": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 4,
       "last_sat_out_round": 2,
       "game_scores": []
     },
@@ -454,15 +355,15 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 3,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Leigh B": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 3,
       "last_sat_out_round": 1,
       "game_scores": []
     },
@@ -470,7 +371,7 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 3,
       "last_sat_out_round": 1,
       "game_scores": []
     },
@@ -478,15 +379,15 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 3,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Nicara M": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 4,
       "last_sat_out_round": 2,
       "game_scores": []
     },
@@ -494,7 +395,7 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 4,
       "last_sat_out_round": 2,
       "game_scores": []
     },
@@ -502,15 +403,15 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Nicole A": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
+      "rounds_sat_out": 4,
       "last_sat_out_round": 2,
       "game_scores": []
     },
@@ -518,69 +419,69 @@
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 4,
+      "last_sat_out_round": 2,
       "game_scores": []
     },
     "Stacie E": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Susan C": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Tracie G": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 2,
+      "last_sat_out_round": 1,
       "game_scores": []
     },
     "Susan M": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 1,
-      "last_sat_out_round": 3,
+      "rounds_sat_out": 3,
+      "last_sat_out_round": 2,
       "game_scores": []
     }
   },
   "session_history": [],
   "player_tiers": {
-    "Abby A": 1,
-    "April S": 2,
-    "Ash M": 1,
-    "Carolyn G": 2,
-    "Catherine B": 3,
-    "Courtney B": 1,
-    "Elise L": 1,
     "Gabrielle H": 1,
-    "Hala A": 3,
     "Jaclyn C": 1,
-    "Jena C": 2,
-    "Jenny G-H": 3,
-    "Julia I": 3,
-    "Karen K": 4,
-    "Kayla O": 3,
-    "Laurie C": 4,
-    "Leigh B": 4,
+    "Ash M": 1,
+    "Elise L": 1,
     "Linda D": 1,
-    "Loren N": 2,
+    "Courtney B": 1,
+    "Abby A": 1,
     "Nicara M": 2,
+    "April S": 2,
+    "Carolyn G": 2,
+    "Loren N": 2,
     "Teresa S": 2,
+    "Jena C": 2,
     "Tricia T": 2,
-    "Nicole A": 3,
-    "Rachel A": 3,
+    "Hala A": 3,
+    "Julia I": 3,
+    "Jenny G-H": 3,
+    "Catherine B": 3,
+    "Karen K": 3,
+    "Kayla O": 3,
+    "Laurie C": 3,
+    "Leigh B": 4,
+    "Nicole A": 4,
+    "Rachel A": 4,
     "Stacie E": 4,
     "Susan C": 4,
     "Tracie G": 4,

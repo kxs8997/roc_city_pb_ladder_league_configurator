@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QMessageBox, QGroupBox, QScrollArea, QTableWidget,
                              QTableWidgetItem, QHeaderView, QDialog, QDialogButtonBox,
                              QFormLayout, QFileDialog)
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QFont, QColor
 
 
@@ -168,6 +168,33 @@ class MixedDoublesLeague:
         
         return sitting_teams
     
+    def get_last_court_assignments(self):
+        """Get a dict of team_name -> court_num from the last round"""
+        if not self.session_rounds:
+            return {}
+        
+        last_round = self.session_rounds[-1]
+        assignments = {}
+        for court in last_round['courts']:
+            court_num = court['court']
+            assignments[court['team1']['name']] = court_num
+            assignments[court['team2']['name']] = court_num
+        return assignments
+    
+    def get_last_opponents(self):
+        """Get a dict of team_name -> opponent_name from the last round"""
+        if not self.session_rounds:
+            return {}
+        
+        last_round = self.session_rounds[-1]
+        opponents = {}
+        for court in last_round['courts']:
+            team1_name = court['team1']['name']
+            team2_name = court['team2']['name']
+            opponents[team1_name] = team2_name
+            opponents[team2_name] = team1_name
+        return opponents
+    
     def generate_round(self):
         """Generate a new round with proper sit-out rotation"""
         num_courts = self.get_active_courts()
@@ -182,23 +209,70 @@ class MixedDoublesLeague:
         
         # Get playing teams
         playing_teams = [t for t in self.teams if t['name'] not in sitting_teams]
-        random.shuffle(playing_teams)
         
-        # Assign to courts (2 teams per court)
+        # Get last round's court assignments to avoid same court consecutively
+        last_court_assignments = self.get_last_court_assignments()
+        
+        # Get last round's opponents to avoid same matchup consecutively
+        last_opponents = self.get_last_opponents()
+        
+        # Smart court assignment: avoid putting teams on the same court as last round
+        # and avoid pairing teams that played each other last round
         courts = []
+        assigned_teams = set()
+        
         for court_num in range(1, num_courts + 1):
-            start_idx = (court_num - 1) * 2
-            court_teams = playing_teams[start_idx:start_idx + 2]
+            # Get all unassigned teams
+            available_teams = [t for t in playing_teams if t['name'] not in assigned_teams]
             
-            if len(court_teams) == 2:
-                courts.append({
-                    'court': court_num,
-                    'team1': court_teams[0],
-                    'team2': court_teams[1],
-                    'team1_score': 0,
-                    'team2_score': 0,
-                    'completed': False
-                })
+            if len(available_teams) < 2:
+                break
+            
+            # Find teams that didn't play on this court last round (preferred for court)
+            preferred_court_teams = [t for t in available_teams 
+                                    if last_court_assignments.get(t['name']) != court_num]
+            
+            # If not enough preferred court teams, use all available
+            if len(preferred_court_teams) < 2:
+                preferred_court_teams = available_teams
+            
+            # Now pick first team
+            random.shuffle(preferred_court_teams)
+            team1 = preferred_court_teams[0]
+            
+            # Find opponent for team1 - prefer someone they didn't play last round
+            remaining = [t for t in available_teams if t['name'] != team1['name']]
+            
+            # Prefer opponents that: 1) didn't play team1 last round, 2) didn't play on this court
+            ideal_opponents = [t for t in remaining 
+                              if last_opponents.get(team1['name']) != t['name']
+                              and last_court_assignments.get(t['name']) != court_num]
+            
+            # Fallback: just avoid last round's opponent
+            good_opponents = [t for t in remaining 
+                             if last_opponents.get(team1['name']) != t['name']]
+            
+            if ideal_opponents:
+                random.shuffle(ideal_opponents)
+                team2 = ideal_opponents[0]
+            elif good_opponents:
+                random.shuffle(good_opponents)
+                team2 = good_opponents[0]
+            else:
+                # Last resort: any remaining team
+                random.shuffle(remaining)
+                team2 = remaining[0]
+            
+            courts.append({
+                'court': court_num,
+                'team1': team1,
+                'team2': team2,
+                'team1_score': 0,
+                'team2_score': 0,
+                'completed': False
+            })
+            assigned_teams.add(team1['name'])
+            assigned_teams.add(team2['name'])
         
         # Update sit-out tracking
         for team_name in sitting_teams:
@@ -385,6 +459,47 @@ class MixedDoublesLeague:
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
     
+    def save_all_rounds_to_file(self, filename):
+        """Save all rounds to a JSON file"""
+        if not self.session_rounds:
+            return False, "No rounds to save"
+        
+        save_data = {
+            'rounds': self.session_rounds,
+            'session_number': self.current_session,
+            'saved_at': datetime.now().isoformat(),
+            'team_numbers': self.team_numbers,
+            'total_rounds': len(self.session_rounds)
+        }
+        
+        try:
+            with open(filename, 'w') as f:
+                json.dump(save_data, f, indent=2)
+            return True, None
+        except Exception as e:
+            return False, str(e)
+    
+    def load_rounds_from_file(self, filename):
+        """Load rounds from a JSON file and replace current session_rounds"""
+        try:
+            with open(filename, 'r') as f:
+                save_data = json.load(f)
+            
+            rounds = save_data.get('rounds')
+            if not rounds:
+                return False, "Invalid rounds file format"
+            
+            # Replace current rounds with loaded rounds
+            self.session_rounds = rounds
+            
+            # Restore team numbers if available
+            if 'team_numbers' in save_data:
+                self.team_numbers = save_data['team_numbers']
+            
+            return True, len(rounds)
+        except Exception as e:
+            return False, str(e)
+    
     def load_from_file(self, filename):
         try:
             with open(filename, 'r') as f:
@@ -562,26 +677,82 @@ class BigScreenDisplay(QWidget):
         
         layout.addLayout(header_layout)
         
-        # Courts container - takes remaining space
-        self.courts_widget = QWidget()
-        self.courts_layout = QVBoxLayout(self.courts_widget)
-        self.courts_layout.setSpacing(8)
-        self.courts_layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self.courts_widget, 1)
+        # Side-by-side container for current and next round
+        self.side_by_side_widget = QWidget()
+        self.side_by_side_layout = QHBoxLayout(self.side_by_side_widget)
+        self.side_by_side_layout.setSpacing(20)
+        self.side_by_side_layout.setContentsMargins(0, 0, 0, 0)
         
-        # Sitting teams at bottom
-        self.sitting_label = QLabel()
-        self.sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.sitting_label.setWordWrap(True)
+        # Current round panel
+        self.current_panel = QWidget()
+        self.current_panel.setStyleSheet("background-color: #252540; border-radius: 10px;")
+        self.current_panel_layout = QVBoxLayout(self.current_panel)
+        self.current_panel_layout.setContentsMargins(10, 10, 10, 10)
+        
+        self.current_title = QLabel("CURRENT ROUND")
+        self.current_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        current_title_font = QFont()
+        current_title_font.setPointSize(int(self.screen_height * 0.018))
+        current_title_font.setBold(True)
+        self.current_title.setFont(current_title_font)
+        self.current_title.setStyleSheet("color: #00d4ff; padding: 5px;")
+        self.current_panel_layout.addWidget(self.current_title)
+        
+        self.current_courts_widget = QWidget()
+        self.current_courts_layout = QVBoxLayout(self.current_courts_widget)
+        self.current_courts_layout.setSpacing(6)
+        self.current_courts_layout.setContentsMargins(0, 0, 0, 0)
+        self.current_panel_layout.addWidget(self.current_courts_widget, 1)
+        
+        self.current_sitting_label = QLabel()
+        self.current_sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.current_sitting_label.setWordWrap(True)
         sitting_font = QFont()
-        sitting_font.setPointSize(int(self.screen_height * 0.014))
+        sitting_font.setPointSize(int(self.screen_height * 0.011))
         sitting_font.setBold(True)
-        self.sitting_label.setFont(sitting_font)
-        self.sitting_label.setStyleSheet("color: #ff6b6b; padding: 10px; background-color: #2d2d44; border-radius: 8px;")
-        layout.addWidget(self.sitting_label)
+        self.current_sitting_label.setFont(sitting_font)
+        self.current_sitting_label.setStyleSheet("color: #ff6b6b; padding: 5px;")
+        self.current_panel_layout.addWidget(self.current_sitting_label)
+        
+        self.side_by_side_layout.addWidget(self.current_panel, 1)
+        
+        # Next round panel
+        self.next_panel = QWidget()
+        self.next_panel.setStyleSheet("background-color: #252540; border-radius: 10px;")
+        self.next_panel_layout = QVBoxLayout(self.next_panel)
+        self.next_panel_layout.setContentsMargins(10, 10, 10, 10)
+        
+        self.next_title = QLabel("UP NEXT")
+        self.next_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        next_title_font = QFont()
+        next_title_font.setPointSize(int(self.screen_height * 0.018))
+        next_title_font.setBold(True)
+        self.next_title.setFont(next_title_font)
+        self.next_title.setStyleSheet("color: #FF9800; padding: 5px;")
+        self.next_panel_layout.addWidget(self.next_title)
+        
+        self.next_courts_widget = QWidget()
+        self.next_courts_layout = QVBoxLayout(self.next_courts_widget)
+        self.next_courts_layout.setSpacing(6)
+        self.next_courts_layout.setContentsMargins(0, 0, 0, 0)
+        self.next_panel_layout.addWidget(self.next_courts_widget, 1)
+        
+        self.next_sitting_label = QLabel()
+        self.next_sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.next_sitting_label.setWordWrap(True)
+        self.next_sitting_label.setFont(sitting_font)
+        self.next_sitting_label.setStyleSheet("color: #ff6b6b; padding: 5px;")
+        self.next_panel_layout.addWidget(self.next_sitting_label)
+        
+        self.side_by_side_layout.addWidget(self.next_panel, 1)
+        
+        layout.addWidget(self.side_by_side_widget, 1)
         
         # Track which round is being displayed (None = latest)
         self.displayed_round_index = None
+        
+        # Track the "current" round for side-by-side display (the one user navigated to)
+        self.current_round_index = None  # None means latest
         
         # Start at 80% of screen size, centered (not maximized so user can resize/move)
         width = int(self.screen_width * 0.8)
@@ -596,12 +767,15 @@ class BigScreenDisplay(QWidget):
         if not self.league.session_rounds:
             return
         
-        if self.displayed_round_index is None:
-            # Currently showing latest, go to second-to-last
-            if len(self.league.session_rounds) > 1:
-                self.displayed_round_index = len(self.league.session_rounds) - 2
-        elif self.displayed_round_index > 0:
-            self.displayed_round_index -= 1
+        # Move the "current" round back (shows current and next side by side)
+        if self.current_round_index is None:
+            # Currently at latest, go back by 2 (so we show different pair)
+            if len(self.league.session_rounds) > 2:
+                self.current_round_index = len(self.league.session_rounds) - 3
+            elif len(self.league.session_rounds) > 1:
+                self.current_round_index = 0
+        elif self.current_round_index > 0:
+            self.current_round_index -= 1
         
         self.update_display()
     
@@ -609,14 +783,14 @@ class BigScreenDisplay(QWidget):
         if not self.league.session_rounds:
             return
         
-        if self.displayed_round_index is None:
-            # Already showing latest
+        if self.current_round_index is None:
+            # Already at latest pair
             return
         
-        self.displayed_round_index += 1
-        if self.displayed_round_index >= len(self.league.session_rounds) - 1:
-            # Back to showing latest
-            self.displayed_round_index = None
+        self.current_round_index += 1
+        # Check if we should go back to showing latest
+        if self.current_round_index >= len(self.league.session_rounds) - 2:
+            self.current_round_index = None
         
         self.update_display()
     
@@ -635,45 +809,144 @@ class BigScreenDisplay(QWidget):
         
         if not self.league.session_rounds:
             self.round_label.setText("No rounds generated yet")
-            self.clear_courts()
-            self.sitting_label.setText("")
+            self.clear_courts(self.current_courts_layout)
+            self.clear_courts(self.next_courts_layout)
+            self.current_sitting_label.setText("")
+            self.next_sitting_label.setText("")
+            self.current_title.setText("CURRENT ROUND")
+            self.next_title.setText("UP NEXT")
             return
         
-        # Get the round to display
-        if self.displayed_round_index is None:
-            current_round = self.league.session_rounds[-1]
-            round_indicator = "(Latest)"
+        # Determine which round index is "current" (user-selected)
+        if self.current_round_index is None:
+            current_idx = len(self.league.session_rounds) - 1
         else:
-            current_round = self.league.session_rounds[self.displayed_round_index]
-            round_indicator = f"({self.displayed_round_index + 1} of {len(self.league.session_rounds)})"
+            current_idx = self.current_round_index
         
-        round_num = current_round['round_number']
-        self.round_label.setText(f"ROUND {round_num} {round_indicator}")
+        next_idx = current_idx + 1
         
-        # Clear existing courts
-        self.clear_courts()
+        # Update header
+        if self.current_round_index is None:
+            self.round_label.setText(f"Showing Rounds {current_idx + 1} & {next_idx + 1} (Latest)")
+        else:
+            self.round_label.setText(f"Showing Rounds {current_idx + 1} & {next_idx + 1}")
         
-        # Display each court
+        # --- Current Round Panel ---
+        current_round = self.league.session_rounds[current_idx]
+        self.current_title.setText(f"ROUND {current_round['round_number']}")
+        
+        self.clear_courts(self.current_courts_layout)
         for court_data in current_round['courts']:
-            court_widget = self.create_court_widget(court_data)
-            self.courts_layout.addWidget(court_widget)
+            court_widget = self.create_court_widget_compact(court_data)
+            self.current_courts_layout.addWidget(court_widget)
         
-        # Display sitting teams
         if current_round.get('sitting_teams'):
-            sitting_text = "SITTING OUT: " + " • ".join([
-                f"#{self.league.team_numbers.get(team_name, '?')} {team_name}" 
-                for team_name in current_round['sitting_teams']
-            ])
-            self.sitting_label.setText(sitting_text)
-            self.sitting_label.show()
+            sitting_text = "Sitting: " + ", ".join(current_round['sitting_teams'])
+            self.current_sitting_label.setText(sitting_text)
         else:
-            self.sitting_label.hide()
+            self.current_sitting_label.setText("")
+        
+        # --- Next Round Panel ---
+        if next_idx < len(self.league.session_rounds):
+            next_round = self.league.session_rounds[next_idx]
+            self.next_title.setText(f"ROUND {next_round['round_number']}")
+            self.next_panel.show()
+            
+            self.clear_courts(self.next_courts_layout)
+            for court_data in next_round['courts']:
+                court_widget = self.create_court_widget_compact(court_data)
+                self.next_courts_layout.addWidget(court_widget)
+            
+            if next_round.get('sitting_teams'):
+                sitting_text = "Sitting: " + ", ".join(next_round['sitting_teams'])
+                self.next_sitting_label.setText(sitting_text)
+            else:
+                self.next_sitting_label.setText("")
+        else:
+            self.next_title.setText("UP NEXT")
+            self.clear_courts(self.next_courts_layout)
+            no_next_label = QLabel("No next round yet")
+            no_next_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            no_next_label.setStyleSheet("color: #888888; font-size: 14pt;")
+            self.next_courts_layout.addWidget(no_next_label)
+            self.next_sitting_label.setText("")
     
-    def clear_courts(self):
-        while self.courts_layout.count():
-            item = self.courts_layout.takeAt(0)
+    def clear_courts(self, layout):
+        while layout.count():
+            item = layout.takeAt(0)
             if item.widget():
                 item.widget().deleteLater()
+    
+    def create_court_widget_compact(self, court_data):
+        """Create a compact court widget for side-by-side display"""
+        widget = QWidget()
+        widget.setStyleSheet("""
+            QWidget {
+                background-color: #2d2d44;
+                border-radius: 8px;
+            }
+        """)
+        
+        layout = QHBoxLayout(widget)
+        layout.setSpacing(10)
+        layout.setContentsMargins(10, 8, 10, 8)
+        
+        # Court number on the side
+        court_font_size = int(self.screen_height * 0.014)
+        court_label = QLabel(f"CT\n{court_data['court']}")
+        court_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        court_font = QFont()
+        court_font.setPointSize(court_font_size)
+        court_font.setBold(True)
+        court_label.setFont(court_font)
+        court_label.setStyleSheet("""
+            color: #00d4ff;
+            background-color: #1a1a2e;
+            border-radius: 6px;
+            padding: 8px;
+            min-width: 50px;
+        """)
+        layout.addWidget(court_label)
+        
+        # Teams container (vertical)
+        teams_container = QWidget()
+        teams_layout = QVBoxLayout(teams_container)
+        teams_layout.setSpacing(2)
+        teams_layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Team 1
+        team1_num = self.league.team_numbers.get(court_data['team1']['name'], '?')
+        team1_text = f"#{team1_num} {court_data['team1']['player1']} & {court_data['team1']['player2']}"
+        team1_label = QLabel(team1_text)
+        team1_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        name_font = QFont()
+        name_font.setPointSize(int(self.screen_height * 0.013))
+        name_font.setBold(True)
+        team1_label.setFont(name_font)
+        team1_label.setStyleSheet("color: #4ecca3;")
+        teams_layout.addWidget(team1_label)
+        
+        # VS
+        vs_label = QLabel("vs")
+        vs_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        vs_font = QFont()
+        vs_font.setPointSize(int(self.screen_height * 0.010))
+        vs_label.setFont(vs_font)
+        vs_label.setStyleSheet("color: #ff6b6b;")
+        teams_layout.addWidget(vs_label)
+        
+        # Team 2
+        team2_num = self.league.team_numbers.get(court_data['team2']['name'], '?')
+        team2_text = f"#{team2_num} {court_data['team2']['player1']} & {court_data['team2']['player2']}"
+        team2_label = QLabel(team2_text)
+        team2_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        team2_label.setFont(name_font)
+        team2_label.setStyleSheet("color: #f39c12;")
+        teams_layout.addWidget(team2_label)
+        
+        layout.addWidget(teams_container, 1)
+        
+        return widget
     
     def create_court_widget(self, court_data):
         widget = QWidget()
@@ -1031,6 +1304,21 @@ class MainWindow(QMainWindow):
         
         layout.addLayout(btn_layout)
         
+        # Save/Load round buttons
+        save_load_layout = QHBoxLayout()
+        
+        save_round_btn = QPushButton('💾 Save All Rounds')
+        save_round_btn.clicked.connect(self.save_all_rounds)
+        save_round_btn.setStyleSheet('QPushButton { font-size: 12pt; padding: 10px; background-color: #FF9800; color: white; }')
+        save_load_layout.addWidget(save_round_btn)
+        
+        load_round_btn = QPushButton('📂 Load Rounds')
+        load_round_btn.clicked.connect(self.load_rounds)
+        load_round_btn.setStyleSheet('QPushButton { font-size: 12pt; padding: 10px; background-color: #607D8B; color: white; }')
+        save_load_layout.addWidget(load_round_btn)
+        
+        layout.addLayout(save_load_layout)
+        
         self.rounds_display = QTextEdit()
         self.rounds_display.setReadOnly(True)
         layout.addWidget(self.rounds_display)
@@ -1359,6 +1647,50 @@ class MainWindow(QMainWindow):
         self.update_scores_table()
         self.save_data()
         self.status_label.setText(f'Round {round_data["round_number"]} generated!')
+    
+    def save_all_rounds(self):
+        """Save all rounds to a file"""
+        if not self.league.session_rounds:
+            QMessageBox.warning(self, 'No Rounds', 'No rounds to save. Generate a round first.')
+            return
+        
+        num_rounds = len(self.league.session_rounds)
+        default_filename = f"rounds_session_{self.league.current_session}.json"
+        
+        filename, _ = QFileDialog.getSaveFileName(
+            self, 
+            f'Save All Rounds ({num_rounds} rounds)', 
+            default_filename,
+            'JSON Files (*.json);;All Files (*)'
+        )
+        
+        if filename:
+            success, error = self.league.save_all_rounds_to_file(filename)
+            if success:
+                self.status_label.setText(f'All {num_rounds} rounds saved to: {filename}')
+                QMessageBox.information(self, 'Rounds Saved', f'All {num_rounds} rounds saved successfully!')
+            else:
+                QMessageBox.warning(self, 'Save Error', f'Failed to save rounds: {error}')
+    
+    def load_rounds(self):
+        """Load rounds from a file"""
+        filename, _ = QFileDialog.getOpenFileName(
+            self, 
+            'Load Rounds', 
+            '',
+            'JSON Files (*.json);;All Files (*)'
+        )
+        
+        if filename:
+            success, result = self.league.load_rounds_from_file(filename)
+            if success:
+                self.update_rounds_display()
+                self.update_scores_table()
+                self.save_data()
+                self.status_label.setText(f'Loaded {result} rounds')
+                QMessageBox.information(self, 'Rounds Loaded', f'Successfully loaded {result} rounds!')
+            else:
+                QMessageBox.warning(self, 'Load Error', f'Failed to load rounds: {result}')
     
     def simulate_scores(self):
         """Simulate random scores for all pending games in current session"""

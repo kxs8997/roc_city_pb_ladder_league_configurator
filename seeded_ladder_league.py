@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QMessageBox, QGroupBox, QScrollArea, QTableWidget,
                              QTableWidgetItem, QHeaderView, QDialog, QDialogButtonBox,
                              QFormLayout, QFileDialog, QComboBox, QInputDialog)
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QFont, QColor
 
 
@@ -42,6 +42,57 @@ class SeededLadderLeague:
             3: [3],  # Tier 3 plays on court 3
             4: [4]   # Tier 4 plays on court 4
         }
+        self.matchup_history_rounds = 9  # Prevent same matchups within this many rounds
+        
+    def get_recent_matchups(self, lookback_rounds=None):
+        """Get all matchups from the last N rounds as frozensets of (team1, team2)"""
+        if lookback_rounds is None:
+            lookback_rounds = self.matchup_history_rounds
+        
+        recent_matchups = set()
+        start_idx = max(0, len(self.session_rounds) - lookback_rounds)
+        
+        for round_data in self.session_rounds[start_idx:]:
+            for court in round_data['courts']:
+                # Create a matchup identifier: frozenset of two frozensets (teams)
+                team1 = frozenset(court['team1'])
+                team2 = frozenset(court['team2'])
+                matchup = frozenset([team1, team2])
+                recent_matchups.add(matchup)
+        
+        return recent_matchups
+    
+    def is_matchup_recent(self, team1, team2, lookback_rounds=None):
+        """Check if this matchup occurred in recent rounds"""
+        recent = self.get_recent_matchups(lookback_rounds)
+        matchup = frozenset([frozenset(team1), frozenset(team2)])
+        return matchup in recent
+    
+    def find_valid_team_arrangement(self, players, max_attempts=100):
+        """Try to find a team arrangement that avoids recent matchups"""
+        recent_matchups = self.get_recent_matchups()
+        
+        for attempt in range(max_attempts):
+            random.shuffle(players)
+            # Check if this arrangement has any recent matchups
+            valid = True
+            for i in range(0, len(players), 4):
+                if i + 4 > len(players):
+                    break
+                court_players = players[i:i+4]
+                team1 = frozenset(court_players[:2])
+                team2 = frozenset(court_players[2:])
+                matchup = frozenset([team1, team2])
+                if matchup in recent_matchups:
+                    valid = False
+                    break
+            
+            if valid:
+                return players.copy()
+        
+        # If we couldn't find a valid arrangement, return the last shuffle
+        # (better to have some repeat than no round at all)
+        return players.copy()
         
     def add_player(self, name):
         if name and name not in self.players:
@@ -73,6 +124,50 @@ class SeededLadderLeague:
                 del self.player_numbers[name]
             return True
         return False
+    
+    def rename_player(self, old_name, new_name):
+        """Rename a player while preserving all their stats, tier, and number"""
+        if old_name not in self.players:
+            return False, "Player not found"
+        if new_name in self.players:
+            return False, "New name already exists"
+        if not new_name or not new_name.strip():
+            return False, "New name cannot be empty"
+        
+        # Update players list
+        idx = self.players.index(old_name)
+        self.players[idx] = new_name
+        
+        # Transfer stats
+        if old_name in self.player_stats:
+            self.player_stats[new_name] = self.player_stats.pop(old_name)
+        
+        # Transfer tier
+        if old_name in self.player_tiers:
+            self.player_tiers[new_name] = self.player_tiers.pop(old_name)
+        
+        # Transfer player number
+        if old_name in self.player_numbers:
+            self.player_numbers[new_name] = self.player_numbers.pop(old_name)
+        
+        # Update name in session rounds (for display purposes)
+        for round_data in self.session_rounds:
+            for court in round_data['courts']:
+                # Update team1
+                if old_name in court['team1']:
+                    court['team1'] = [new_name if p == old_name else p for p in court['team1']]
+                # Update team2
+                if old_name in court['team2']:
+                    court['team2'] = [new_name if p == old_name else p for p in court['team2']]
+            # Update sitting players
+            if old_name in round_data.get('sitting_players', []):
+                round_data['sitting_players'] = [new_name if p == old_name else p for p in round_data['sitting_players']]
+        
+        # Update forced sit out list
+        if old_name in self.forced_sit_out:
+            self.forced_sit_out = [new_name if p == old_name else p for p in self.forced_sit_out]
+        
+        return True, f"Renamed {old_name} to {new_name}"
         
     def get_tier_players(self, tier):
         """Get list of players in a specific tier"""
@@ -185,7 +280,8 @@ class SeededLadderLeague:
              
         sitting_players = self.select_sitting_players(self.players, players_needed, current_round_num)
         playing_players = [p for p in self.players if p not in sitting_players]
-        random.shuffle(playing_players)
+        # Find arrangement that avoids recent matchups
+        playing_players = self.find_valid_team_arrangement(playing_players)
         
         courts = []
         # Assign to courts 1, 2, 3, 4 sequentially
@@ -240,8 +336,8 @@ class SeededLadderLeague:
             sitting = self.select_sitting_players(tier_players, players_needed, current_round_num)
             playing = [p for p in tier_players if p not in sitting]
             
-            # Shuffle playing players
-            random.shuffle(playing)
+            # Find arrangement that avoids recent matchups
+            playing = self.find_valid_team_arrangement(playing)
             
             # Assign players to courts
             for i, court_num in enumerate(courts_for_tier):
@@ -338,31 +434,76 @@ class SeededLadderLeague:
             self.player_stats[player]['games_played'] += 1
             self.player_stats[player]['total_points'] += points_for
             self.player_stats[player]['total_points_against'] += points_against
+            # Store individual game scores for capped calculation
+            self.player_stats[player]['game_scores'].append({
+                'round': round_num,
+                'points_for': points_for,
+                'points_against': points_against
+            })
     def get_rankings(self):
-        """Get player rankings based on points"""
+        """Get player rankings based on capped points (11-10) with true differential as tiebreaker.
+        Only counts games up to the minimum played by any player in the same tier."""
         if not self.players:
             return []
+        
+        # First, find minimum games played per tier
+        tier_min_games = {1: float('inf'), 2: float('inf'), 3: float('inf'), 4: float('inf')}
+        for player in self.players:
+            tier = self.player_tiers.get(player, 4)
+            games = self.player_stats[player]['games_played']
+            if games > 0 and games < tier_min_games[tier]:
+                tier_min_games[tier] = games
+        
+        # Replace inf with 0 for tiers with no players who have played
+        for tier in tier_min_games:
+            if tier_min_games[tier] == float('inf'):
+                tier_min_games[tier] = 0
         
         rankings = []
         for player in self.players:
             stats = self.player_stats[player]
+            tier = self.player_tiers.get(player, 4)
             games_played = stats['games_played']
-            points = stats['total_points']
-            points_against = stats['total_points_against']
-            differential = points - points_against
+            game_scores = stats.get('game_scores', [])
+            
+            # Determine how many games to count (minimum in tier)
+            games_to_count = min(games_played, tier_min_games[tier]) if tier_min_games[tier] > 0 else games_played
+            
+            # Calculate capped points (11-10) and true differential for counted games only
+            capped_points = 0
+            capped_points_against = 0
+            true_differential = 0
+            
+            for i, game in enumerate(game_scores[:games_to_count]):
+                pts_for = game['points_for']
+                pts_against = game['points_against']
+                
+                # True differential uses actual scores
+                true_differential += (pts_for - pts_against)
+                
+                # Capped points: winner gets 11, loser gets 10
+                if pts_for > pts_against:
+                    capped_points += 11
+                    capped_points_against += 10
+                elif pts_for < pts_against:
+                    capped_points += 10
+                    capped_points_against += 11
+                else:
+                    # Tie (shouldn't happen in pickleball, but handle it)
+                    capped_points += pts_for
+                    capped_points_against += pts_against
             
             rankings.append({
                 'player': player,
                 'games_played': games_played,
-                'counted_games': games_played,
-                'points': points,
-                'points_against': points_against,
-                'differential': differential,
-                'tier': self.player_tiers.get(player, 4)
+                'counted_games': games_to_count,
+                'points': capped_points,
+                'points_against': capped_points_against,
+                'differential': true_differential,
+                'tier': tier
             })
         
-        # Sort by tier (asc), then points (desc), then differential (desc)
-        # This ensures Tier 1 players are always ranked highest, even after a new session starts
+        # Sort by tier (asc), then capped points (desc), then true differential (desc)
         rankings.sort(key=lambda x: (x['tier'], -x['points'], -x['differential']))
         
         return rankings
@@ -520,6 +661,67 @@ class SeededLadderLeague:
                 'game_scores': []
             }
 
+    def delete_round(self, round_num):
+        """Delete a specific round and revert any stats from that round"""
+        if round_num < 1 or round_num > len(self.session_rounds):
+            return False, "Invalid round number"
+        
+        round_data = self.session_rounds[round_num - 1]
+        
+        # Revert stats for completed games in this round
+        for court in round_data['courts']:
+            if court.get('completed', False):
+                team1_score = court.get('team1_score', 0)
+                team2_score = court.get('team2_score', 0)
+                
+                # Revert team1 stats
+                for player in court['team1']:
+                    if player in self.player_stats:
+                        self.player_stats[player]['games_played'] -= 1
+                        self.player_stats[player]['total_points'] -= team1_score
+                        self.player_stats[player]['total_points_against'] -= team2_score
+                        # Remove the game score entry
+                        game_scores = self.player_stats[player].get('game_scores', [])
+                        # Find and remove the matching game score
+                        for i, gs in enumerate(game_scores):
+                            if gs.get('round') == round_num and gs.get('points_for') == team1_score and gs.get('points_against') == team2_score:
+                                game_scores.pop(i)
+                                break
+                
+                # Revert team2 stats
+                for player in court['team2']:
+                    if player in self.player_stats:
+                        self.player_stats[player]['games_played'] -= 1
+                        self.player_stats[player]['total_points'] -= team2_score
+                        self.player_stats[player]['total_points_against'] -= team1_score
+                        # Remove the game score entry
+                        game_scores = self.player_stats[player].get('game_scores', [])
+                        for i, gs in enumerate(game_scores):
+                            if gs.get('round') == round_num and gs.get('points_for') == team2_score and gs.get('points_against') == team1_score:
+                                game_scores.pop(i)
+                                break
+        
+        # Remove the round
+        self.session_rounds.pop(round_num - 1)
+        
+        # Renumber remaining rounds
+        for i, rd in enumerate(self.session_rounds):
+            rd['round_number'] = i + 1
+        
+        # Update game_scores round numbers for rounds after the deleted one
+        for player in self.player_stats:
+            for gs in self.player_stats[player].get('game_scores', []):
+                if gs.get('round', 0) > round_num:
+                    gs['round'] -= 1
+        
+        return True, f"Round {round_num} deleted"
+    
+    def delete_last_round(self):
+        """Delete the most recent round"""
+        if not self.session_rounds:
+            return False, "No rounds to delete"
+        return self.delete_round(len(self.session_rounds))
+    
     def clear_current_session(self):
         self.session_rounds = []
         for player in self.players:
@@ -797,26 +999,82 @@ class BigScreenDisplay(QWidget):
         
         layout.addLayout(header_layout)
         
-        # Courts container - takes remaining space
-        self.courts_widget = QWidget()
-        self.courts_layout = QVBoxLayout(self.courts_widget)
-        self.courts_layout.setSpacing(8)
-        self.courts_layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self.courts_widget, 1)
+        # Side-by-side container for current and next round
+        self.side_by_side_widget = QWidget()
+        self.side_by_side_layout = QHBoxLayout(self.side_by_side_widget)
+        self.side_by_side_layout.setSpacing(20)
+        self.side_by_side_layout.setContentsMargins(0, 0, 0, 0)
         
-        # Sitting players at bottom
-        self.sitting_label = QLabel()
-        self.sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.sitting_label.setWordWrap(True)
+        # Current round panel
+        self.current_panel = QWidget()
+        self.current_panel.setStyleSheet("background-color: #252540; border-radius: 10px;")
+        self.current_panel_layout = QVBoxLayout(self.current_panel)
+        self.current_panel_layout.setContentsMargins(10, 10, 10, 10)
+        
+        self.current_title = QLabel("CURRENT ROUND")
+        self.current_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        current_title_font = QFont()
+        current_title_font.setPointSize(int(self.screen_height * 0.018))
+        current_title_font.setBold(True)
+        self.current_title.setFont(current_title_font)
+        self.current_title.setStyleSheet("color: #00d4ff; padding: 5px;")
+        self.current_panel_layout.addWidget(self.current_title)
+        
+        self.current_courts_widget = QWidget()
+        self.current_courts_layout = QVBoxLayout(self.current_courts_widget)
+        self.current_courts_layout.setSpacing(6)
+        self.current_courts_layout.setContentsMargins(0, 0, 0, 0)
+        self.current_panel_layout.addWidget(self.current_courts_widget, 1)
+        
+        self.current_sitting_label = QLabel()
+        self.current_sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.current_sitting_label.setWordWrap(True)
         sitting_font = QFont()
-        sitting_font.setPointSize(int(self.screen_height * 0.014))
+        sitting_font.setPointSize(int(self.screen_height * 0.011))
         sitting_font.setBold(True)
-        self.sitting_label.setFont(sitting_font)
-        self.sitting_label.setStyleSheet("color: #ff6b6b; padding: 10px; background-color: #2d2d44; border-radius: 8px;")
-        layout.addWidget(self.sitting_label)
+        self.current_sitting_label.setFont(sitting_font)
+        self.current_sitting_label.setStyleSheet("color: #ff6b6b; padding: 5px;")
+        self.current_panel_layout.addWidget(self.current_sitting_label)
+        
+        self.side_by_side_layout.addWidget(self.current_panel, 1)
+        
+        # Next round panel
+        self.next_panel = QWidget()
+        self.next_panel.setStyleSheet("background-color: #252540; border-radius: 10px;")
+        self.next_panel_layout = QVBoxLayout(self.next_panel)
+        self.next_panel_layout.setContentsMargins(10, 10, 10, 10)
+        
+        self.next_title = QLabel("UP NEXT")
+        self.next_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        next_title_font = QFont()
+        next_title_font.setPointSize(int(self.screen_height * 0.018))
+        next_title_font.setBold(True)
+        self.next_title.setFont(next_title_font)
+        self.next_title.setStyleSheet("color: #FF9800; padding: 5px;")
+        self.next_panel_layout.addWidget(self.next_title)
+        
+        self.next_courts_widget = QWidget()
+        self.next_courts_layout = QVBoxLayout(self.next_courts_widget)
+        self.next_courts_layout.setSpacing(6)
+        self.next_courts_layout.setContentsMargins(0, 0, 0, 0)
+        self.next_panel_layout.addWidget(self.next_courts_widget, 1)
+        
+        self.next_sitting_label = QLabel()
+        self.next_sitting_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.next_sitting_label.setWordWrap(True)
+        self.next_sitting_label.setFont(sitting_font)
+        self.next_sitting_label.setStyleSheet("color: #ff6b6b; padding: 5px;")
+        self.next_panel_layout.addWidget(self.next_sitting_label)
+        
+        self.side_by_side_layout.addWidget(self.next_panel, 1)
+        
+        layout.addWidget(self.side_by_side_widget, 1)
         
         # Track which round is being displayed (None = latest)
         self.displayed_round_index = None
+        
+        # Track the "current" round for side-by-side display (the one user navigated to)
+        self.current_round_index = None  # None means latest
         
         # Start at 80% of screen size, centered (not maximized so user can resize/move)
         width = int(self.screen_width * 0.8)
@@ -831,12 +1089,15 @@ class BigScreenDisplay(QWidget):
         if not self.league.session_rounds:
             return
         
-        if self.displayed_round_index is None:
-            # Currently showing latest, go to second-to-last
-            if len(self.league.session_rounds) > 1:
-                self.displayed_round_index = len(self.league.session_rounds) - 2
-        elif self.displayed_round_index > 0:
-            self.displayed_round_index -= 1
+        # Move the "current" round back (shows current and next side by side)
+        if self.current_round_index is None:
+            # Currently at latest, go back by 2 (so we show different pair)
+            if len(self.league.session_rounds) > 2:
+                self.current_round_index = len(self.league.session_rounds) - 3
+            elif len(self.league.session_rounds) > 1:
+                self.current_round_index = 0
+        elif self.current_round_index > 0:
+            self.current_round_index -= 1
         
         self.update_display()
     
@@ -844,14 +1105,14 @@ class BigScreenDisplay(QWidget):
         if not self.league.session_rounds:
             return
         
-        if self.displayed_round_index is None:
-            # Already showing latest
+        if self.current_round_index is None:
+            # Already at latest pair
             return
         
-        self.displayed_round_index += 1
-        if self.displayed_round_index >= len(self.league.session_rounds) - 1:
-            # Back to showing latest
-            self.displayed_round_index = None
+        self.current_round_index += 1
+        # Check if we should go back to showing latest
+        if self.current_round_index >= len(self.league.session_rounds) - 2:
+            self.current_round_index = None
         
         self.update_display()
     
@@ -871,20 +1132,27 @@ class BigScreenDisplay(QWidget):
         if not self.league.session_rounds:
             self.round_label.setText("No rounds generated yet")
             self.mode_label.setText("")
-            self.clear_courts()
-            self.sitting_label.setText("")
+            self.clear_courts(self.current_courts_layout)
+            self.clear_courts(self.next_courts_layout)
+            self.current_sitting_label.setText("")
+            self.next_sitting_label.setText("")
+            self.current_title.setText("CURRENT ROUND")
+            self.next_title.setText("UP NEXT")
             return
         
-        # Get the round to display
-        if self.displayed_round_index is None:
-            current_round = self.league.session_rounds[-1]
-            round_indicator = "(Latest)"
+        # Determine which round index is "current" (user-selected)
+        if self.current_round_index is None:
+            current_idx = len(self.league.session_rounds) - 1
         else:
-            current_round = self.league.session_rounds[self.displayed_round_index]
-            round_indicator = f"({self.displayed_round_index + 1} of {len(self.league.session_rounds)})"
+            current_idx = self.current_round_index
         
-        round_num = current_round['round_number']
-        self.round_label.setText(f"ROUND {round_num} {round_indicator}")
+        next_idx = current_idx + 1
+        
+        # Update header
+        if self.current_round_index is None:
+            self.round_label.setText(f"Showing Rounds {current_idx + 1} & {next_idx + 1} (Latest)")
+        else:
+            self.round_label.setText(f"Showing Rounds {current_idx + 1} & {next_idx + 1}")
         
         # Show mode
         if self.league.is_seeding_session:
@@ -903,30 +1171,130 @@ class BigScreenDisplay(QWidget):
             self.mode_label.setText(mode_text)
             self.mode_label.setStyleSheet("color: #4ecca3; padding: 10px;")
         
-        # Clear existing courts
-        self.clear_courts()
+        # --- Current Round Panel ---
+        current_round = self.league.session_rounds[current_idx]
+        self.current_title.setText(f"ROUND {current_round['round_number']}")
         
-        # Display each court
-        for court_data in current_round['courts']:
-            court_widget = self.create_court_widget(court_data)
-            self.courts_layout.addWidget(court_widget)
+        self.clear_courts(self.current_courts_layout)
+        # Sort courts by court number to ensure CT1, CT2, CT3, CT4 order
+        sorted_courts = sorted(current_round['courts'], key=lambda c: c['court'])
+        for court_data in sorted_courts:
+            court_widget = self.create_court_widget_compact(court_data)
+            self.current_courts_layout.addWidget(court_widget)
         
-        # Display sitting players
-        if current_round['sitting_players']:
-            sitting_text = "SITTING OUT: " + " • ".join([
-                f"#{self.league.player_numbers.get(p, '?')} {p}" 
-                for p in current_round['sitting_players']
-            ])
-            self.sitting_label.setText(sitting_text)
-            self.sitting_label.show()
+        if current_round.get('sitting_players'):
+            sitting_text = "Sitting: " + ", ".join(current_round['sitting_players'])
+            self.current_sitting_label.setText(sitting_text)
         else:
-            self.sitting_label.hide()
+            self.current_sitting_label.setText("")
+        
+        # --- Next Round Panel ---
+        if next_idx < len(self.league.session_rounds):
+            next_round = self.league.session_rounds[next_idx]
+            self.next_title.setText(f"ROUND {next_round['round_number']}")
+            self.next_panel.show()
+            
+            self.clear_courts(self.next_courts_layout)
+            # Sort courts by court number to ensure CT1, CT2, CT3, CT4 order
+            sorted_next_courts = sorted(next_round['courts'], key=lambda c: c['court'])
+            for court_data in sorted_next_courts:
+                court_widget = self.create_court_widget_compact(court_data)
+                self.next_courts_layout.addWidget(court_widget)
+            
+            if next_round.get('sitting_players'):
+                sitting_text = "Sitting: " + ", ".join(next_round['sitting_players'])
+                self.next_sitting_label.setText(sitting_text)
+            else:
+                self.next_sitting_label.setText("")
+        else:
+            self.next_title.setText("UP NEXT")
+            self.clear_courts(self.next_courts_layout)
+            no_next_label = QLabel("No next round yet")
+            no_next_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            no_next_label.setStyleSheet("color: #888888; font-size: 14pt;")
+            self.next_courts_layout.addWidget(no_next_label)
+            self.next_sitting_label.setText("")
     
-    def clear_courts(self):
-        while self.courts_layout.count():
-            item = self.courts_layout.takeAt(0)
+    def clear_courts(self, layout):
+        while layout.count():
+            item = layout.takeAt(0)
             if item.widget():
                 item.widget().deleteLater()
+    
+    def create_court_widget_compact(self, court_data):
+        """Create a compact court widget for side-by-side display"""
+        widget = QWidget()
+        widget.setStyleSheet("""
+            QWidget {
+                background-color: #2d2d44;
+                border-radius: 8px;
+            }
+        """)
+        
+        layout = QHBoxLayout(widget)
+        layout.setSpacing(10)
+        layout.setContentsMargins(10, 8, 10, 8)
+        
+        # Court number on the side
+        court_font_size = int(self.screen_height * 0.014)
+        court_label = QLabel(f"CT\n{court_data['court']}")
+        court_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        court_font = QFont()
+        court_font.setPointSize(court_font_size)
+        court_font.setBold(True)
+        court_label.setFont(court_font)
+        court_label.setStyleSheet("""
+            color: #00d4ff;
+            background-color: #1a1a2e;
+            border-radius: 6px;
+            padding: 8px;
+            min-width: 50px;
+        """)
+        layout.addWidget(court_label)
+        
+        # Teams container (vertical)
+        teams_container = QWidget()
+        teams_layout = QVBoxLayout(teams_container)
+        teams_layout.setSpacing(2)
+        teams_layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Team 1
+        team1_players = []
+        for player in court_data['team1']:
+            player_num = self.league.player_numbers.get(player, '?')
+            team1_players.append(f"#{player_num} {player}")
+        team1_label = QLabel(" & ".join(team1_players))
+        team1_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        name_font = QFont()
+        name_font.setPointSize(int(self.screen_height * 0.013))
+        name_font.setBold(True)
+        team1_label.setFont(name_font)
+        team1_label.setStyleSheet("color: #4ecca3;")
+        teams_layout.addWidget(team1_label)
+        
+        # VS
+        vs_label = QLabel("vs")
+        vs_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        vs_font = QFont()
+        vs_font.setPointSize(int(self.screen_height * 0.010))
+        vs_label.setFont(vs_font)
+        vs_label.setStyleSheet("color: #ff6b6b;")
+        teams_layout.addWidget(vs_label)
+        
+        # Team 2
+        team2_players = []
+        for player in court_data['team2']:
+            player_num = self.league.player_numbers.get(player, '?')
+            team2_players.append(f"#{player_num} {player}")
+        team2_label = QLabel(" & ".join(team2_players))
+        team2_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        team2_label.setFont(name_font)
+        team2_label.setStyleSheet("color: #f39c12;")
+        teams_layout.addWidget(team2_label)
+        
+        layout.addWidget(teams_container, 1)
+        
+        return widget
     
     def create_court_widget(self, court_data):
         widget = QWidget()
@@ -1385,9 +1753,18 @@ class MainWindow(QMainWindow):
         self.update_players_list()
         players_layout.addWidget(self.players_list)
         
-        remove_btn = QPushButton('Remove Selected Player')
+        player_btns_layout = QHBoxLayout()
+        
+        remove_btn = QPushButton('Remove Player')
         remove_btn.clicked.connect(self.remove_player)
-        players_layout.addWidget(remove_btn)
+        player_btns_layout.addWidget(remove_btn)
+        
+        rename_btn = QPushButton('Rename/Sub Player')
+        rename_btn.clicked.connect(self.rename_player)
+        rename_btn.setStyleSheet('QPushButton { background-color: #FF9800; color: white; }')
+        player_btns_layout.addWidget(rename_btn)
+        
+        players_layout.addLayout(player_btns_layout)
         
         players_group.setLayout(players_layout)
         layout.addWidget(players_group)
@@ -1549,10 +1926,20 @@ class MainWindow(QMainWindow):
         layout.addWidget(info_label)
         
         gen_layout = QHBoxLayout()
-        generate_btn = QPushButton('Generate Next Round')
+        generate_btn = QPushButton('Generate Round')
         generate_btn.clicked.connect(self.generate_round)
         generate_btn.setStyleSheet('QPushButton { font-size: 14pt; padding: 10px; background-color: #88cc00; }')
         gen_layout.addWidget(generate_btn)
+        
+        generate_9_btn = QPushButton('Generate 9 Rounds')
+        generate_9_btn.clicked.connect(self.generate_9_rounds)
+        generate_9_btn.setStyleSheet('QPushButton { font-size: 14pt; padding: 10px; background-color: #FF9800; color: white; }')
+        gen_layout.addWidget(generate_9_btn)
+        
+        delete_round_btn = QPushButton('🗑️ Delete Last Round')
+        delete_round_btn.clicked.connect(self.delete_last_round)
+        delete_round_btn.setStyleSheet('QPushButton { font-size: 14pt; padding: 10px; background-color: #f44336; color: white; }')
+        gen_layout.addWidget(delete_round_btn)
         
         big_screen_btn = QPushButton('📺 Big Screen Display')
         big_screen_btn.clicked.connect(self.open_big_screen)
@@ -1760,6 +2147,37 @@ class MainWindow(QMainWindow):
                 self.update_scores_player_numbers()
                 self.save_data()
                 self.status_label.setText(f'Removed player: {name}')
+    
+    def rename_player(self):
+        """Rename a player (useful for substitutes) while keeping all stats"""
+        current_item = self.players_list.currentItem()
+        if not current_item:
+            QMessageBox.warning(self, 'No Selection', 'Please select a player to rename')
+            return
+        
+        display_text = current_item.text()
+        # Extract player name from "#X - Name (Tier)" format
+        if ' - ' in display_text:
+            old_name = display_text.split(' - ', 1)[1].split(' (')[0]
+        else:
+            old_name = display_text.split(' (')[0]
+        
+        new_name, ok = QInputDialog.getText(self, 'Rename Player (Sub)', 
+                                            f'Enter new name for "{old_name}":\n(Stats, tier, and number will be preserved)',
+                                            text=old_name)
+        if ok and new_name:
+            success, message = self.league.rename_player(old_name, new_name.strip())
+            if success:
+                self.update_players_list()
+                self.update_player_numbers_table()
+                self.update_scores_player_numbers()
+                self.update_rounds_display()
+                self.update_scores_table()
+                self.update_rankings()
+                self.save_data()
+                self.status_label.setText(message)
+            else:
+                QMessageBox.warning(self, 'Rename Failed', message)
     
     def load_demo_players(self, count=16):
         """Load demo players with tier assignments based on count"""
@@ -2090,6 +2508,58 @@ class MainWindow(QMainWindow):
         self.save_data()
         self.status_label.setText(f'Round {round_data["round_number"]} generated!')
     
+    def generate_9_rounds(self):
+        """Generate 9 rounds at once with duplicate checking"""
+        reply = QMessageBox.question(self, 'Generate 9 Rounds', 
+                                     'Generate 9 rounds with duplicate matchup checking?\n\n'
+                                     'This will create 9 rounds where no matchup repeats.',
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        if reply != QMessageBox.StandardButton.Yes:
+            return
+        
+        rounds_generated = 0
+        errors = []
+        
+        for i in range(9):
+            round_data, error = self.league.generate_round()
+            if error:
+                errors.append(f"Round {i+1}: {error}")
+                break
+            rounds_generated += 1
+        
+        self.update_rounds_display()
+        self.update_scores_table()
+        self.save_data()
+        
+        if errors:
+            QMessageBox.warning(self, 'Generation Stopped', 
+                               f'Generated {rounds_generated} rounds.\n\nStopped due to:\n' + '\n'.join(errors))
+        else:
+            self.status_label.setText(f'Generated {rounds_generated} rounds!')
+    
+    def delete_last_round(self):
+        """Delete the most recent round"""
+        if not self.league.session_rounds:
+            QMessageBox.warning(self, 'No Rounds', 'No rounds to delete.')
+            return
+        
+        round_num = len(self.league.session_rounds)
+        reply = QMessageBox.question(self, 'Delete Round', 
+                                     f'Delete Round {round_num}?\n\nThis will revert any scores recorded for this round.',
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        if reply == QMessageBox.StandardButton.Yes:
+            success, message = self.league.delete_last_round()
+            if success:
+                self.update_rounds_display()
+                self.update_scores_table()
+                self.update_rankings()
+                self.save_data()
+                self.status_label.setText(message)
+            else:
+                QMessageBox.warning(self, 'Delete Failed', message)
+    
     def simulate_scores(self):
         """Simulate random scores for all pending games in current session"""
         if not self.league.session_rounds:
@@ -2202,7 +2672,9 @@ class MainWindow(QMainWindow):
             # Add player number to rankings
             player_num = self.league.player_numbers.get(rank_data['player'], '?')
             self.rankings_table.setItem(i, 2, QTableWidgetItem(f"#{player_num} {rank_data['player']}"))
-            self.rankings_table.setItem(i, 3, QTableWidgetItem(str(rank_data['games_played'])))
+            # Show counted/total games (e.g., "4/5" means 4 counted out of 5 played)
+            games_text = f"{rank_data['counted_games']}/{rank_data['games_played']}" if rank_data['counted_games'] != rank_data['games_played'] else str(rank_data['games_played'])
+            self.rankings_table.setItem(i, 3, QTableWidgetItem(games_text))
             self.rankings_table.setItem(i, 4, QTableWidgetItem(str(rank_data['points'])))
             
             diff = rank_data['differential']
