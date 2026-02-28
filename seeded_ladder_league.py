@@ -375,20 +375,29 @@ class SeededLadderLeague:
             court_num = active_courts[0]
             num_sitting = n - 4
 
-            # Sort by fewest sit-outs first — those who've sat least should sit next.
-            # Tie-break: penalise consecutive sit-outs (sat last round).
-            by_fairness = sorted(
-                tier_players,
-                key=lambda p: (
-                    self.player_stats[p]['rounds_sat_out'],
-                    1 if self.player_stats[p]['last_sat_out_round'] == current_round_num - 1 else 0,
-                    p
-                )
-            )
+            # Players who sat last round must play this round — never sit them again.
+            eligible = [p for p in tier_players
+                        if self.player_stats[p]['last_sat_out_round'] != current_round_num - 1]
 
             if num_sitting == 0:
                 sitter_options = [()]
+            elif len(eligible) >= num_sitting:
+                # Normal case: pick sitters only from eligible players, fairest first.
+                eligible_sorted = sorted(
+                    eligible,
+                    key=lambda p: (self.player_stats[p]['rounds_sat_out'], p)
+                )
+                sitter_options = sorted(
+                    itertools.combinations(eligible_sorted, num_sitting),
+                    key=lambda combo: (
+                        max(self.player_stats[p]['rounds_sat_out'] for p in combo),
+                        sum(self.player_stats[p]['rounds_sat_out'] for p in combo),
+                    )
+                )
             else:
+                # Edge case: not enough eligible players — allow consecutive as last resort.
+                by_fairness = sorted(tier_players,
+                                     key=lambda p: (self.player_stats[p]['rounds_sat_out'], p))
                 sitter_options = sorted(
                     itertools.combinations(by_fairness, num_sitting),
                     key=lambda combo: (
@@ -411,8 +420,10 @@ class SeededLadderLeague:
                     break
 
             if not scheduled:
-                # All pairings exhausted — use fairest sitters, first available pairing.
-                sitters = list(by_fairness[:num_sitting])
+                # All unique pairings exhausted — use fairest eligible sitters, first pairing.
+                pool = eligible if len(eligible) >= num_sitting else tier_players
+                fallback_sitters = sorted(pool, key=lambda p: (self.player_stats[p]['rounds_sat_out'], p))
+                sitters = list(fallback_sitters[:num_sitting])
                 active = [p for p in tier_players if p not in set(sitters)]
                 a, b, c, d = sorted(active)
                 courts.append(self._create_court_data(court_num, [a, b, c, d]))
