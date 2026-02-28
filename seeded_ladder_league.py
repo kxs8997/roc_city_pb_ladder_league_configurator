@@ -382,18 +382,20 @@ class SeededLadderLeague:
             if num_sitting == 0:
                 sitter_options = [()]
             elif len(eligible) >= num_sitting:
-                # Normal case: pick sitters only from eligible players, fairest first.
-                eligible_sorted = sorted(
-                    eligible,
-                    key=lambda p: (self.player_stats[p]['rounds_sat_out'], p)
-                )
-                sitter_options = sorted(
-                    itertools.combinations(eligible_sorted, num_sitting),
-                    key=lambda combo: (
-                        max(self.player_stats[p]['rounds_sat_out'] for p in combo),
-                        sum(self.player_stats[p]['rounds_sat_out'] for p in combo),
-                    )
-                )
+                # Score each combo: prefer combos whose active 4 have more unused pairings
+                # (avoids putting the same 4 together repeatedly, exhausting their pairings).
+                # Tie-break by fairness (fewest sit-outs sit next).
+                scored = []
+                for combo in itertools.combinations(eligible, num_sitting):
+                    active = [p for p in tier_players if p not in set(combo)]
+                    avail = self._count_available_pairings(active)
+                    scored.append((combo, avail))
+                scored.sort(key=lambda x: (
+                    -x[1],  # more available pairings first
+                    max(self.player_stats[p]['rounds_sat_out'] for p in x[0]),
+                    sum(self.player_stats[p]['rounds_sat_out'] for p in x[0]),
+                ))
+                sitter_options = [combo for combo, _ in scored]
             else:
                 # Edge case: not enough eligible players — allow consecutive as last resort.
                 by_fairness = sorted(tier_players,
@@ -430,6 +432,18 @@ class SeededLadderLeague:
                 all_sitting.extend(sitters)
 
         return self._finalize_round(current_round_num, courts, all_sitting)
+
+    def _count_available_pairings(self, players):
+        """Count how many of the 3 possible pairings for 4 players use only unused partnerships."""
+        if len(players) != 4:
+            return 0
+        a, b, c, d = players
+        count = 0
+        for t1, t2 in [([a, b], [c, d]), ([a, c], [b, d]), ([a, d], [b, c])]:
+            if (self.is_valid_partnership(t1[0], t1[1]) and
+                    self.is_valid_partnership(t2[0], t2[1])):
+                count += 1
+        return count
 
     def _pick_pairing(self, active_players):
         """Given exactly 4 players, return (team1, team2) using no repeat partnerships.
@@ -477,6 +491,70 @@ class SeededLadderLeague:
         
         self.session_rounds.append(round_data)
         return round_data, None
+
+    def generate_best_9_rounds(self, max_attempts=50):
+        """Generate 9 rounds, trying multiple times to minimise repeat partnerships.
+        Returns (rounds_generated, repeat_count).  State is left with the best attempt."""
+        import copy
+
+        # Snapshot state before generation
+        saved_rounds = copy.deepcopy(self.session_rounds)
+        saved_stats = copy.deepcopy(self.player_stats)
+        saved_partnerships = set(self.used_partnerships)
+        saved_forced = list(self.forced_sit_out)
+
+        best_rounds = None
+        best_stats = None
+        best_partnerships = None
+        best_repeat_count = float('inf')
+
+        for _ in range(max_attempts):
+            # Restore to pre-generation state
+            self.session_rounds = copy.deepcopy(saved_rounds)
+            self.player_stats = copy.deepcopy(saved_stats)
+            self.used_partnerships = set(saved_partnerships)
+            self.forced_sit_out = list(saved_forced)
+
+            generated = 0
+            for _ in range(9):
+                rd, err = self.generate_round()
+                if err:
+                    break
+                generated += 1
+
+            if generated < 9:
+                continue
+
+            # Count repeats in the new rounds only
+            repeats = 0
+            seen = {}
+            start_idx = len(saved_rounds)
+            for rd in self.session_rounds[start_idx:]:
+                for court in rd['courts']:
+                    for team_key in ('team1', 'team2'):
+                        key = tuple(sorted(court[team_key]))
+                        seen[key] = seen.get(key, 0) + 1
+                        if seen[key] > 1:
+                            repeats += 1
+
+            if repeats < best_repeat_count:
+                best_rounds = copy.deepcopy(self.session_rounds)
+                best_stats = copy.deepcopy(self.player_stats)
+                best_partnerships = set(self.used_partnerships)
+                best_repeat_count = repeats
+
+            if repeats == 0:
+                break  # Perfect — no need to keep trying
+
+        # Apply the best result
+        if best_rounds is not None:
+            self.session_rounds = best_rounds
+            self.player_stats = best_stats
+            self.used_partnerships = best_partnerships
+        self.forced_sit_out = list(saved_forced)
+
+        new_rounds = len(self.session_rounds) - len(saved_rounds)
+        return new_rounds, best_repeat_count
 
     def record_game_score(self, round_num, court_num, team1_score, team2_score, team1=None, team2=None):
         """Record scores for a completed game"""
@@ -918,8 +996,16 @@ class SeededLadderLeague:
                     self.tier_court_assignments = loaded_assignments
                 
                 self.forced_sit_out = data.get('forced_sit_out', [])
-                # Start fresh - only track partnerships from this session onwards
+                # Rebuild used_partnerships from existing session rounds
                 self.used_partnerships = set()
+                for rnd in self.session_rounds:
+                    for court in rnd.get('courts', []):
+                        t1 = court.get('team1', [])
+                        t2 = court.get('team2', [])
+                        if len(t1) == 2:
+                            self.used_partnerships.add(tuple(sorted(t1)))
+                        if len(t2) == 2:
+                            self.used_partnerships.add(tuple(sorted(t2)))
             return True
         except:
             return False
@@ -2628,35 +2714,18 @@ class MainWindow(QMainWindow):
         if reply != QMessageBox.StandardButton.Yes:
             return
         
-        rounds_generated = 0
-        errors = []
-        
-        for i in range(9):
-            round_data, error = self.league.generate_round()
-            if error:
-                errors.append(f"Round {i+1}: {error}")
-                break
-            rounds_generated += 1
+        rounds_generated, repeat_count = self.league.generate_best_9_rounds(max_attempts=50)
         
         self.update_rounds_display()
         self.update_scores_table()
         self.save_data()
         
-        # Validate partnerships after generation - only check the rounds just generated
-        starting_round = self.league.session_rounds[-rounds_generated]['round_number'] if rounds_generated > 0 else None
-        duplicate_partnerships = self.check_partnership_duplicates(from_round=starting_round)
-        
-        if errors:
-            QMessageBox.warning(self, 'Generation Stopped', 
-                               f'Generated {rounds_generated} rounds.\n\nStopped due to:\n' + '\n'.join(errors))
-        elif duplicate_partnerships:
-            warning_msg = f'Generated {rounds_generated} rounds.\n\n'
-            warning_msg += f'⚠️ WARNING: Found {len(duplicate_partnerships)} repeat partnership(s):\n\n'
-            for partners, rounds in duplicate_partnerships[:5]:  # Show max 5
-                warning_msg += f'• {partners[0]} & {partners[1]} (Rounds {", ".join(map(str, rounds))})\n'
-            if len(duplicate_partnerships) > 5:
-                warning_msg += f'\n...and {len(duplicate_partnerships) - 5} more'
-            QMessageBox.warning(self, 'Partnership Duplicates Found', warning_msg)
+        if rounds_generated == 0:
+            QMessageBox.warning(self, 'Generation Failed', 'Could not generate any rounds.')
+        elif repeat_count > 0:
+            QMessageBox.warning(self, 'Partnerships',
+                               f'Generated {rounds_generated} rounds (best of 50 attempts).\n\n'
+                               f'⚠️ {repeat_count} repeat partnership(s) — unavoidable for this tier size.')
         else:
             QMessageBox.information(self, 'Success', 
                                    f'✅ Generated {rounds_generated} rounds!\n\n'
