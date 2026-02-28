@@ -375,6 +375,11 @@ class SeededLadderLeague:
             court_num = active_courts[0]
             num_sitting = n - 4
 
+            # Forced sit-outs for this tier (skip anyone who sat last round — they must play).
+            forced_in_tier = [p for p in self.forced_sit_out
+                              if p in tier_players
+                              and self.player_stats[p]['last_sat_out_round'] != current_round_num - 1]
+
             # Players who sat last round must play this round — never sit them again.
             eligible = [p for p in tier_players
                         if self.player_stats[p]['last_sat_out_round'] != current_round_num - 1]
@@ -382,20 +387,28 @@ class SeededLadderLeague:
             if num_sitting == 0:
                 sitter_options = [()]
             elif len(eligible) >= num_sitting:
-                # Score each combo: prefer combos whose active 4 have more unused pairings
-                # (avoids putting the same 4 together repeatedly, exhausting their pairings).
-                # Tie-break by fairness (fewest sit-outs sit next).
-                scored = []
-                for combo in itertools.combinations(eligible, num_sitting):
-                    active = [p for p in tier_players if p not in set(combo)]
-                    avail = self._count_available_pairings(active)
-                    scored.append((combo, avail))
-                scored.sort(key=lambda x: (
-                    -x[1],  # more available pairings first
-                    max(self.player_stats[p]['rounds_sat_out'] for p in x[0]),
-                    sum(self.player_stats[p]['rounds_sat_out'] for p in x[0]),
-                ))
-                sitter_options = [combo for combo, _ in scored]
+                # How many extra sitters needed beyond forced?
+                extra_needed = num_sitting - len(forced_in_tier)
+                forced_set = set(forced_in_tier)
+
+                if extra_needed <= 0:
+                    # All sitters are forced (or more forced than slots — take first num_sitting).
+                    sitter_options = [tuple(forced_in_tier[:num_sitting])]
+                else:
+                    # Combine forced with all combos of remaining eligible.
+                    remaining = [p for p in eligible if p not in forced_set]
+                    scored = []
+                    for extra in itertools.combinations(remaining, extra_needed):
+                        combo = tuple(forced_in_tier) + extra
+                        active = [p for p in tier_players if p not in set(combo)]
+                        avail = self._count_available_pairings(active)
+                        scored.append((combo, avail))
+                    scored.sort(key=lambda x: (
+                        -x[1],  # more available pairings first
+                        max(self.player_stats[p]['rounds_sat_out'] for p in x[0]),
+                        sum(self.player_stats[p]['rounds_sat_out'] for p in x[0]),
+                    ))
+                    sitter_options = [combo for combo, _ in scored]
             else:
                 # Edge case: not enough eligible players — allow consecutive as last resort.
                 by_fairness = sorted(tier_players,
