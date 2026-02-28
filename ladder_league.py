@@ -33,6 +33,7 @@ class RoundRobinLeague:
         self.player_numbers = {}  # Map player name to assigned number
         self.next_player_number = 1  # Track next available number
         self.forced_sit_out = []  # Players forced to sit out next round
+        self.used_partnerships = set()  # Track partnerships used in current session
         
     def add_player(self, name):
         if name and name not in self.players:
@@ -151,8 +152,77 @@ class RoundRobinLeague:
         
         return sitting_players
     
+    def get_partnership_key(self, player1, player2):
+        """Create a consistent key for a partnership (order-independent)"""
+        return tuple(sorted([player1, player2]))
+    
+    def is_valid_partnership(self, player1, player2):
+        """Check if two players can be partnered (haven't partnered before this session)"""
+        return self.get_partnership_key(player1, player2) not in self.used_partnerships
+    
+    def record_partnership(self, player1, player2):
+        """Record that two players have been partnered"""
+        self.used_partnerships.add(self.get_partnership_key(player1, player2))
+    
+    def form_courts_with_unique_partnerships(self, playing_players, num_courts):
+        """
+        Form courts ensuring no repeat partnerships.
+        Uses backtracking to find a valid assignment.
+        Returns list of court dicts or None if no valid assignment found.
+        """
+        from itertools import combinations
+        
+        # Get all valid (unused) partnerships from playing players
+        valid_pairs = []
+        for p1, p2 in combinations(playing_players, 2):
+            if self.is_valid_partnership(p1, p2):
+                valid_pairs.append((p1, p2))
+        
+        # We need num_courts * 2 teams (2 teams per court)
+        teams_needed = num_courts * 2
+        
+        # Try to find teams_needed non-overlapping pairs
+        def find_teams(pairs, selected_teams, used_players):
+            if len(selected_teams) == teams_needed:
+                return selected_teams
+            
+            for i, pair in enumerate(pairs):
+                p1, p2 = pair
+                if p1 not in used_players and p2 not in used_players:
+                    new_used = used_players | {p1, p2}
+                    result = find_teams(pairs[i+1:], selected_teams + [pair], new_used)
+                    if result is not None:
+                        return result
+            return None
+        
+        # Shuffle pairs for randomness
+        random.shuffle(valid_pairs)
+        teams = find_teams(valid_pairs, [], set())
+        
+        if teams is None:
+            return None
+        
+        # Shuffle teams and assign to courts
+        random.shuffle(teams)
+        courts = []
+        for court_num in range(1, num_courts + 1):
+            team1 = list(teams[(court_num - 1) * 2])
+            team2 = list(teams[(court_num - 1) * 2 + 1])
+            court_players = team1 + team2
+            courts.append({
+                'court': court_num,
+                'players': court_players,
+                'team1': team1,
+                'team2': team2,
+                'team1_score': 0,
+                'team2_score': 0,
+                'completed': False
+            })
+        
+        return courts
+    
     def generate_round(self):
-        """Generate a new round with proper sit-out rotation"""
+        """Generate a new round with proper sit-out rotation and no repeat partnerships"""
         num_courts = self.get_active_courts()
         
         if len(self.players) < num_courts * 4:
@@ -165,24 +235,34 @@ class RoundRobinLeague:
         
         # Get playing players
         playing_players = [p for p in self.players if p not in sitting_players]
-        random.shuffle(playing_players)
         
-        # Assign to courts
-        courts = []
-        for court_num in range(1, num_courts + 1):
-            start_idx = (court_num - 1) * 4
-            court_players = playing_players[start_idx:start_idx + 4]
-            
-            if len(court_players) == 4:
-                courts.append({
-                    'court': court_num,
-                    'players': court_players,
-                    'team1': court_players[:2],
-                    'team2': court_players[2:],
-                    'team1_score': 0,
-                    'team2_score': 0,
-                    'completed': False
-                })
+        # Try to form valid teams (no repeat partnerships)
+        courts = self.form_courts_with_unique_partnerships(playing_players, num_courts)
+        
+        if courts is None:
+            # Fallback: if we can't find valid partnerships, use random assignment
+            # This can happen when all possible partnerships are exhausted
+            random.shuffle(playing_players)
+            courts = []
+            for court_num in range(1, num_courts + 1):
+                start_idx = (court_num - 1) * 4
+                court_players = playing_players[start_idx:start_idx + 4]
+                
+                if len(court_players) == 4:
+                    courts.append({
+                        'court': court_num,
+                        'players': court_players,
+                        'team1': court_players[:2],
+                        'team2': court_players[2:],
+                        'team1_score': 0,
+                        'team2_score': 0,
+                        'completed': False
+                    })
+        
+        # Record all partnerships used in this round
+        for court in courts:
+            self.record_partnership(court['team1'][0], court['team1'][1])
+            self.record_partnership(court['team2'][0], court['team2'][1])
         
         # Update sit-out tracking
         for player in sitting_players:
@@ -293,6 +373,8 @@ class RoundRobinLeague:
         
         # Clear current session rounds but KEEP cumulative stats (no ladder/tiers)
         self.session_rounds = []
+        # Clear partnership tracking for new session
+        self.used_partnerships = set()
         # Only reset sit-out tracking for new session, keep points cumulative
         for player in self.players:
             self.player_stats[player]['rounds_sat_out'] = 0
@@ -302,6 +384,7 @@ class RoundRobinLeague:
     def clear_current_session(self):
         """Clear current session rounds and scores without saving to history"""
         self.session_rounds = []
+        self.used_partnerships = set()
         for player in self.players:
             self.player_stats[player] = {
                 'games_played': 0,
@@ -323,6 +406,7 @@ class RoundRobinLeague:
         self.session_rounds = []
         self.current_session = 1
         self.session_history = []
+        self.used_partnerships = set()
         for player in self.players:
             self.player_stats[player] = {
                 'games_played': 0,
@@ -344,6 +428,7 @@ class RoundRobinLeague:
         self.session_history = []
         self.player_numbers = {}
         self.next_player_number = 1
+        self.used_partnerships = set()
     
     def save_to_file(self, filename):
         data = {
@@ -354,7 +439,8 @@ class RoundRobinLeague:
             'session_history': self.session_history,
             'player_numbers': self.player_numbers,
             'next_player_number': self.next_player_number,
-            'forced_sit_out': self.forced_sit_out
+            'forced_sit_out': self.forced_sit_out,
+            'used_partnerships': [list(p) for p in self.used_partnerships]  # Convert tuples to lists for JSON
         }
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
@@ -371,6 +457,9 @@ class RoundRobinLeague:
                 self.player_numbers = data.get('player_numbers', {})
                 self.next_player_number = data.get('next_player_number', 1)
                 self.forced_sit_out = data.get('forced_sit_out', [])
+                # Load partnerships (convert lists back to tuples for set)
+                partnerships_data = data.get('used_partnerships', [])
+                self.used_partnerships = set(tuple(p) for p in partnerships_data)
                 
                 # Migrate old data: add wins/losses if missing
                 for player in self.players:

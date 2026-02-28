@@ -1,33 +1,33 @@
 {
   "players": [
-    "Abby A",
-    "April S",
-    "Ash M",
-    "Carolyn G",
-    "Catherine B",
-    "Courtney B",
-    "Elise L",
     "Gabrielle H",
-    "Hala A",
-    "Jaclyn C",
-    "Jena C",
-    "Jenny G-H",
-    "Julia I",
-    "Karen K",
-    "Kayla O",
-    "Laurie C",
-    "Leigh B",
-    "Linda D",
     "Loren N",
+    "Jaclyn C",
+    "Elise L",
+    "Bri D",
+    "Linda D",
     "Nicara M",
-    "Teresa S",
+    "Rachel B",
+    "Courtney B",
+    "Molly H",
+    "Abby A",
+    "Karen K",
+    "April S",
     "Tricia T",
-    "Nicole A",
+    "Carolyn G",
+    "Trish M",
+    "Kayla O",
+    "Jess C",
+    "Jena C",
     "Rachel A",
+    "Leia P",
+    "Julia I",
     "Stacie E",
-    "Susan C",
-    "Tracie G",
-    "Susan M"
+    "Leigh B",
+    "Jenny G-H",
+    "Lisa W",
+    "Laurie C",
+    "Tracie G"
   ],
   "session_rounds": [
     {
@@ -36,38 +36,18 @@
         {
           "court": 2,
           "players": [
-            "Elise L",
-            "Courtney B",
             "Gabrielle H",
-            "Jaclyn C"
+            "Loren N",
+            "Jaclyn C",
+            "Elise L"
           ],
           "team1": [
-            "Elise L",
-            "Courtney B"
-          ],
-          "team2": [
             "Gabrielle H",
-            "Jaclyn C"
-          ],
-          "team1_score": 0,
-          "team2_score": 0,
-          "completed": false
-        },
-        {
-          "court": 1,
-          "players": [
-            "Tricia T",
-            "Jena C",
-            "Carolyn G",
-            "April S"
-          ],
-          "team1": [
-            "Tricia T",
-            "Jena C"
+            "Loren N"
           ],
           "team2": [
-            "Carolyn G",
-            "April S"
+            "Jaclyn C",
+            "Elise L"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -76,18 +56,38 @@
         {
           "court": 3,
           "players": [
-            "Laurie C",
-            "Kayla O",
-            "Julia I",
-            "Karen K"
+            "Rachel B",
+            "Courtney B",
+            "Molly H",
+            "Abby A"
           ],
           "team1": [
-            "Laurie C",
-            "Kayla O"
+            "Rachel B",
+            "Courtney B"
           ],
           "team2": [
-            "Julia I",
-            "Karen K"
+            "Molly H",
+            "Abby A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Trish M",
+            "Kayla O",
+            "Jess C"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Trish M"
+          ],
+          "team2": [
+            "Kayla O",
+            "Jess C"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -96,18 +96,18 @@
         {
           "court": 4,
           "players": [
-            "Susan M",
-            "Tracie G",
-            "Susan C",
-            "Stacie E"
+            "Julia I",
+            "Stacie E",
+            "Leigh B",
+            "Jenny G-H"
           ],
           "team1": [
-            "Susan M",
-            "Tracie G"
+            "Julia I",
+            "Stacie E"
           ],
           "team2": [
-            "Susan C",
-            "Stacie E"
+            "Leigh B",
+            "Jenny G-H"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -115,18 +115,18 @@
         }
       ],
       "sitting_players": [
+        "Bri D",
         "Linda D",
-        "Abby A",
-        "Ash M",
-        "Loren N",
         "Nicara M",
-        "Teresa S",
-        "Catherine B",
-        "Hala A",
-        "Jenny G-H",
-        "Leigh B",
-        "Nicole A",
-        "Rachel A"
+        "Karen K",
+        "April S",
+        "Tricia T",
+        "Jena C",
+        "Rachel A",
+        "Leia P",
+        "Lisa W",
+        "Laurie C",
+        "Tracie G"
       ]
     },
     {
@@ -135,38 +135,18 @@
         {
           "court": 2,
           "players": [
-            "Courtney B",
-            "Linda D",
-            "Gabrielle H",
-            "Jaclyn C"
-          ],
-          "team1": [
-            "Courtney B",
+            "Bri D",
+            "Nicara M",
+            "Elise L",
             "Linda D"
           ],
-          "team2": [
-            "Gabrielle H",
-            "Jaclyn C"
-          ],
-          "team1_score": 0,
-          "team2_score": 0,
-          "completed": false
-        },
-        {
-          "court": 1,
-          "players": [
-            "Loren N",
-            "April S",
-            "Tricia T",
-            "Jena C"
-          ],
           "team1": [
-            "Loren N",
-            "April S"
+            "Bri D",
+            "Nicara M"
           ],
           "team2": [
-            "Tricia T",
-            "Jena C"
+            "Elise L",
+            "Linda D"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -176,17 +156,37 @@
           "court": 3,
           "players": [
             "Karen K",
-            "Catherine B",
-            "Jenny G-H",
-            "Laurie C"
+            "Tricia T",
+            "Abby A",
+            "April S"
           ],
           "team1": [
             "Karen K",
-            "Catherine B"
+            "Tricia T"
           ],
           "team2": [
-            "Jenny G-H",
-            "Laurie C"
+            "Abby A",
+            "April S"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Jena C",
+            "Leia P",
+            "Jess C",
+            "Rachel A"
+          ],
+          "team1": [
+            "Jena C",
+            "Leia P"
+          ],
+          "team2": [
+            "Jess C",
+            "Rachel A"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -195,18 +195,18 @@
         {
           "court": 4,
           "players": [
-            "Leigh B",
-            "Susan C",
+            "Lisa W",
             "Tracie G",
-            "Stacie E"
+            "Jenny G-H",
+            "Laurie C"
           ],
           "team1": [
-            "Leigh B",
-            "Susan C"
+            "Lisa W",
+            "Tracie G"
           ],
           "team2": [
-            "Tracie G",
-            "Stacie E"
+            "Jenny G-H",
+            "Laurie C"
           ],
           "team1_score": 0,
           "team2_score": 0,
@@ -214,324 +214,2198 @@
         }
       ],
       "sitting_players": [
-        "Ash M",
-        "Abby A",
-        "Elise L",
-        "Teresa S",
+        "Gabrielle H",
+        "Loren N",
+        "Jaclyn C",
+        "Rachel B",
+        "Courtney B",
+        "Molly H",
         "Carolyn G",
-        "Nicara M",
+        "Trish M",
         "Kayla O",
         "Julia I",
-        "Hala A",
-        "Nicole A",
+        "Stacie E",
+        "Leigh B"
+      ]
+    },
+    {
+      "round_number": 3,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Jaclyn C",
+            "Loren N",
+            "Nicara M"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Jaclyn C"
+          ],
+          "team2": [
+            "Loren N",
+            "Nicara M"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Molly H",
+            "Courtney B",
+            "Tricia T"
+          ],
+          "team1": [
+            "Rachel B",
+            "Molly H"
+          ],
+          "team2": [
+            "Courtney B",
+            "Tricia T"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Kayla O",
+            "Trish M",
+            "Leia P"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Kayla O"
+          ],
+          "team2": [
+            "Trish M",
+            "Leia P"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Leigh B",
+            "Stacie E",
+            "Tracie G"
+          ],
+          "team1": [
+            "Julia I",
+            "Leigh B"
+          ],
+          "team2": [
+            "Stacie E",
+            "Tracie G"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Elise L",
+        "Bri D",
+        "Linda D",
+        "Abby A",
+        "Karen K",
+        "April S",
+        "Jess C",
+        "Jena C",
         "Rachel A",
-        "Susan M"
+        "Jenny G-H",
+        "Lisa W",
+        "Laurie C"
+      ]
+    },
+    {
+      "round_number": 4,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Elise L",
+            "Bri D",
+            "Jaclyn C",
+            "Linda D"
+          ],
+          "team1": [
+            "Elise L",
+            "Bri D"
+          ],
+          "team2": [
+            "Jaclyn C",
+            "Linda D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Abby A",
+            "Karen K",
+            "Molly H",
+            "April S"
+          ],
+          "team1": [
+            "Abby A",
+            "Karen K"
+          ],
+          "team2": [
+            "Molly H",
+            "April S"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Jess C",
+            "Jena C",
+            "Kayla O",
+            "Rachel A"
+          ],
+          "team1": [
+            "Jess C",
+            "Jena C"
+          ],
+          "team2": [
+            "Kayla O",
+            "Rachel A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Jenny G-H",
+            "Lisa W",
+            "Leigh B",
+            "Laurie C"
+          ],
+          "team1": [
+            "Jenny G-H",
+            "Lisa W"
+          ],
+          "team2": [
+            "Leigh B",
+            "Laurie C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Gabrielle H",
+        "Loren N",
+        "Nicara M",
+        "Rachel B",
+        "Courtney B",
+        "Tricia T",
+        "Carolyn G",
+        "Trish M",
+        "Leia P",
+        "Julia I",
+        "Stacie E",
+        "Tracie G"
+      ]
+    },
+    {
+      "round_number": 5,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Nicara M",
+            "Loren N",
+            "Linda D"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Nicara M"
+          ],
+          "team2": [
+            "Loren N",
+            "Linda D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Tricia T",
+            "Courtney B",
+            "April S"
+          ],
+          "team1": [
+            "Rachel B",
+            "Tricia T"
+          ],
+          "team2": [
+            "Courtney B",
+            "April S"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Leia P",
+            "Trish M",
+            "Rachel A"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Leia P"
+          ],
+          "team2": [
+            "Trish M",
+            "Rachel A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Tracie G",
+            "Stacie E",
+            "Laurie C"
+          ],
+          "team1": [
+            "Julia I",
+            "Tracie G"
+          ],
+          "team2": [
+            "Stacie E",
+            "Laurie C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Jaclyn C",
+        "Elise L",
+        "Bri D",
+        "Molly H",
+        "Abby A",
+        "Karen K",
+        "Kayla O",
+        "Jess C",
+        "Jena C",
+        "Leigh B",
+        "Jenny G-H",
+        "Lisa W"
+      ]
+    },
+    {
+      "round_number": 6,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Loren N",
+            "Elise L",
+            "Jaclyn C",
+            "Bri D"
+          ],
+          "team1": [
+            "Loren N",
+            "Elise L"
+          ],
+          "team2": [
+            "Jaclyn C",
+            "Bri D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Courtney B",
+            "Abby A",
+            "Molly H",
+            "Karen K"
+          ],
+          "team1": [
+            "Courtney B",
+            "Abby A"
+          ],
+          "team2": [
+            "Molly H",
+            "Karen K"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Trish M",
+            "Jess C",
+            "Kayla O",
+            "Jena C"
+          ],
+          "team1": [
+            "Trish M",
+            "Jess C"
+          ],
+          "team2": [
+            "Kayla O",
+            "Jena C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Stacie E",
+            "Jenny G-H",
+            "Leigh B",
+            "Lisa W"
+          ],
+          "team1": [
+            "Stacie E",
+            "Jenny G-H"
+          ],
+          "team2": [
+            "Leigh B",
+            "Lisa W"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Gabrielle H",
+        "Linda D",
+        "Nicara M",
+        "Rachel B",
+        "April S",
+        "Tricia T",
+        "Carolyn G",
+        "Rachel A",
+        "Leia P",
+        "Julia I",
+        "Laurie C",
+        "Tracie G"
+      ]
+    },
+    {
+      "round_number": 7,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Bri D",
+            "Linda D",
+            "Nicara M"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Bri D"
+          ],
+          "team2": [
+            "Linda D",
+            "Nicara M"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Karen K",
+            "April S",
+            "Tricia T"
+          ],
+          "team1": [
+            "Rachel B",
+            "Karen K"
+          ],
+          "team2": [
+            "April S",
+            "Tricia T"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Jena C",
+            "Rachel A",
+            "Leia P"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Jena C"
+          ],
+          "team2": [
+            "Rachel A",
+            "Leia P"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Lisa W",
+            "Laurie C",
+            "Tracie G"
+          ],
+          "team1": [
+            "Julia I",
+            "Lisa W"
+          ],
+          "team2": [
+            "Laurie C",
+            "Tracie G"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Loren N",
+        "Jaclyn C",
+        "Elise L",
+        "Courtney B",
+        "Molly H",
+        "Abby A",
+        "Trish M",
+        "Kayla O",
+        "Jess C",
+        "Stacie E",
+        "Leigh B",
+        "Jenny G-H"
+      ]
+    },
+    {
+      "round_number": 8,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Elise L",
+            "Loren N",
+            "Jaclyn C"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Elise L"
+          ],
+          "team2": [
+            "Loren N",
+            "Jaclyn C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Abby A",
+            "Courtney B",
+            "Molly H"
+          ],
+          "team1": [
+            "Rachel B",
+            "Abby A"
+          ],
+          "team2": [
+            "Courtney B",
+            "Molly H"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Jess C",
+            "Trish M",
+            "Kayla O"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Jess C"
+          ],
+          "team2": [
+            "Trish M",
+            "Kayla O"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Jenny G-H",
+            "Stacie E",
+            "Leigh B"
+          ],
+          "team1": [
+            "Julia I",
+            "Jenny G-H"
+          ],
+          "team2": [
+            "Stacie E",
+            "Leigh B"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Bri D",
+        "Linda D",
+        "Nicara M",
+        "Karen K",
+        "April S",
+        "Tricia T",
+        "Jena C",
+        "Rachel A",
+        "Leia P",
+        "Lisa W",
+        "Laurie C",
+        "Tracie G"
+      ]
+    },
+    {
+      "round_number": 9,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Elise L",
+            "Nicara M",
+            "Bri D",
+            "Linda D"
+          ],
+          "team1": [
+            "Elise L",
+            "Nicara M"
+          ],
+          "team2": [
+            "Bri D",
+            "Linda D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Abby A",
+            "Tricia T",
+            "Karen K",
+            "April S"
+          ],
+          "team1": [
+            "Abby A",
+            "Tricia T"
+          ],
+          "team2": [
+            "Karen K",
+            "April S"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Jess C",
+            "Leia P",
+            "Jena C",
+            "Rachel A"
+          ],
+          "team1": [
+            "Jess C",
+            "Leia P"
+          ],
+          "team2": [
+            "Jena C",
+            "Rachel A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Jenny G-H",
+            "Tracie G",
+            "Lisa W",
+            "Laurie C"
+          ],
+          "team1": [
+            "Jenny G-H",
+            "Tracie G"
+          ],
+          "team2": [
+            "Lisa W",
+            "Laurie C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Gabrielle H",
+        "Loren N",
+        "Jaclyn C",
+        "Rachel B",
+        "Courtney B",
+        "Molly H",
+        "Carolyn G",
+        "Trish M",
+        "Kayla O",
+        "Julia I",
+        "Stacie E",
+        "Leigh B"
+      ]
+    },
+    {
+      "round_number": 10,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Loren N",
+            "Jaclyn C",
+            "Elise L"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Loren N"
+          ],
+          "team2": [
+            "Jaclyn C",
+            "Elise L"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Courtney B",
+            "Molly H",
+            "Abby A"
+          ],
+          "team1": [
+            "Rachel B",
+            "Courtney B"
+          ],
+          "team2": [
+            "Molly H",
+            "Abby A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Trish M",
+            "Kayla O",
+            "Jess C"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Trish M"
+          ],
+          "team2": [
+            "Kayla O",
+            "Jess C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Stacie E",
+            "Leigh B",
+            "Jenny G-H"
+          ],
+          "team1": [
+            "Julia I",
+            "Stacie E"
+          ],
+          "team2": [
+            "Leigh B",
+            "Jenny G-H"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Bri D",
+        "Linda D",
+        "Nicara M",
+        "Karen K",
+        "April S",
+        "Tricia T",
+        "Jena C",
+        "Rachel A",
+        "Leia P",
+        "Lisa W",
+        "Laurie C",
+        "Tracie G"
+      ]
+    },
+    {
+      "round_number": 11,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Bri D",
+            "Nicara M",
+            "Elise L",
+            "Linda D"
+          ],
+          "team1": [
+            "Bri D",
+            "Nicara M"
+          ],
+          "team2": [
+            "Elise L",
+            "Linda D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Karen K",
+            "Tricia T",
+            "Abby A",
+            "April S"
+          ],
+          "team1": [
+            "Karen K",
+            "Tricia T"
+          ],
+          "team2": [
+            "Abby A",
+            "April S"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Jena C",
+            "Leia P",
+            "Jess C",
+            "Rachel A"
+          ],
+          "team1": [
+            "Jena C",
+            "Leia P"
+          ],
+          "team2": [
+            "Jess C",
+            "Rachel A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Lisa W",
+            "Tracie G",
+            "Jenny G-H",
+            "Laurie C"
+          ],
+          "team1": [
+            "Lisa W",
+            "Tracie G"
+          ],
+          "team2": [
+            "Jenny G-H",
+            "Laurie C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Gabrielle H",
+        "Loren N",
+        "Jaclyn C",
+        "Rachel B",
+        "Courtney B",
+        "Molly H",
+        "Carolyn G",
+        "Trish M",
+        "Kayla O",
+        "Julia I",
+        "Stacie E",
+        "Leigh B"
+      ]
+    },
+    {
+      "round_number": 12,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Jaclyn C",
+            "Loren N",
+            "Nicara M"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Jaclyn C"
+          ],
+          "team2": [
+            "Loren N",
+            "Nicara M"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Molly H",
+            "Courtney B",
+            "Tricia T"
+          ],
+          "team1": [
+            "Rachel B",
+            "Molly H"
+          ],
+          "team2": [
+            "Courtney B",
+            "Tricia T"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Kayla O",
+            "Trish M",
+            "Leia P"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Kayla O"
+          ],
+          "team2": [
+            "Trish M",
+            "Leia P"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Leigh B",
+            "Stacie E",
+            "Tracie G"
+          ],
+          "team1": [
+            "Julia I",
+            "Leigh B"
+          ],
+          "team2": [
+            "Stacie E",
+            "Tracie G"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Elise L",
+        "Bri D",
+        "Linda D",
+        "Abby A",
+        "Karen K",
+        "April S",
+        "Jess C",
+        "Jena C",
+        "Rachel A",
+        "Jenny G-H",
+        "Lisa W",
+        "Laurie C"
+      ]
+    },
+    {
+      "round_number": 13,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Elise L",
+            "Bri D",
+            "Jaclyn C",
+            "Linda D"
+          ],
+          "team1": [
+            "Elise L",
+            "Bri D"
+          ],
+          "team2": [
+            "Jaclyn C",
+            "Linda D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Abby A",
+            "Karen K",
+            "Molly H",
+            "April S"
+          ],
+          "team1": [
+            "Abby A",
+            "Karen K"
+          ],
+          "team2": [
+            "Molly H",
+            "April S"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Jess C",
+            "Jena C",
+            "Kayla O",
+            "Rachel A"
+          ],
+          "team1": [
+            "Jess C",
+            "Jena C"
+          ],
+          "team2": [
+            "Kayla O",
+            "Rachel A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Jenny G-H",
+            "Lisa W",
+            "Leigh B",
+            "Laurie C"
+          ],
+          "team1": [
+            "Jenny G-H",
+            "Lisa W"
+          ],
+          "team2": [
+            "Leigh B",
+            "Laurie C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Gabrielle H",
+        "Loren N",
+        "Nicara M",
+        "Rachel B",
+        "Courtney B",
+        "Tricia T",
+        "Carolyn G",
+        "Trish M",
+        "Leia P",
+        "Julia I",
+        "Stacie E",
+        "Tracie G"
+      ]
+    },
+    {
+      "round_number": 14,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Nicara M",
+            "Loren N",
+            "Linda D"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Nicara M"
+          ],
+          "team2": [
+            "Loren N",
+            "Linda D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Tricia T",
+            "Courtney B",
+            "April S"
+          ],
+          "team1": [
+            "Rachel B",
+            "Tricia T"
+          ],
+          "team2": [
+            "Courtney B",
+            "April S"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Leia P",
+            "Trish M",
+            "Rachel A"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Leia P"
+          ],
+          "team2": [
+            "Trish M",
+            "Rachel A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Tracie G",
+            "Stacie E",
+            "Laurie C"
+          ],
+          "team1": [
+            "Julia I",
+            "Tracie G"
+          ],
+          "team2": [
+            "Stacie E",
+            "Laurie C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Jaclyn C",
+        "Elise L",
+        "Bri D",
+        "Molly H",
+        "Abby A",
+        "Karen K",
+        "Kayla O",
+        "Jess C",
+        "Jena C",
+        "Leigh B",
+        "Jenny G-H",
+        "Lisa W"
+      ]
+    },
+    {
+      "round_number": 15,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Loren N",
+            "Elise L",
+            "Jaclyn C",
+            "Bri D"
+          ],
+          "team1": [
+            "Loren N",
+            "Elise L"
+          ],
+          "team2": [
+            "Jaclyn C",
+            "Bri D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Courtney B",
+            "Abby A",
+            "Molly H",
+            "Karen K"
+          ],
+          "team1": [
+            "Courtney B",
+            "Abby A"
+          ],
+          "team2": [
+            "Molly H",
+            "Karen K"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Trish M",
+            "Jess C",
+            "Kayla O",
+            "Jena C"
+          ],
+          "team1": [
+            "Trish M",
+            "Jess C"
+          ],
+          "team2": [
+            "Kayla O",
+            "Jena C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Stacie E",
+            "Jenny G-H",
+            "Leigh B",
+            "Lisa W"
+          ],
+          "team1": [
+            "Stacie E",
+            "Jenny G-H"
+          ],
+          "team2": [
+            "Leigh B",
+            "Lisa W"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Gabrielle H",
+        "Linda D",
+        "Nicara M",
+        "Rachel B",
+        "April S",
+        "Tricia T",
+        "Carolyn G",
+        "Rachel A",
+        "Leia P",
+        "Julia I",
+        "Laurie C",
+        "Tracie G"
+      ]
+    },
+    {
+      "round_number": 16,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Bri D",
+            "Linda D",
+            "Nicara M"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Bri D"
+          ],
+          "team2": [
+            "Linda D",
+            "Nicara M"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Karen K",
+            "April S",
+            "Tricia T"
+          ],
+          "team1": [
+            "Rachel B",
+            "Karen K"
+          ],
+          "team2": [
+            "April S",
+            "Tricia T"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Jena C",
+            "Rachel A",
+            "Leia P"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Jena C"
+          ],
+          "team2": [
+            "Rachel A",
+            "Leia P"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Lisa W",
+            "Laurie C",
+            "Tracie G"
+          ],
+          "team1": [
+            "Julia I",
+            "Lisa W"
+          ],
+          "team2": [
+            "Laurie C",
+            "Tracie G"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Loren N",
+        "Jaclyn C",
+        "Elise L",
+        "Courtney B",
+        "Molly H",
+        "Abby A",
+        "Trish M",
+        "Kayla O",
+        "Jess C",
+        "Stacie E",
+        "Leigh B",
+        "Jenny G-H"
+      ]
+    },
+    {
+      "round_number": 17,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Gabrielle H",
+            "Elise L",
+            "Loren N",
+            "Jaclyn C"
+          ],
+          "team1": [
+            "Gabrielle H",
+            "Elise L"
+          ],
+          "team2": [
+            "Loren N",
+            "Jaclyn C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Rachel B",
+            "Abby A",
+            "Courtney B",
+            "Molly H"
+          ],
+          "team1": [
+            "Rachel B",
+            "Abby A"
+          ],
+          "team2": [
+            "Courtney B",
+            "Molly H"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Carolyn G",
+            "Jess C",
+            "Trish M",
+            "Kayla O"
+          ],
+          "team1": [
+            "Carolyn G",
+            "Jess C"
+          ],
+          "team2": [
+            "Trish M",
+            "Kayla O"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Julia I",
+            "Jenny G-H",
+            "Stacie E",
+            "Leigh B"
+          ],
+          "team1": [
+            "Julia I",
+            "Jenny G-H"
+          ],
+          "team2": [
+            "Stacie E",
+            "Leigh B"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Bri D",
+        "Linda D",
+        "Nicara M",
+        "Karen K",
+        "April S",
+        "Tricia T",
+        "Jena C",
+        "Rachel A",
+        "Leia P",
+        "Lisa W",
+        "Laurie C",
+        "Tracie G"
+      ]
+    },
+    {
+      "round_number": 18,
+      "courts": [
+        {
+          "court": 2,
+          "players": [
+            "Elise L",
+            "Nicara M",
+            "Bri D",
+            "Linda D"
+          ],
+          "team1": [
+            "Elise L",
+            "Nicara M"
+          ],
+          "team2": [
+            "Bri D",
+            "Linda D"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 3,
+          "players": [
+            "Abby A",
+            "Tricia T",
+            "Karen K",
+            "April S"
+          ],
+          "team1": [
+            "Abby A",
+            "Tricia T"
+          ],
+          "team2": [
+            "Karen K",
+            "April S"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 1,
+          "players": [
+            "Jess C",
+            "Leia P",
+            "Jena C",
+            "Rachel A"
+          ],
+          "team1": [
+            "Jess C",
+            "Leia P"
+          ],
+          "team2": [
+            "Jena C",
+            "Rachel A"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        },
+        {
+          "court": 4,
+          "players": [
+            "Jenny G-H",
+            "Tracie G",
+            "Lisa W",
+            "Laurie C"
+          ],
+          "team1": [
+            "Jenny G-H",
+            "Tracie G"
+          ],
+          "team2": [
+            "Lisa W",
+            "Laurie C"
+          ],
+          "team1_score": 0,
+          "team2_score": 0,
+          "completed": false
+        }
+      ],
+      "sitting_players": [
+        "Gabrielle H",
+        "Loren N",
+        "Jaclyn C",
+        "Rachel B",
+        "Courtney B",
+        "Molly H",
+        "Carolyn G",
+        "Trish M",
+        "Kayla O",
+        "Julia I",
+        "Stacie E",
+        "Leigh B"
       ]
     }
   ],
   "current_session": 1,
   "player_stats": {
-    "Abby A": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 5,
-      "last_sat_out_round": 2,
-      "game_scores": []
-    },
-    "April S": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Ash M": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 5,
-      "last_sat_out_round": 2,
-      "game_scores": []
-    },
-    "Carolyn G": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 2,
-      "game_scores": []
-    },
-    "Catherine B": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Courtney B": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Elise L": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 2,
-      "game_scores": []
-    },
     "Gabrielle H": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Hala A": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 5,
-      "last_sat_out_round": 2,
-      "game_scores": []
-    },
-    "Jaclyn C": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Jena C": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Jenny G-H": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Julia I": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 2,
-      "game_scores": []
-    },
-    "Karen K": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Kayla O": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 2,
-      "game_scores": []
-    },
-    "Laurie C": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Leigh B": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Linda D": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
       "game_scores": []
     },
     "Loren N": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 1,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Jaclyn C": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Elise L": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 6,
+      "last_sat_out_round": 16,
+      "game_scores": []
+    },
+    "Bri D": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
+      "game_scores": []
+    },
+    "Linda D": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
       "game_scores": []
     },
     "Nicara M": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
       "game_scores": []
     },
-    "Teresa S": {
+    "Rachel B": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Courtney B": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Molly H": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Abby A": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 6,
+      "last_sat_out_round": 16,
+      "game_scores": []
+    },
+    "Karen K": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
+      "game_scores": []
+    },
+    "April S": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
       "game_scores": []
     },
     "Tricia T": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 1,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
       "game_scores": []
     },
-    "Nicole A": {
+    "Carolyn G": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Trish M": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Kayla O": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Jess C": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 6,
+      "last_sat_out_round": 16,
+      "game_scores": []
+    },
+    "Jena C": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
       "game_scores": []
     },
     "Rachel A": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 4,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
+      "game_scores": []
+    },
+    "Leia P": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
+      "game_scores": []
+    },
+    "Julia I": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
       "game_scores": []
     },
     "Stacie E": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 1,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
       "game_scores": []
     },
-    "Susan C": {
+    "Leigh B": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 1,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 18,
+      "game_scores": []
+    },
+    "Jenny G-H": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 6,
+      "last_sat_out_round": 16,
+      "game_scores": []
+    },
+    "Lisa W": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
+      "game_scores": []
+    },
+    "Laurie C": {
+      "games_played": 0,
+      "total_points": 0,
+      "total_points_against": 0,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
       "game_scores": []
     },
     "Tracie G": {
       "games_played": 0,
       "total_points": 0,
       "total_points_against": 0,
-      "rounds_sat_out": 2,
-      "last_sat_out_round": 1,
-      "game_scores": []
-    },
-    "Susan M": {
-      "games_played": 0,
-      "total_points": 0,
-      "total_points_against": 0,
-      "rounds_sat_out": 3,
-      "last_sat_out_round": 2,
+      "rounds_sat_out": 8,
+      "last_sat_out_round": 17,
       "game_scores": []
     }
   },
   "session_history": [],
   "player_tiers": {
     "Gabrielle H": 1,
+    "Loren N": 1,
     "Jaclyn C": 1,
-    "Ash M": 1,
     "Elise L": 1,
+    "Bri D": 1,
     "Linda D": 1,
-    "Courtney B": 1,
-    "Abby A": 1,
-    "Nicara M": 2,
+    "Nicara M": 1,
+    "Rachel B": 2,
+    "Courtney B": 2,
+    "Molly H": 2,
+    "Abby A": 2,
+    "Karen K": 2,
     "April S": 2,
-    "Carolyn G": 2,
-    "Loren N": 2,
-    "Teresa S": 2,
-    "Jena C": 2,
     "Tricia T": 2,
-    "Hala A": 3,
-    "Julia I": 3,
-    "Jenny G-H": 3,
-    "Catherine B": 3,
-    "Karen K": 3,
+    "Carolyn G": 3,
+    "Trish M": 3,
     "Kayla O": 3,
-    "Laurie C": 3,
-    "Leigh B": 4,
-    "Nicole A": 4,
-    "Rachel A": 4,
+    "Jess C": 3,
+    "Jena C": 3,
+    "Rachel A": 3,
+    "Leia P": 3,
+    "Julia I": 4,
     "Stacie E": 4,
-    "Susan C": 4,
-    "Tracie G": 4,
-    "Susan M": 4
+    "Leigh B": 4,
+    "Jenny G-H": 4,
+    "Lisa W": 4,
+    "Laurie C": 4,
+    "Tracie G": 4
   },
   "is_seeding_session": false,
   "player_numbers": {
-    "Abby A": 7,
-    "April S": 9,
-    "Ash M": 3,
-    "Carolyn G": 10,
-    "Catherine B": 20,
-    "Courtney B": 6,
-    "Elise L": 4,
     "Gabrielle H": 1,
-    "Hala A": 16,
-    "Jaclyn C": 2,
-    "Jena C": 13,
-    "Jenny G-H": 19,
-    "Julia I": 21,
-    "Karen K": 23,
-    "Kayla O": 15,
-    "Laurie C": 26,
-    "Leigh B": 25,
-    "Linda D": 5,
-    "Loren N": 11,
-    "Nicara M": 8,
-    "Teresa S": 27,
-    "Tricia T": 28,
-    "Nicole A": 29,
-    "Rachel A": 30,
-    "Stacie E": 31,
-    "Susan C": 32,
-    "Tracie G": 33,
-    "Susan M": 34
+    "Loren N": 2,
+    "Jaclyn C": 3,
+    "Elise L": 4,
+    "Bri D": 5,
+    "Linda D": 6,
+    "Nicara M": 7,
+    "Rachel B": 8,
+    "Courtney B": 9,
+    "Molly H": 10,
+    "Abby A": 11,
+    "Karen K": 12,
+    "April S": 13,
+    "Tricia T": 14,
+    "Carolyn G": 15,
+    "Trish M": 16,
+    "Kayla O": 17,
+    "Jess C": 18,
+    "Jena C": 19,
+    "Rachel A": 20,
+    "Leia P": 21,
+    "Julia I": 22,
+    "Stacie E": 23,
+    "Leigh B": 24,
+    "Jenny G-H": 25,
+    "Lisa W": 26,
+    "Laurie C": 27,
+    "Tracie G": 28
   },
-  "next_player_number": 35,
+  "next_player_number": 29,
   "tier_court_assignments": {
     "1": [
       2
     ],
     "2": [
-      1
+      3
     ],
     "3": [
-      3
+      1
     ],
     "4": [
       4
     ]
   },
-  "forced_sit_out": []
+  "forced_sit_out": [],
+  "used_partnerships": [
+    [
+      "Jess C",
+      "Rachel A"
+    ],
+    [
+      "Karen K",
+      "Molly H"
+    ],
+    [
+      "Laurie C",
+      "Lisa W"
+    ],
+    [
+      "Elise L",
+      "Jaclyn C"
+    ],
+    [
+      "Loren N",
+      "Nicara M"
+    ],
+    [
+      "Abby A",
+      "Karen K"
+    ],
+    [
+      "Abby A",
+      "Courtney B"
+    ],
+    [
+      "Jenny G-H",
+      "Stacie E"
+    ],
+    [
+      "Carolyn G",
+      "Trish M"
+    ],
+    [
+      "Abby A",
+      "April S"
+    ],
+    [
+      "Stacie E",
+      "Tracie G"
+    ],
+    [
+      "Jena C",
+      "Jess C"
+    ],
+    [
+      "April S",
+      "Tricia T"
+    ],
+    [
+      "Linda D",
+      "Nicara M"
+    ],
+    [
+      "Courtney B",
+      "Tricia T"
+    ],
+    [
+      "Bri D",
+      "Gabrielle H"
+    ],
+    [
+      "Abby A",
+      "Molly H"
+    ],
+    [
+      "Elise L",
+      "Linda D"
+    ],
+    [
+      "Gabrielle H",
+      "Nicara M"
+    ],
+    [
+      "Jenny G-H",
+      "Laurie C"
+    ],
+    [
+      "Linda D",
+      "Loren N"
+    ],
+    [
+      "Carolyn G",
+      "Jess C"
+    ],
+    [
+      "Jenny G-H",
+      "Leigh B"
+    ],
+    [
+      "Jena C",
+      "Rachel A"
+    ],
+    [
+      "Julia I",
+      "Tracie G"
+    ],
+    [
+      "Gabrielle H",
+      "Loren N"
+    ],
+    [
+      "Jenny G-H",
+      "Lisa W"
+    ],
+    [
+      "Jaclyn C",
+      "Linda D"
+    ],
+    [
+      "Bri D",
+      "Nicara M"
+    ],
+    [
+      "Jess C",
+      "Kayla O"
+    ],
+    [
+      "Kayla O",
+      "Trish M"
+    ],
+    [
+      "Laurie C",
+      "Tracie G"
+    ],
+    [
+      "Courtney B",
+      "Rachel B"
+    ],
+    [
+      "Lisa W",
+      "Tracie G"
+    ],
+    [
+      "Rachel B",
+      "Tricia T"
+    ],
+    [
+      "Karen K",
+      "Tricia T"
+    ],
+    [
+      "Bri D",
+      "Elise L"
+    ],
+    [
+      "Kayla O",
+      "Rachel A"
+    ],
+    [
+      "Gabrielle H",
+      "Jaclyn C"
+    ],
+    [
+      "Elise L",
+      "Gabrielle H"
+    ],
+    [
+      "Julia I",
+      "Stacie E"
+    ],
+    [
+      "April S",
+      "Karen K"
+    ],
+    [
+      "Jess C",
+      "Leia P"
+    ],
+    [
+      "Carolyn G",
+      "Kayla O"
+    ],
+    [
+      "Carolyn G",
+      "Jena C"
+    ],
+    [
+      "April S",
+      "Courtney B"
+    ],
+    [
+      "Bri D",
+      "Jaclyn C"
+    ],
+    [
+      "Elise L",
+      "Nicara M"
+    ],
+    [
+      "Jena C",
+      "Kayla O"
+    ],
+    [
+      "April S",
+      "Molly H"
+    ],
+    [
+      "Bri D",
+      "Linda D"
+    ],
+    [
+      "Courtney B",
+      "Molly H"
+    ],
+    [
+      "Leigh B",
+      "Stacie E"
+    ],
+    [
+      "Julia I",
+      "Leigh B"
+    ],
+    [
+      "Laurie C",
+      "Stacie E"
+    ],
+    [
+      "Elise L",
+      "Loren N"
+    ],
+    [
+      "Abby A",
+      "Tricia T"
+    ],
+    [
+      "Karen K",
+      "Rachel B"
+    ],
+    [
+      "Rachel A",
+      "Trish M"
+    ],
+    [
+      "Julia I",
+      "Lisa W"
+    ],
+    [
+      "Jenny G-H",
+      "Julia I"
+    ],
+    [
+      "Leia P",
+      "Trish M"
+    ],
+    [
+      "Jenny G-H",
+      "Tracie G"
+    ],
+    [
+      "Laurie C",
+      "Leigh B"
+    ],
+    [
+      "Jaclyn C",
+      "Loren N"
+    ],
+    [
+      "Jess C",
+      "Trish M"
+    ],
+    [
+      "Carolyn G",
+      "Leia P"
+    ],
+    [
+      "Leia P",
+      "Rachel A"
+    ],
+    [
+      "Leigh B",
+      "Lisa W"
+    ],
+    [
+      "Molly H",
+      "Rachel B"
+    ],
+    [
+      "Jena C",
+      "Leia P"
+    ],
+    [
+      "Abby A",
+      "Rachel B"
+    ]
+  ]
 }
